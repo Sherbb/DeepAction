@@ -1,5 +1,5 @@
 # DeepAction
-An platform to create ability based action games on.
+A platform to create ability based action games on.
 
 Requires ODIN: https://odininspector.com/
 
