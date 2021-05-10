@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 845308493}
   - component: {fileID: 845308492}
   - component: {fileID: 845308496}
+  - component: {fileID: 845308497}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -288,22 +289,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: health
-      Entry: 7
-      Data: 0|ResourceStat, Assembly-CSharp
-    - Name: value
-      Entry: 4
-      Data: 61.4406776
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: resources
       Entry: 7
-      Data: 1|Unity.Cloud.Collaborate.Common.SerializableDictionary`2[[System.String,
-        mscorlib],[ResourceStat, Assembly-CSharp]], Unity.CollabProxy.Editor
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[ResourceStat,
+        Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 2|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
         mscorlib]], mscorlib
     - Name: 
       Entry: 8
@@ -316,13 +308,34 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: 
+      Data: health
     - Name: $v
       Entry: 7
-      Data: 3|ResourceStat, Assembly-CSharp
+      Data: 2|ResourceStat, Assembly-CSharp
     - Name: value
       Entry: 4
-      Data: 17.3267326
+      Data: 100
+    - Name: maxValue
+      Entry: 4
+      Data: 0
+    - Name: color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -335,13 +348,83 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: attributes
+    - Name: moveSpeed
       Entry: 7
-      Data: 4|Unity.Cloud.Collaborate.Common.SerializableDictionary`2[[AttributeType,
-        Assembly-CSharp],[BaseAttribute, Assembly-CSharp]], Unity.CollabProxy.Editor
+      Data: 3|BaseAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 0
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: healthRegen
+      Entry: 7
+      Data: 4|BaseAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 0
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: armor
+      Entry: 7
+      Data: 5|BaseAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 0
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: customAttributes
+      Entry: 7
+      Data: 6|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[BaseAttribute,
+        Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 5|System.Collections.Generic.EnumEqualityComparer`1[[AttributeType, Assembly-CSharp]],
+      Data: 7|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: behaviors
+      Entry: 7
+      Data: 8|System.Collections.Generic.List`1[[DeepBehavior, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -352,48 +435,23 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 0
-    - Name: $v
-      Entry: 7
-      Data: 6|BaseAttribute, Assembly-CSharp
-    - Name: value
-      Entry: 4
-      Data: 0
-    - Name: test
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: abilities
-      Entry: 7
-      Data: 7|Ability[], Assembly-CSharp
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+--- !u!114 &845308497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845308491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94a1b009b0d4c242ba2cdeb3327e113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityObject: {fileID: 11400000, guid: 650520c74d0486a45a403c843b5c73a3, type: 2}
+  ability1:
+    behaviorID: NOTSET
+    parent: {fileID: 0}
+    behaviorTarget: {fileID: 0}
 --- !u!1 &988282955
 GameObject:
   m_ObjectHideFlags: 0
