@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public interface IHit
+namespace DeepAction
 {
-    void Hit();
+    public interface IHit
+    {
+        void Hit();
+    }
 }
