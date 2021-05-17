@@ -27,17 +27,14 @@ namespace DeepAction
 
         [Title("Attributes","",TitleAlignments.Centered)]
 
-        public Dictionary<D_Attribute, DeepAttribute> customAttributes = new Dictionary<D_Attribute, DeepAttribute>();
+        public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
         [Title("Behaviors","",TitleAlignments.Centered)]
 
         [System.NonSerialized, OdinSerialize]
         public List<DeepBehavior> behaviors = new List<DeepBehavior>();
 
-        public void Hit()
-        {
 
-        }
 
         public DeepBehavior AddBehavior(DeepBehavior behavior)
         {
@@ -45,6 +42,56 @@ namespace DeepAction
             b.parent = this;
             behaviors.Add(b);
             return b;
+        }
+
+
+        //End Maintanance stuff.
+
+        //Start behavior event stuff
+
+        public void Hit(float damage)
+        {
+            foreach(DeepBehavior b in behaviors)
+            {
+                b.events.OnTakeDamage?.Invoke(damage);
+            }
+        }
+
+        //standard unity stuff
+        private void Update()
+        {
+            foreach(DeepBehavior b in behaviors)
+            {
+                b.events.Update?.Invoke();
+            }
+        }
+        private void FixedUpdate()
+        {
+            foreach(DeepBehavior b in behaviors)
+            {
+                b.events.FixedUpdate?.Invoke();
+            }
+        }
+        private void LateUpdate()
+        {
+            foreach(DeepBehavior b in behaviors)
+            {
+                b.events.LateUpdate?.Invoke();
+            }
+        }
+        private void OnEnable()
+        {
+            foreach(DeepBehavior b in behaviors)
+            {
+                b.events.OnEntityEnable?.Invoke();
+            }
+        }
+        private void OnDisable()
+        {
+            foreach(DeepBehavior b in behaviors)
+            {
+                b.events.OnEntityDisable?.Invoke();
+            }
         }
     }
 }

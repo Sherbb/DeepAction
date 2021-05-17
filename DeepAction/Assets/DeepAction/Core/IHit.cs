@@ -5,6 +5,6 @@ namespace DeepAction
 {
     public interface IHit
     {
-        void Hit();
+        void Hit(float damage);
     }
 }

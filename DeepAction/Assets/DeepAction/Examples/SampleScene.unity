@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 845308493}
   - component: {fileID: 845308492}
   - component: {fileID: 845308496}
+  - component: {fileID: 845308497}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -307,7 +308,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -319,7 +320,7 @@ MonoBehaviour:
       Data: 2|DeepAction.DeepResource, Assembly-CSharp
     - Name: value
       Entry: 4
-      Data: 64.84375
+      Data: 100
     - Name: 
       Entry: 8
       Data: 
@@ -337,77 +338,6 @@ MonoBehaviour:
       Data: 3|DeepAction.DeepResource, Assembly-CSharp
     - Name: value
       Entry: 4
-      Data: 81.25
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2
-    - Name: $v
-      Entry: 7
-      Data: 4|DeepAction.DeepResource, Assembly-CSharp
-    - Name: value
-      Entry: 4
-      Data: 38.4765625
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: customAttributes
-      Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[DeepAction.DeepAttribute,
-        Assembly-CSharp]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 0
-    - Name: $v
-      Entry: 7
-      Data: 7|DeepAction.DeepAttribute, Assembly-CSharp
-    - Name: baseValue
-      Entry: 4
-      Data: 0
-    - Name: clamp
-      Entry: 5
-      Data: false
-    - Name: minValue
-      Entry: 4
-      Data: 0
-    - Name: maxValue
-      Entry: 4
       Data: 100
     - Name: 
       Entry: 8
@@ -421,114 +351,35 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: attributes
+      Entry: 7
+      Data: 4|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[DeepAction.DeepAttribute,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 5|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: behaviors
       Entry: 7
-      Data: 8|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 9|DeepAction.DeepBehavior, Assembly-CSharp
-    - Name: behaviorID
-      Entry: 1
-      Data: NOTSET
-    - Name: parent
-      Entry: 6
-      Data: 
-    - Name: resourcesToTrigger
-      Entry: 7
-      Data: 10|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resources, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 11|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resources,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: actions
-      Entry: 7
-      Data: 12|System.Collections.Generic.List`1[[DeepAction.DeepAction, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 13|DeepAction.TestAction, Assembly-CSharp
-    - Name: behavior
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: behaviorTarget
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 14|DeepAction.DeepBehavior, Assembly-CSharp
-    - Name: behaviorID
-      Entry: 1
-      Data: NOTSET
-    - Name: parent
-      Entry: 6
-      Data: 
-    - Name: resourcesToTrigger
-      Entry: 7
-      Data: 15|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resources, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 16|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resources,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: actions
-      Entry: 7
-      Data: 17|System.Collections.Generic.List`1[[DeepAction.DeepAction, Assembly-CSharp]],
+      Data: 6|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -539,18 +390,24 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: behaviorTarget
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+--- !u!114 &845308497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845308491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94a1b009b0d4c242ba2cdeb3327e113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityObject: {fileID: 11400000, guid: 650520c74d0486a45a403c843b5c73a3, type: 2}
+  ability1:
+    behaviorID: NOTSET
+    notes: 
+    parent: {fileID: 0}
+    behaviorTarget: {fileID: 0}
 --- !u!1 &988282955
 GameObject:
   m_ObjectHideFlags: 0

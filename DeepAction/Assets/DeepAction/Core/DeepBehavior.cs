@@ -7,30 +7,46 @@ using System;
 using System.Linq;
 namespace DeepAction
 {
-
-    [System.Serializable]
-    [HideReferenceObjectPicker]
+    [System.Serializable][HideReferenceObjectPicker]
     public class DeepBehavior
     {
         //a behavior is just something that holds a bunch of actions.
 
-        //all behaviors on an actionEntity are in the same list. they all get trigger on the same events. Except:
+        //all behaviors on an actionEntity are in the same list. they all invoke the same events. Except:
         //You can trigger a particular behavior with Trigger()
 
         public string behaviorID = "NOTSET";
-        [HideInInspector]
-        public DeepEntity parent;
-
-        //resources require to TRIGGER the behavior. This is where you put the spell cost. Can be set by actions.
-        public Dictionary<D_Resources, float> resourcesToTrigger = new Dictionary<D_Resources, float>();
-
-        [TypeFilter("GetFilteredTypeList")]
+        [Tooltip("Literally just a place to leave notes about the behavior. This should NOT be used for any functionality."),SerializeField,TextArea]
+        private string notes = "";
+        [Space]
+        public Dictionary<D_Resources, float> resourcesToTrigger = new Dictionary<D_Resources, float>();//resources require to TRIGGER the behavior. This is where you put the spell cost. Can be set by actions.
+        [TypeFilter("GetFilteredTypeList")][Space]
         public List<DeepAction> actions = new List<DeepAction>();
 
-        //this is NOT the same as Trigger target.
-        //this can be SET by a DeepAction, and then used in a trigger, or whatever
+
         [HideInInspector]
-        public DeepEntity behaviorTarget;
+        public DeepEntity parent;
+        [HideInInspector]
+        public DeepEntity behaviorTarget;   //a target that a behavior HOLDS. this is NOT the same as the target that gets passed in Trigger()
+        [HideInInspector]
+        public Events events;
+
+        public class Events
+        {
+            public Action<Vector3,Vector3,DeepEntity> Trigger;
+
+            public Action OnEntityEnable;
+            public Action OnEntityDisable;
+            public Action OnEntityDie;
+
+            public Action Update;
+            public Action FixedUpdate;
+            public Action LateUpdate;
+
+            public Action<float>OnTakeDamage;
+            public Action<float>OnDealDamage;
+        }
+
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
         {
             foreach (D_Resources key in resourcesToTrigger.Keys)
@@ -53,10 +69,8 @@ namespace DeepAction
                 parent.resources[key].TryToConsume(resourcesToTrigger[key]);
             }
 
-            foreach (DeepAction a in actions)
-            {
-                a.Trigger(point, direction, target);
-            }
+            events.Trigger?.Invoke(point,direction,target);
+
             return true;
         }
         #region Trigger Overloads
@@ -66,25 +80,24 @@ namespace DeepAction
         public bool Trigger(DeepEntity target) { return Trigger(Vector3.zero, Vector3.zero, target); }
         #endregion
 
-        //communicate to another behavior. Clean this up
-        public bool SendMessage(string message, DeepBehavior sender)
-        {
-            return false;
-        }
         public virtual DeepBehavior Clone()
         {
             DeepBehavior newB = (DeepBehavior)this.MemberwiseClone();
             newB.actions = new List<DeepAction>();
+
+            newB.events = new Events();
+
             foreach (DeepAction a in this.actions)
             {
                 DeepAction newA = a.Clone();
                 newA.behavior = newB;
                 newB.actions.Add(newA);
+                newA.IntitializeAction();
             }
             return newB;
         }
 
-
+        //for odin
         private IEnumerable<Type> GetFilteredTypeList()
         {
             var q = typeof(DeepAction).Assembly.GetTypes()

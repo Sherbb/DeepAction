@@ -30,8 +30,8 @@ MonoBehaviour:
     - Name: behaviorID
       Entry: 1
       Data: TestAbility
-    - Name: parent
-      Entry: 6
+    - Name: notes
+      Entry: 1
       Data: 
     - Name: resourcesToTrigger
       Entry: 7
@@ -93,8 +93,44 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: parent
+      Entry: 6
+      Data: 
     - Name: behaviorTarget
       Entry: 6
+      Data: 
+    - Name: events
+      Entry: 7
+      Data: 6|DeepAction.DeepBehavior+Events, Assembly-CSharp
+    - Name: Trigger
+      Entry: 6
+      Data: 
+    - Name: OnEntityEnable
+      Entry: 6
+      Data: 
+    - Name: OnEntityDisable
+      Entry: 6
+      Data: 
+    - Name: OnEntityDie
+      Entry: 6
+      Data: 
+    - Name: Update
+      Entry: 6
+      Data: 
+    - Name: FixedUpdate
+      Entry: 6
+      Data: 
+    - Name: LateUpdate
+      Entry: 6
+      Data: 
+    - Name: OnTakeDamage
+      Entry: 6
+      Data: 
+    - Name: OnDealDamage
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: 
       Entry: 8
