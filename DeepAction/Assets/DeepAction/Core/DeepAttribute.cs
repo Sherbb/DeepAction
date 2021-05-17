@@ -11,9 +11,9 @@ namespace DeepAction
         [OnInspectorInit("@showModifiers = false")]
         //
 
-        [SerializeField, HideLabel, HorizontalGroup("hoz"), InlineButton("M"), InlineButton("C")]
+        [SerializeField, HideLabel,SuffixLabel("Base Value",true), HorizontalGroup("hoz"), InlineButton("M"), InlineButton("C")]
         private float baseValue;
-        [HideLabel, ShowInInspector, ReadOnly, HorizontalGroup("hoz")]
+        [HideLabel, ShowInInspector,SuffixLabel("Final Value",true), ReadOnly, HorizontalGroup("hoz")]
         private float value;
 
         [OnValueChanged("UpdateReadOnlyPreview")]
@@ -26,69 +26,51 @@ namespace DeepAction
         [SerializeField, ShowIf("clamp"), HorizontalGroup("hoz2"), LabelWidth(70)]
         private float maxValue = 100f;
 
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector, ReadOnly]
-        private float add = 0f;
+        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector,ReadOnly]
+        private List<DeepAttributeModifier> modifiers = new List<DeepAttributeModifier>();
 
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector, ReadOnly]
-        private List<float> posMultipliers = new List<float>();//multipliers are clamped to a max of 100%
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector, ReadOnly]
-        private List<float> negMultipliers = new List<float>();
+        [BoxGroup("Active Modifiers"), ShowIf("showModifiers")]
+        public bool overrideToMax;//if true we will pick the largest override value.
 
-        public void AddMultplier(float f)
+        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector,ReadOnly]
+        private List<float> overrides = new List<float>();
+
+        public DeepAttributeModifier AddModifier(DeepAttributeModifier modifier)
         {
-            if (f > 0)
+            if (modifiers == null)
             {
-                posMultipliers.Add(f);
+                modifiers = new List<DeepAttributeModifier>();
             }
-            else if (f < 0)
-            {
-                negMultipliers.Add(f);
-            }
-
-            UpdateValue();
+            modifiers.Add(modifier);
+            return modifier;
         }
 
-        public void RemoveMultiplier(float f)
+        public bool RemoveModifer(DeepAttributeModifier modifier)
         {
-            if (f > 0)
+            if (modifiers.Contains(modifier))
             {
-                if (!posMultipliers.Remove(f))
-                {
-                    Debug.LogError("Tried to remove a multplier from an attribute that it did not have.");
-                }
+                modifiers.Remove(modifier);
+                return true;
             }
-            else if (f < 0)
-            {
-                if (!negMultipliers.Remove(f))
-                {
-                    Debug.LogError("Tried to remove a multplier from an attribute that it did not have.");
-                }
-            }
-
-
-            UpdateValue();
+            return false;
         }
 
-        public void AddValueAdd(float f)
+        public void AddOverride(float value)
         {
-            add += f;
-            UpdateValue();
+            overrides.Add(value);
         }
 
-        public void RemoveValueAdd(float f)
+        public bool RemoveOverride(float value)
         {
-            add -= f;
-            UpdateValue();
+            if (overrides.Contains(value))
+            {
+                overrides.Remove(value);
+                return true;
+            }
+            return false;
         }
 
         public float GetValue()
-        {
-            UpdateValue();//need to call UpdateValue() when the object is created, then move this out.
-            return value;
-        }
-
-        //I am pretty sure we should never need this.
-        public float UpdateAndGetValue()
         {
             UpdateValue();
             return value;
@@ -96,42 +78,65 @@ namespace DeepAction
 
         public void UpdateValue()
         {
+            //baseValue + baseAdd * baseMultiply + postAdd
+
+            if (overrides == null)
+            {
+                overrides = new List<float>();
+            }
+
+            if (modifiers == null)
+            {
+                modifiers = new List<DeepAttributeModifier>();
+            }
+
             float f = baseValue;
 
-            float m = 1f;//m = multiplier
-
-
-            if (posMultipliers == null)
+            //override
+            if (overrides.Count > 0)
             {
-                posMultipliers = new List<float>();
+                f = overrides[0];
+
+                if (overrideToMax)
+                {
+                    foreach(float ovr in overrides)
+                    {
+                        if (ovr > f)
+                        {
+                            f = ovr;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach(float ovr in overrides)
+                    {
+                        if (ovr < f)
+                        {
+                            f = ovr;
+                        }
+                    }
+                }
+                value = f;
+                return;
             }
-            if (negMultipliers == null)
+
+            foreach(DeepAttributeModifier mod in modifiers)
             {
-                negMultipliers = new List<float>();
+                f += mod.baseAdd;
             }
 
-            foreach (float v in posMultipliers)
+            float newBase = f;
+
+            foreach(DeepAttributeModifier mod in modifiers)
             {
-                m *= (1f - Mathf.Clamp(v, 0f, 1f));
-                //m *= 1f + v;//exponential ish. The stack get multiplied, dependent on order
-                //f += ((baseValue * v) - baseValue);//additive
+                f += (newBase * mod.multiplier);
             }
 
-            m = 1f - m;
-
-            float nm = 1f;//negative multiplier;
-
-            foreach (float v in negMultipliers)
+            foreach(DeepAttributeModifier mod in modifiers)
             {
-                nm *= (1f - (-Mathf.Clamp(v, -1f, 0f)));
+                f += mod.postAdd;
             }
-
-            m -= (1f - nm);
-
-            f *= (1f + m);
-            //multipliers are now applied
-
-            f += add;
 
             if (clamp)
             {
@@ -153,5 +158,35 @@ namespace DeepAction
             showModifiers = !showModifiers;
         }
         #endregion
+    }
+
+    [HideReferenceObjectPicker,InlineProperty]
+    public class DeepAttributeModifier
+    {
+        //BaseValue + baseAdd * multiplier + postAdd
+
+        //overrideBaseValue REPLACES baseValue
+
+        //overridePostValue REPLACES the FINAL value. It does not get added to or multiplied at all.
+
+        [HorizontalGroup("hoz"),SuffixLabel("BaseAdd",true),HideLabel]
+        public float baseAdd;
+        [HorizontalGroup("hoz"),SuffixLabel("Multiplier",true),HideLabel]
+        public float multiplier;
+        [HorizontalGroup("hoz"),SuffixLabel("Post Add",true),HideLabel]
+        public float postAdd;
+        public DeepAttributeModifier(float baseAdd,float multiplier,float postAdd)
+        {
+            this.baseAdd = baseAdd;
+            this.postAdd = postAdd;
+            this.multiplier = multiplier;
+        }
+        public DeepAttributeModifier(DeepAttributeModifier other)
+        {
+            this.baseAdd = other.baseAdd;
+            this.postAdd = other.postAdd;
+            this.multiplier = other.multiplier;
+        }
+
     }
 }

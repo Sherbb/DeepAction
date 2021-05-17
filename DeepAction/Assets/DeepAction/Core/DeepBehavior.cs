@@ -80,6 +80,14 @@ namespace DeepAction
         public bool Trigger(DeepEntity target) { return Trigger(Vector3.zero, Vector3.zero, target); }
         #endregion
 
+        public void IntitializeBehavior()
+        {
+            foreach(DeepAction a in actions)
+            {
+                a.IntitializeAction();
+            }
+        }
+
         public virtual DeepBehavior Clone()
         {
             DeepBehavior newB = (DeepBehavior)this.MemberwiseClone();
@@ -92,7 +100,6 @@ namespace DeepAction
                 DeepAction newA = a.Clone();
                 newA.behavior = newB;
                 newB.actions.Add(newA);
-                newA.IntitializeAction();
             }
             return newB;
         }

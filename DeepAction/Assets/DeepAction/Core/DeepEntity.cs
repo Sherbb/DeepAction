@@ -46,6 +46,9 @@ namespace DeepAction
             DeepBehavior b = behavior.Clone();
             b.parent = this;
             behaviors.Add(b);
+
+            b.IntitializeBehavior();
+
             return b;
         }
 
