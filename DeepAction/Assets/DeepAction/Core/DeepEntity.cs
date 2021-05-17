@@ -7,11 +7,16 @@ namespace DeepAction
 {
     public class DeepEntity : SerializedMonoBehaviour, IHit
     {
-        ///An action entity can:
-        ///
-        ///Take Damage
-        ///Have Behaviors
-        ///Behaviors can do pretty much anything. They are abilities, modifiers, in some cases they can control the action entity.
+        ///An action entity has:
+        ///Resources
+        ///Attributes
+        ///Behaviors
+
+        ///Behaviors can be:
+        ///Abilities
+        ///Status Effects
+        ///Modifiers
+        ///Whatever you can imagine
 
         ///An action entity is:
         ///

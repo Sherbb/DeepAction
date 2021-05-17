@@ -24,17 +24,13 @@ namespace DeepAction
     {
         public override void IntitializeAction()
         {
-            behavior.events.Trigger += Blah;
-            behavior.events.Trigger += Blah2;
+            behavior.events.Trigger += Test;
         }
 
-        public void Blah(Vector3 point, Vector3 direction, DeepEntity target)
+        public void Test(Vector3 point, Vector3 direction, DeepEntity target)
         {
              Debug.Log("Ability triggered");
         }
-        public void Blah2(Vector3 point, Vector3 direction, DeepEntity target)
-        {
-             Debug.Log("Ability triggered22222");
-        }
+
     }
 }
