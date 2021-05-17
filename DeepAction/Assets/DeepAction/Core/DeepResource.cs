@@ -33,5 +33,11 @@ namespace DeepAction
             }
         }
 
+        public DeepResource Clone()
+        {
+            DeepResource newR = (DeepResource)this.MemberwiseClone();
+            return newR;
+        }
+
     }
 }

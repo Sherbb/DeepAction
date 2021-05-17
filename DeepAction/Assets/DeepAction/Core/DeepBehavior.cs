@@ -19,7 +19,7 @@ namespace DeepAction
         [Tooltip("Literally just a place to leave notes about the behavior. This should NOT be used for any functionality."),SerializeField,TextArea]
         private string notes = "";
         [Space]
-        public Dictionary<D_Resources, float> resourcesToTrigger = new Dictionary<D_Resources, float>();//resources require to TRIGGER the behavior. This is where you put the spell cost. Can be set by actions.
+        public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();//resources require to TRIGGER the behavior. This is where you put the spell cost. Can be set by actions.
         [TypeFilter("GetFilteredTypeList")][Space]
         public List<DeepAction> actions = new List<DeepAction>();
 
@@ -49,7 +49,7 @@ namespace DeepAction
 
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
         {
-            foreach (D_Resources key in resourcesToTrigger.Keys)
+            foreach (D_Resource key in resourcesToTrigger.Keys)
             {
                 if (!parent.resources.ContainsKey(key))
                 {
@@ -64,7 +64,7 @@ namespace DeepAction
                 }
             }
 
-            foreach (D_Resources key in resourcesToTrigger.Keys)
+            foreach (D_Resource key in resourcesToTrigger.Keys)
             {
                 parent.resources[key].TryToConsume(resourcesToTrigger[key]);
             }
@@ -109,7 +109,6 @@ namespace DeepAction
         {
             var q = typeof(DeepAction).Assembly.GetTypes()
                 .Where(x => !x.IsAbstract)                                          // Excludes BaseClass
-                .Where(x => !x.IsGenericTypeDefinition)                             // Excludes C1<>??
                 .Where(x => typeof(DeepAction).IsAssignableFrom(x));                // Excludes classes not inheriting from BaseClass
             return q;
         }

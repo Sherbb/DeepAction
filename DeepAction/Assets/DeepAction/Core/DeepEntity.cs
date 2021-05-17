@@ -26,20 +26,95 @@ namespace DeepAction
         ///structures
 
 
-        [Title("Deep Entity","Deep Action by @AlanSherba",TitleAlignments.Centered)]
+        [Title("Deep Entity", "Deep Action by @AlanSherba", TitleAlignments.Centered)]
 
-        public Dictionary<D_Resources, DeepResource> resources = new Dictionary<D_Resources, DeepResource>();
+        public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
 
-        [Title("Attributes","",TitleAlignments.Centered)]
+        [Title("Attributes", "", TitleAlignments.Centered)]
 
         public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
-        [Title("Behaviors","",TitleAlignments.Centered)]
+        [Title("Behaviors", "", TitleAlignments.Centered)]
 
         [System.NonSerialized, OdinSerialize]
         public List<DeepBehavior> behaviors = new List<DeepBehavior>();
 
+        [Title("Preset", "Determines where the entity will pull its start values from", TitleAlignments.Centered)]
+        public enum EntityPresetType { UseInsepctor, PresetObject, None }
+        [EnumToggleButtons, HideLabel]
+        [InfoBox("$EnumExplanation", InfoMessageType.None),DisableInPlayMode]
+        public EntityPresetType presetType = EntityPresetType.UseInsepctor;
 
+        [ShowIf("presetType", EntityPresetType.PresetObject)]
+        public DeepEntityPreset preset;
+
+        private Dictionary<D_Resource, DeepResource> inspectorResources = new Dictionary<D_Resource, DeepResource>();
+        private Dictionary<D_Attribute, DeepAttribute> inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>();
+        private List<DeepBehavior> inspectorBehaviors = new List<DeepBehavior>();
+
+        private void Awake()
+        {
+            if (presetType == EntityPresetType.UseInsepctor)
+            {
+                //because we sometimes Reset entities we need to save their orginal data if we are using the inspector preset type.
+                inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>(attributes);
+                inspectorResources = new Dictionary<D_Resource, DeepResource>(resources);
+                inspectorBehaviors = new List<DeepBehavior>(behaviors);
+            }
+            ApplyDefaultValues();
+        }
+
+        public void ApplyDefaultValues()
+        {
+            switch (presetType)
+            {
+                case EntityPresetType.UseInsepctor:
+                    attributes = new Dictionary<D_Attribute, DeepAttribute>(inspectorAttributes);
+                    foreach (D_Attribute key in attributes.Keys)
+                    {
+                        attributes[key] = attributes[key].Clone();
+                    }
+                    resources = new Dictionary<D_Resource, DeepResource>(inspectorResources);
+                    foreach (D_Resource key in resources.Keys)
+                    {
+                        resources[key] = resources[key].Clone();
+                    }
+                    behaviors = new List<DeepBehavior>();
+                    foreach (DeepBehavior b in inspectorBehaviors)
+                    {
+                        AddBehavior(b);
+                    }
+                    break;
+                case EntityPresetType.PresetObject:
+                    if (preset != null)
+                    {
+                        attributes = new Dictionary<D_Attribute, DeepAttribute>(preset.attributes);
+                        foreach (D_Attribute key in attributes.Keys)
+                        {
+                            attributes[key] = attributes[key].Clone();
+                        }
+                        resources = new Dictionary<D_Resource, DeepResource>(preset.resources);
+                        foreach (D_Resource key in resources.Keys)
+                        {
+                            resources[key] = resources[key].Clone();
+                        }
+                        behaviors = new List<DeepBehavior>();
+                        foreach (DeepBehavior b in preset.behaviors)
+                        {
+                            AddBehavior(b);
+                        }
+
+
+
+
+                    }
+                    break;
+                case EntityPresetType.None:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public DeepBehavior AddBehavior(DeepBehavior behavior)
         {
@@ -59,7 +134,7 @@ namespace DeepAction
 
         public void Hit(float damage)
         {
-            foreach(DeepBehavior b in behaviors)
+            foreach (DeepBehavior b in behaviors)
             {
                 b.events.OnTakeDamage?.Invoke(damage);
             }
@@ -68,38 +143,55 @@ namespace DeepAction
         //standard unity stuff
         private void Update()
         {
-            foreach(DeepBehavior b in behaviors)
+            foreach (DeepBehavior b in behaviors)
             {
                 b.events.Update?.Invoke();
             }
         }
         private void FixedUpdate()
         {
-            foreach(DeepBehavior b in behaviors)
+            foreach (DeepBehavior b in behaviors)
             {
                 b.events.FixedUpdate?.Invoke();
             }
         }
         private void LateUpdate()
         {
-            foreach(DeepBehavior b in behaviors)
+            foreach (DeepBehavior b in behaviors)
             {
                 b.events.LateUpdate?.Invoke();
             }
         }
         private void OnEnable()
         {
-            foreach(DeepBehavior b in behaviors)
+            foreach (DeepBehavior b in behaviors)
             {
                 b.events.OnEntityEnable?.Invoke();
             }
         }
         private void OnDisable()
         {
-            foreach(DeepBehavior b in behaviors)
+            foreach (DeepBehavior b in behaviors)
             {
                 b.events.OnEntityDisable?.Invoke();
             }
         }
+
+        #region InspectorStuff
+        private string EnumExplanation()
+        {
+            switch (presetType)
+            {
+                case EntityPresetType.UseInsepctor:
+                    return "Will use the values that are saved in this inspector.";
+                case EntityPresetType.PresetObject:
+                    return "Will use the values in the supplied object.";
+                case EntityPresetType.None:
+                    return "Entity values will be wiped on start.";
+                default:
+                    return "";
+            }
+        }
+        #endregion
     }
 }

@@ -18,7 +18,7 @@ namespace DeepAction
 
         [OnValueChanged("UpdateReadOnlyPreview")]
         [SerializeField, HideInInspector]
-        private bool clamp;
+        private bool clamp;//
         private bool showModifiers;//non essential
 
         [SerializeField, ShowIf("clamp"), HorizontalGroup("hoz2"), LabelWidth(70)]
@@ -68,6 +68,12 @@ namespace DeepAction
                 return true;
             }
             return false;
+        }
+
+        public DeepAttribute Clone()
+        {
+            DeepAttribute newA = (DeepAttribute)this.MemberwiseClone();
+            return newA;
         }
 
         public float GetValue()

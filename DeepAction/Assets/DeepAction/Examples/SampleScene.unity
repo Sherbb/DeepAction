@@ -291,11 +291,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: resources
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resources, Assembly-CSharp],[DeepAction.DeepResource,
+      Data: 0|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[DeepAction.DeepResource,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resources,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resource,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -370,7 +370,37 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
       Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 6|DeepAction.DeepAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 1
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: overrideToMax
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -379,7 +409,7 @@ MonoBehaviour:
       Data: 
     - Name: behaviors
       Entry: 7
-      Data: 6|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
+      Data: 7|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -390,6 +420,8 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  presetType: 0
+  preset: {fileID: 0}
 --- !u!114 &845308497
 MonoBehaviour:
   m_ObjectHideFlags: 0

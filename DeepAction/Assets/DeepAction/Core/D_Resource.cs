@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace DeepAction
 {
-    public enum D_Resources
+    public enum D_Resource
     {
         Health,
         Mana,

@@ -35,11 +35,11 @@ MonoBehaviour:
       Data: 
     - Name: resourcesToTrigger
       Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resources, Assembly-CSharp],[System.Single,
+      Data: 2|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[System.Single,
         mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resources,
+      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resource,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -80,10 +80,34 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 5|DeepAction.TestAction, Assembly-CSharp
+      Data: 5|DeepAction.AffectAttributeAction, Assembly-CSharp
     - Name: behavior
       Entry: 6
       Data: 
+    - Name: modifier
+      Entry: 7
+      Data: 6|DeepAction.DeepAttributeModifier, Assembly-CSharp
+    - Name: baseAdd
+      Entry: 4
+      Data: 0
+    - Name: multiplier
+      Entry: 4
+      Data: 8.8
+    - Name: postAdd
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attributeToModify
+      Entry: 3
+      Data: 0
+    - Name: mod
+      Entry: 6
+      Data: 
+    - Name: random
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -101,7 +125,7 @@ MonoBehaviour:
       Data: 
     - Name: events
       Entry: 7
-      Data: 6|DeepAction.DeepBehavior+Events, Assembly-CSharp
+      Data: 7|DeepAction.DeepBehavior+Events, Assembly-CSharp
     - Name: Trigger
       Entry: 6
       Data: 
