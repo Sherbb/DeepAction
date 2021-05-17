@@ -174,6 +174,8 @@ namespace DeepAction
         //overrideBaseValue REPLACES baseValue
 
         //overridePostValue REPLACES the FINAL value. It does not get added to or multiplied at all.
+        [SuffixLabel("Source",true),HideLabel]
+        public string source = "Unknown";//exists just to help you keep track of stuff in inspectors.
 
         [HorizontalGroup("hoz"),SuffixLabel("BaseAdd",true),HideLabel]
         public float baseAdd;
@@ -181,6 +183,13 @@ namespace DeepAction
         public float multiplier;
         [HorizontalGroup("hoz"),SuffixLabel("Post Add",true),HideLabel]
         public float postAdd;
+
+        public DeepAttributeModifier()
+        {
+            this.baseAdd = 0f;
+            this.multiplier = 0f;
+            this.postAdd = 0f;
+        }
         public DeepAttributeModifier(float baseAdd,float multiplier,float postAdd)
         {
             this.baseAdd = baseAdd;
@@ -192,6 +201,7 @@ namespace DeepAction
             this.baseAdd = other.baseAdd;
             this.postAdd = other.postAdd;
             this.multiplier = other.multiplier;
+            this.source = other.source;
         }
 
     }

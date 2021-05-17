@@ -23,11 +23,58 @@ MonoBehaviour:
     SerializationNodes:
     - Name: resources
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resources, Assembly-CSharp],[DeepAction.DeepResource,
+      Data: 0|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[DeepAction.DeepResource,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resources,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resource,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 2|DeepAction.DeepResource, Assembly-CSharp
+    - Name: value
+      Entry: 4
+      Data: 3
+    - Name: baseMax
+      Entry: 4
+      Data: 3
+    - Name: currentMaxValue
+      Entry: 4
+      Data: 3
+    - Name: baseFlatRegen
+      Entry: 4
+      Data: 0
+    - Name: basePercentRegen
+      Entry: 4
+      Data: 0
+    - Name: currentRegen
+      Entry: 4
+      Data: 0
+    - Name: attributeMaxValueAdd
+      Entry: 7
+      Data: 3|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 4|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -41,6 +88,109 @@ MonoBehaviour:
     - Name: 
       Entry: 12
       Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attributeMaxValueMultiply
+      Entry: 7
+      Data: 5|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 4
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 4
+      Data: 0.1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attributeFlatRegen
+      Entry: 7
+      Data: 6|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 4
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attributePercentRegen
+      Entry: 7
+      Data: 7|UnityEngine.Rendering.SerializedDictionary`2[[DeepAction.D_Attribute,
+        Assembly-CSharp],[System.Single, mscorlib]], Unity.RenderPipelines.Core.Runtime
+    - Name: comparer
+      Entry: 7
+      Data: 8|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: parentEntity
+      Entry: 6
+      Data: 
+    - Name: barColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 0.30400002
+    - Name: 
+      Entry: 4
+      Data: 0.30400002
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -49,11 +199,11 @@ MonoBehaviour:
       Data: 
     - Name: attributes
       Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[DeepAction.DeepAttribute,
+      Data: 9|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[DeepAction.DeepAttribute,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
+      Data: 10|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -66,7 +216,97 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
       Data: 0
+    - Name: $v
+      Entry: 7
+      Data: 11|DeepAction.DeepAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 1
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: overrideToMax
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 12|DeepAction.DeepAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 2
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: overrideToMax
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 13|DeepAction.DeepAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 3
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: overrideToMax
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -75,11 +315,109 @@ MonoBehaviour:
       Data: 
     - Name: behaviors
       Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
+      Data: 14|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 15|DeepAction.DeepBehavior, Assembly-CSharp
+    - Name: behaviorID
+      Entry: 1
+      Data: Example
+    - Name: notes
+      Entry: 1
+      Data: 
+    - Name: resourcesToTrigger
+      Entry: 7
+      Data: 16|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
       Data: 0
+    - Name: $v
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: actions
+      Entry: 7
+      Data: 17|System.Collections.Generic.List`1[[DeepAction.DeepAction, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 18|DeepAction.AffectAttributeAction, Assembly-CSharp
+    - Name: behavior
+      Entry: 6
+      Data: 
+    - Name: modifier
+      Entry: 7
+      Data: 19|DeepAction.DeepAttributeModifier, Assembly-CSharp
+    - Name: source
+      Entry: 1
+      Data: AffectAttributeAction
+    - Name: baseAdd
+      Entry: 4
+      Data: 0
+    - Name: multiplier
+      Entry: 4
+      Data: 15.5
+    - Name: postAdd
+      Entry: 4
+      Data: 15
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: attributeToModify
+      Entry: 3
+      Data: 0
+    - Name: mod
+      Entry: 6
+      Data: 
+    - Name: random
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: parent
+      Entry: 6
+      Data: 
+    - Name: behaviorTarget
+      Entry: 6
+      Data: 
+    - Name: events
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
