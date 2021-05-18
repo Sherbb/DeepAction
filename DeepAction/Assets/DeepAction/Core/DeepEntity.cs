@@ -26,26 +26,26 @@ namespace DeepAction
         ///structures
         [OnInspectorGUI("InspectorValidate")]
 
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
         [Title("Deep Entity", "Deep Action by @AlanSherba", TitleAlignments.Centered)]
-
         public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
 
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
         [Title("Attributes", "", TitleAlignments.Centered)]
-
         public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
-        [Title("Behaviors", "", TitleAlignments.Centered)]
-
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
+        [Title("Behaviors", "", TitleAlignments.Centered),ListDrawerSettings(NumberOfItemsPerPage = 1)]
         [System.NonSerialized, OdinSerialize]
         public List<DeepBehavior> behaviors = new List<DeepBehavior>();
 
         [Title("Preset", "Determines where the entity will pull its start values from", TitleAlignments.Centered)]
-        public enum EntityPresetType { UseInsepctor, PresetObject, None }
+        public enum EntityPresetType { UseInspector, PresetObject, CompositeObjects, None }
         [EnumToggleButtons, HideLabel]
         [InfoBox("$EnumExplanation", InfoMessageType.None), HideInPlayMode]
-        public EntityPresetType presetType = EntityPresetType.UseInsepctor;
+        public EntityPresetType presetType = EntityPresetType.UseInspector;
 
-        [ShowIf("presetType", EntityPresetType.PresetObject),HideInPlayMode]
+        [ShowIf("@presetType == EntityPresetType.PresetObject &&  !UnityEngine.Application.isPlaying"),InlineEditor]
         public DeepEntityPreset preset;
 
         private Dictionary<D_Resource, DeepResource> inspectorResources = new Dictionary<D_Resource, DeepResource>();
@@ -54,7 +54,7 @@ namespace DeepAction
 
         private void Awake()
         {
-            if (presetType == EntityPresetType.UseInsepctor)
+            if (presetType == EntityPresetType.UseInspector)
             {
                 //because we sometimes Reset entities we need to save their orginal data if we are using the inspector preset type.
                 inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>(attributes);
@@ -68,7 +68,7 @@ namespace DeepAction
         {
             switch (presetType)
             {
-                case EntityPresetType.UseInsepctor:
+                case EntityPresetType.UseInspector:
                     attributes = new Dictionary<D_Attribute, DeepAttribute>(inspectorAttributes);
                     foreach (D_Attribute key in inspectorAttributes.Keys)
                     {
@@ -138,6 +138,22 @@ namespace DeepAction
             return b;
         }
 
+        /// <summary>
+        /// Removes the behavior from the entity and calls DestroyAction() on all actions.
+        /// Remember that the object won't actually be destroyed if you are still holding a reference to it somewhere.
+        /// </summary>
+        /// <returns>Returns true if the enity had the behavior</returns>
+        public bool RemoveBehavior(DeepBehavior behavior)
+        {
+            if (!behaviors.Contains(behavior))
+            {
+                return false;
+            }
+
+            behavior.RemoveBehavior();
+            behaviors.Remove(behavior);
+            return true;
+        }
 
         //End Maintanance stuff.
 
@@ -224,10 +240,12 @@ namespace DeepAction
         {
             switch (presetType)
             {
-                case EntityPresetType.UseInsepctor:
+                case EntityPresetType.UseInspector:
                     return "Will use the values that are saved in this inspector.";
                 case EntityPresetType.PresetObject:
                     return "Will use the values in the supplied object.";
+                case EntityPresetType.CompositeObjects:
+                    return "Will use the multiple supplied objects to build the preset.";
                 case EntityPresetType.None:
                     return "Entity values will be wiped on start.";
                 default:

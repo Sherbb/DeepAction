@@ -29,7 +29,7 @@ namespace DeepAction
         [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector,ReadOnly]
         private List<DeepAttributeModifier> modifiers = new List<DeepAttributeModifier>();
 
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers")]
+        [BoxGroup("Active Modifiers"), ShowIf("showModifiers")][Tooltip("If true the HIGHEST override will be chosen.")]
         public bool overrideToMax;//if true we will pick the largest override value.
 
         [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector,ReadOnly]

@@ -87,6 +87,15 @@ namespace DeepAction
             }
         }
 
+        
+        public void RemoveBehavior()
+        {
+            foreach(DeepAction a in actions)
+            {
+                a.DestroyAction();
+            }
+        }
+
         public virtual DeepBehavior Clone()
         {
             DeepBehavior newB = (DeepBehavior)this.MemberwiseClone();

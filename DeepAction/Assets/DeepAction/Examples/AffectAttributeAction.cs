@@ -9,23 +9,32 @@ namespace DeepAction
         public DeepAttributeModifier modifier = new DeepAttributeModifier();
         public D_Attribute attributeToModify;
 
-        public DeepAttributeModifier mod;
-
-        public bool random;
+        [HideInEditorMode,ReadOnly]
+        public DeepAttributeModifier activeModifier;
 
         public override void IntitializeAction()
         {
             if (behavior.parent.attributes.ContainsKey(attributeToModify))
             {
-                mod = behavior.parent.attributes[attributeToModify].AddModifier(new DeepAttributeModifier(modifier));
-                mod.source += "/" + behavior.behaviorID + "/" + behavior.parent.name;//if would be nice if we could do this automatically...ohwell
+                activeModifier = behavior.parent.attributes[attributeToModify].AddModifier(new DeepAttributeModifier(modifier));
+                activeModifier.source += "/" + behavior.behaviorID + "/" + behavior.parent.name;//it would be nice if we could do this automatically...ohwell
             }
-            behavior.events.Update += Update;
+            else
+            {
+                activeModifier = null;
+            }
         }
 
-        private void Update()
+        public override void DestroyAction()
         {
-            if(random) mod.multiplier = Random.Range(0f,1f);
+            if (activeModifier != null)
+            {
+                if (behavior.parent.attributes.ContainsKey(attributeToModify))
+                {
+                    behavior.parent.attributes[attributeToModify].RemoveModifer(activeModifier);
+                }
+            }
+            activeModifier = null;
         }
     }
 }

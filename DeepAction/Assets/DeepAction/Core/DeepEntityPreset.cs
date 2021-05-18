@@ -15,7 +15,7 @@ namespace DeepAction
         [Title("Attributes", "", TitleAlignments.Centered)]
         public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
-        [Title("Behaviors", "", TitleAlignments.Centered)]
+        [Title("Behaviors", "", TitleAlignments.Centered),ListDrawerSettings(NumberOfItemsPerPage = 1)]
         [System.NonSerialized, OdinSerialize]
         public List<DeepBehavior> behaviors = new List<DeepBehavior>();
     }
