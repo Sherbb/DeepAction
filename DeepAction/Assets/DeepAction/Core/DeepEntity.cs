@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using System;
+
 namespace DeepAction
 {
     public class DeepEntity : SerializedMonoBehaviour, IHit
@@ -27,13 +29,30 @@ namespace DeepAction
         [OnInspectorGUI("InspectorValidate")]//prolly remove this
 
 
-        [Title("Preset", "Determines where the entity will pull its start values from", TitleAlignments.Centered)]
+        //[Title("Preset", "Determines where the entity will pull its start values from", TitleAlignments.Centered)]
+        [BoxGroup("Settings")]
+        public OnDeathBehavior deathBehavior = OnDeathBehavior.Destroy;
+        public enum OnDeathBehavior{Disable,Destroy,Nothing}
+        [HideInInspector]
+        public Action OnDeath;
+
+        public enum InitializeOnEnable {Always, AfterDeath, Never}
+        
+        [HorizontalGroup("Settings/hoz")][Tooltip("AfterDeath = After being intialized once, the entity must DIE to be initialized on enable again.")]
+        public InitializeOnEnable onEnableInitialize = InitializeOnEnable.AfterDeath;
+        [HorizontalGroup("Settings/hoz")][ToggleLeft][Tooltip("This will completly reset all resources, attributes, and behaviors. This will create a lot of garbage! If you code your behaviors nicely you usually won't need this. Entities will always pull from preset on AWAKE.")]
+        public bool applyPreset = false;
+        private bool hasDied;//used to track for after death
+        [BoxGroup("Settings")]//[Title("Preset Type","Determines where the entity will draw its default values from")]
         public enum EntityPresetType { UseInspector, PresetObject, CompositeObjects, None }
-        [EnumToggleButtons, HideLabel]
-        [InfoBox("$EnumExplanation", InfoMessageType.None), HideInPlayMode]
+        [BoxGroup("Settings")][Tooltip("Determines where the entity will draw its default values from")]
+        /*[InfoBox("$EnumExplanation", InfoMessageType.None)]*/[ HideInPlayMode]
         public EntityPresetType presetType = EntityPresetType.UseInspector;
+        [BoxGroup("Settings")]
         [ShowIf("@presetType == EntityPresetType.PresetObject &&  !UnityEngine.Application.isPlaying"),InlineEditor]
         public DeepEntityPreset preset;
+
+
 
 
         [Space]
@@ -41,7 +60,7 @@ namespace DeepAction
         [Title("Resources", "", TitleAlignments.Centered)]
         public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
         [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Tooltip("The order in which resources will be drained when the enity takes damage. Starting from the top, and working down. If all resources are drained the entity will Die()")]
+        [Tooltip("The order in which resources will be drained when the enity takes damage. Starting from the top, and working down. If the bottom resources in the heirarchy is drained, the entity will Die()")]
         public D_Resource[] damageHeirarchy;
 
         [Space]
@@ -79,10 +98,24 @@ namespace DeepAction
                 inspectorBehaviors = new List<DeepBehavior>(behaviors);
                 inspectorDamageHeirarchy = (D_Resource[])damageHeirarchy.Clone();
             }
-            ApplyDefaultValues();
+            InitializeEntity(true);
         }
 
-        public void ApplyDefaultValues()
+        public void InitializeEntity(bool doPresetApply)
+        {
+            if (doPresetApply)
+            {
+                ApplyPreset();
+            }
+            foreach(DeepResource res in resources.Values)
+            {
+                res.parentEntity = this;
+                res.SetValueWithRatio(res.defaultRatio);
+            }
+            hasDied = false;
+        }
+
+        public void ApplyPreset()
         {
             switch (presetType)
             {
@@ -142,10 +175,6 @@ namespace DeepAction
                     break;
             }
 
-            foreach(DeepResource res in resources.Values)
-            {
-                res.parentEntity = this;
-            }
 
         }
 
@@ -237,9 +266,30 @@ namespace DeepAction
 
         public void Die()
         {
-            Debug.Log("OOOOOOOOOOOOOFFFFF");
+            OnDeath?.Invoke();
 
-            //blek
+            foreach (DeepBehavior b in behaviors)
+            {
+                b.events.OnEntityDie?.Invoke();
+            }
+
+            hasDied = true;
+
+            switch (deathBehavior)
+            {
+                case OnDeathBehavior.Disable:
+                    gameObject.SetActive(false);
+                    break;
+                case OnDeathBehavior.Destroy:
+                    Destroy(gameObject);
+                    break;
+                case OnDeathBehavior.Nothing:
+                    //uhh
+                    break;
+            }
+
+
+
         }
 
         //standard unity stuff
@@ -250,6 +300,13 @@ namespace DeepAction
             {
                 res.Tick();
             }
+            if (resources[damageHeirarchy[damageHeirarchy.Length-1]].GetValue() <= 0)
+            {
+                //resources can have - regen. 
+                //So if your hp has negative regen we wanna see if you died here
+                Die();
+            }
+
 
             foreach (DeepBehavior b in behaviors)
             {
@@ -272,6 +329,23 @@ namespace DeepAction
         }
         private void OnEnable()
         {
+            switch (onEnableInitialize)
+            {
+                case InitializeOnEnable.Always:
+                    InitializeEntity(applyPreset);
+                    break;
+                case InitializeOnEnable.AfterDeath:
+                    if (hasDied)
+                    {
+                        InitializeEntity(applyPreset);
+                    }
+                    break;
+                case InitializeOnEnable.Never:
+                    //nope
+                    break;
+            }
+
+
             foreach (DeepBehavior b in behaviors)
             {
                 b.events.OnEntityEnable?.Invoke();

@@ -32,7 +32,7 @@ namespace DeepAction
         public float baseFlatRegen; // 1 = +1 per second
         [ShowIf("showSettings")]
         [SuffixLabel("%/s",true)][BoxGroup("Regen"),OnValueChanged("UpdateValues")]
-        public float basePercentRegen; // .1 = +1% per second
+        public float basePercentRegen; // .01 = +1% per second
         [ShowIf("showSettings")]
         [SuffixLabel("num/s",true)][BoxGroup("Regen"),ReadOnly]
         public float currentRegen;//
@@ -55,8 +55,11 @@ namespace DeepAction
         public DeepEntity parentEntity;
 
         [ShowIf("showSettings")]
-        [BoxGroup("Visual")]
+        [BoxGroup("Other")]
         public Color barColor = Color.white;
+        [ShowIf("showSettings")]
+        [BoxGroup("Other")][Tooltip("What % the resources will be filled when an entity is initialized. 1 = full")]
+        public float defaultRatio = 1f;
 
 
         //temp variables
@@ -80,7 +83,6 @@ namespace DeepAction
             return value = Mathf.Clamp(value + currentRegen * Time.deltaTime,0f,currentMaxValue);
         }
 
-        //Currently this only gets called ONGUI, and on Tick()
         public void UpdateValues()
         {
             UpdateMaxValue();//should prolly inline these
@@ -107,7 +109,7 @@ namespace DeepAction
                 }
             }
 
-            currentMaxValue = Mathf.Clamp(currentMaxValue,0f,Mathf.Infinity);
+            currentMaxValue = Mathf.Clamp(currentMaxValue,1f,Mathf.Infinity);
             value = Mathf.Clamp(ratio * currentMaxValue,0f,currentMaxValue);
         }
 
@@ -172,6 +174,17 @@ namespace DeepAction
             value -= take;
 
             return f - take;
+        }
+
+        public float SetValueWithRatio(float r, bool update = false)
+        {
+            if (update)
+            {
+                UpdateValues();
+            }
+
+            value = currentMaxValue * Mathf.Clamp(r,0f,1f);
+            return value;
         }
 
         public DeepResource Clone()
