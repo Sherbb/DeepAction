@@ -43,7 +43,9 @@ namespace DeepAction
             public Action LateUpdate;
 
             public Action<float>OnTakeDamage;
+            public ActionRef<float>OnTakeDamageRef;
             public Action<float>OnDealDamage;
+            
         }
 
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
@@ -121,4 +123,10 @@ namespace DeepAction
             return q;
         }
     }
+
+    //lets us have an action with a ref.
+    //
+    //for example we can give OnTakeDamage a REF float allowing behaviors to modify incoming damage before it is applied.
+
+    public delegate void ActionRef<T>(ref T item);
 }

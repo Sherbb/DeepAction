@@ -24,33 +24,50 @@ namespace DeepAction
         ///ability projectiles
         ///enemies
         ///structures
-        [OnInspectorGUI("InspectorValidate")]
+        [OnInspectorGUI("InspectorValidate")]//prolly remove this
 
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Title("Deep Entity", "Deep Action by @AlanSherba", TitleAlignments.Centered)]
-        public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
-
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Title("Attributes", "", TitleAlignments.Centered)]
-        public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
-
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Title("Behaviors", "", TitleAlignments.Centered),ListDrawerSettings(NumberOfItemsPerPage = 1)]
-        [System.NonSerialized, OdinSerialize]
-        public List<DeepBehavior> behaviors = new List<DeepBehavior>();
 
         [Title("Preset", "Determines where the entity will pull its start values from", TitleAlignments.Centered)]
         public enum EntityPresetType { UseInspector, PresetObject, CompositeObjects, None }
         [EnumToggleButtons, HideLabel]
         [InfoBox("$EnumExplanation", InfoMessageType.None), HideInPlayMode]
         public EntityPresetType presetType = EntityPresetType.UseInspector;
-
         [ShowIf("@presetType == EntityPresetType.PresetObject &&  !UnityEngine.Application.isPlaying"),InlineEditor]
         public DeepEntityPreset preset;
 
+
+        [Space]
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
+        [Title("Resources", "", TitleAlignments.Centered)]
+        public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
+        [Tooltip("The order in which resources will be drained when the enity takes damage. Starting from the top, and working down. If all resources are drained the entity will Die()")]
+        public D_Resource[] damageHeirarchy;
+
+        [Space]
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
+        [Title("Attributes", "", TitleAlignments.Centered)]
+        public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
+
+        [Space]
+        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
+        [Title("Behaviors", "", TitleAlignments.Centered),ListDrawerSettings(NumberOfItemsPerPage = 1)]
+        [System.NonSerialized, OdinSerialize]
+        public List<DeepBehavior> behaviors = new List<DeepBehavior>();
+
+        #region inspectorPreset
         private Dictionary<D_Resource, DeepResource> inspectorResources = new Dictionary<D_Resource, DeepResource>();
         private Dictionary<D_Attribute, DeepAttribute> inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>();
         private List<DeepBehavior> inspectorBehaviors = new List<DeepBehavior>();
+        private D_Resource[] inspectorDamageHeirarchy;
+        #endregion
+
+
+        //other
+        
+
+
+
 
         private void Awake()
         {
@@ -60,6 +77,7 @@ namespace DeepAction
                 inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>(attributes);
                 inspectorResources = new Dictionary<D_Resource, DeepResource>(resources);
                 inspectorBehaviors = new List<DeepBehavior>(behaviors);
+                inspectorDamageHeirarchy = (D_Resource[])damageHeirarchy.Clone();
             }
             ApplyDefaultValues();
         }
@@ -84,6 +102,7 @@ namespace DeepAction
                     {
                         AddBehavior(b);
                     }
+                    damageHeirarchy = inspectorDamageHeirarchy;
                     break;
                 case EntityPresetType.PresetObject:
                     if (preset != null)
@@ -103,18 +122,21 @@ namespace DeepAction
                         {
                             AddBehavior(b);
                         }
+                        damageHeirarchy = preset.damageHeirarchy;
                     }
                     else
                     {
                         attributes = new Dictionary<D_Attribute, DeepAttribute>();
                         resources = new Dictionary<D_Resource, DeepResource>();
                         behaviors = new List<DeepBehavior>();
+                        damageHeirarchy = new D_Resource[0];
                     }
                     break;
                 case EntityPresetType.None:
                     attributes = new Dictionary<D_Attribute, DeepAttribute>();
                     resources = new Dictionary<D_Resource, DeepResource>();
                     behaviors = new List<DeepBehavior>();
+                    damageHeirarchy = new D_Resource[0];
                     break;
                 default:
                     break;
@@ -186,10 +208,38 @@ namespace DeepAction
 
         public void Hit(float damage)
         {
+            float d = damage;
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.OnTakeDamage?.Invoke(damage);
+                b.events.OnTakeDamage?.Invoke(d);
+                b.events.OnTakeDamageRef?.Invoke(ref d);
             }
+
+            if (damageHeirarchy.Length == 0)
+            {
+                Die();
+            }
+
+            for (int i = 0; i < damageHeirarchy.Length; i++)
+            {
+                d = resources[damageHeirarchy[i]].ConsumeWithRemainder(d);
+                if (d <= 0f)
+                {
+                    break;
+                }
+            }
+
+            if (resources[damageHeirarchy[damageHeirarchy.Length-1]].GetValue() <= 0)
+            {
+                Die();
+            }
+        }
+
+        public void Die()
+        {
+            Debug.Log("OOOOOOOOOOOOOFFFFF");
+
+            //blek
         }
 
         //standard unity stuff

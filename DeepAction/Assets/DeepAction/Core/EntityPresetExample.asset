@@ -187,10 +187,10 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 4
-      Data: 0.30400002
+      Data: 0.3537736
     - Name: 
       Entry: 4
-      Data: 0.30400002
+      Data: 0.3537736
     - Name: 
       Entry: 4
       Data: 1
@@ -544,7 +544,7 @@ MonoBehaviour:
       Data: 23|DeepAction.DeepAttribute, Assembly-CSharp
     - Name: baseValue
       Entry: 4
-      Data: 1
+      Data: 0
     - Name: clamp
       Entry: 5
       Data: false
@@ -574,7 +574,7 @@ MonoBehaviour:
       Data: 24|DeepAction.DeepAttribute, Assembly-CSharp
     - Name: baseValue
       Entry: 4
-      Data: 1
+      Data: 0
     - Name: clamp
       Entry: 5
       Data: false
@@ -604,7 +604,7 @@ MonoBehaviour:
       Data: 25|DeepAction.DeepAttribute, Assembly-CSharp
     - Name: baseValue
       Entry: 4
-      Data: 1
+      Data: 0
     - Name: clamp
       Entry: 5
       Data: false
@@ -635,26 +635,6 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 27|DeepAction.DeepBehavior, Assembly-CSharp
-    - Name: behaviorID
-      Entry: 1
-      Data: Example
-    - Name: notes
-      Entry: 1
-      Data: 
-    - Name: resourcesToTrigger
-      Entry: 7
-      Data: 28|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 29|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resource,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
       Data: 0
     - Name: 
       Entry: 13
@@ -662,145 +642,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: actions
-      Entry: 7
-      Data: 30|System.Collections.Generic.List`1[[DeepAction.DeepAction, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 31|DeepAction.AffectAttributeAction, Assembly-CSharp
-    - Name: behavior
-      Entry: 6
-      Data: 
-    - Name: modifier
-      Entry: 7
-      Data: 32|DeepAction.DeepAttributeModifier, Assembly-CSharp
-    - Name: source
-      Entry: 1
-      Data: ExampleAffect
-    - Name: baseAdd
-      Entry: 4
-      Data: 1
-    - Name: multiplier
-      Entry: 4
-      Data: 1
-    - Name: postAdd
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attributeToModify
-      Entry: 3
-      Data: 0
-    - Name: activeModifier
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: parent
-      Entry: 6
-      Data: 
-    - Name: behaviorTarget
-      Entry: 6
-      Data: 
-    - Name: events
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 33|DeepAction.DeepBehavior, Assembly-CSharp
-    - Name: behaviorID
-      Entry: 1
-      Data: NOTSET
-    - Name: notes
-      Entry: 1
-      Data: 
-    - Name: resourcesToTrigger
-      Entry: 7
-      Data: 34|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 35|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Resource,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: actions
-      Entry: 7
-      Data: 36|System.Collections.Generic.List`1[[DeepAction.DeepAction, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 37|DeepAction.TestAction, Assembly-CSharp
-    - Name: behavior
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: parent
-      Entry: 6
-      Data: 
-    - Name: behaviorTarget
-      Entry: 6
-      Data: 
-    - Name: events
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+  damageHeirarchy: 00000000

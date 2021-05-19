@@ -160,6 +160,20 @@ namespace DeepAction
             }
         }
 
+        public float ConsumeWithRemainder(float f, bool update = false)
+        {
+            if (update)
+            {
+                UpdateValues();
+            }
+
+            float take = Mathf.Clamp(f,0f,value);
+
+            value -= take;
+
+            return f - take;
+        }
+
         public DeepResource Clone()
         {
             DeepResource newR = (DeepResource)this.MemberwiseClone();

@@ -9,6 +9,15 @@ namespace DeepAction
     {
         Strength,
         Dexterity,
-        Inteligence
+        Inteligence,
+
+
+
+
+        placeHolder1 = 100,
+
+        placeHolder2,
+
+
     }
 }
