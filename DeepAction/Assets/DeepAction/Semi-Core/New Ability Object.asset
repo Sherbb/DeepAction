@@ -24,12 +24,18 @@ MonoBehaviour:
     - Name: ability
       Entry: 7
       Data: 0|DeepAction.Ability, Assembly-CSharp
+    - Name: abilityName
+      Entry: 1
+      Data: ExampleAbility
+    - Name: baseAbilityCooldown
+      Entry: 4
+      Data: 3
     - Name: behavior
       Entry: 7
       Data: 1|DeepAction.DeepBehavior, Assembly-CSharp
     - Name: behaviorID
       Entry: 1
-      Data: TestAbility
+      Data: ExampleAbilityBehavior
     - Name: notes
       Entry: 1
       Data: 
@@ -87,6 +93,9 @@ MonoBehaviour:
     - Name: modifier
       Entry: 7
       Data: 6|DeepAction.DeepAttributeModifier, Assembly-CSharp
+    - Name: source
+      Entry: 6
+      Data: 
     - Name: baseAdd
       Entry: 4
       Data: 0
@@ -102,12 +111,9 @@ MonoBehaviour:
     - Name: attributeToModify
       Entry: 3
       Data: 0
-    - Name: mod
+    - Name: activeModifier
       Entry: 6
       Data: 
-    - Name: random
-      Entry: 5
-      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -148,6 +154,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: OnTakeDamage
+      Entry: 6
+      Data: 
+    - Name: OnTakeDamageRef
       Entry: 6
       Data: 
     - Name: OnDealDamage

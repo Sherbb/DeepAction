@@ -181,6 +181,8 @@ GameObject:
   m_Component:
   - component: {fileID: 845308495}
   - component: {fileID: 845308496}
+  - component: {fileID: 845308493}
+  - component: {fileID: 845308492}
   m_Layer: 0
   m_Name: ENTITY
   m_TagString: Untagged
@@ -188,6 +190,38 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &845308492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845308491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94a1b009b0d4c242ba2cdeb3327e113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityObject: {fileID: 11400000, guid: 650520c74d0486a45a403c843b5c73a3, type: 2}
+--- !u!114 &845308493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845308491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ad4418a56c8ea49ae5f5240eb2f7da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: asdf
+  abilityRef: {fileID: 11400000, guid: 650520c74d0486a45a403c843b5c73a3, type: 2}
+  activeSave:
+    behaviorID: TestAbility
+    notes: 
+    parent: {fileID: 0}
+    behaviorTarget: {fileID: 0}
 --- !u!4 &845308495
 Transform:
   m_ObjectHideFlags: 0
@@ -217,13 +251,15 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 845308496}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
+    - Name: OnDeath
+      Entry: 6
+      Data: 
     - Name: resources
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[DeepAction.D_Resource, Assembly-CSharp],[DeepAction.DeepResource,
@@ -243,135 +279,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
       Data: 0
-    - Name: $v
-      Entry: 7
-      Data: 2|DeepAction.DeepResource, Assembly-CSharp
-    - Name: value
-      Entry: 4
-      Data: 1
-    - Name: baseMax
-      Entry: 4
-      Data: 1
-    - Name: currentMaxValue
-      Entry: 4
-      Data: 1
-    - Name: baseFlatRegen
-      Entry: 4
-      Data: 0
-    - Name: basePercentRegen
-      Entry: 4
-      Data: 0
-    - Name: currentRegen
-      Entry: 4
-      Data: 0
-    - Name: attributeMaxValueAdd
-      Entry: 7
-      Data: 3|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 4|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attributeMaxValueMultiply
-      Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 9
-      Data: 4
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attributeFlatRegen
-      Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 9
-      Data: 4
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: attributePercentRegen
-      Entry: 7
-      Data: 7|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[System.Single,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 9
-      Data: 4
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: parentEntity
-      Entry: 10
-      Data: 0
-    - Name: barColor
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 0.2216981
-    - Name: 
-      Entry: 4
-      Data: 0.2216981
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -380,11 +288,11 @@ MonoBehaviour:
       Data: 
     - Name: attributes
       Entry: 7
-      Data: 8|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[DeepAction.DeepAttribute,
+      Data: 2|System.Collections.Generic.Dictionary`2[[DeepAction.D_Attribute, Assembly-CSharp],[DeepAction.DeepAttribute,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 9|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
+      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[DeepAction.D_Attribute,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -406,7 +314,7 @@ MonoBehaviour:
       Data: 
     - Name: behaviors
       Entry: 7
-      Data: 10|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
+      Data: 4|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -417,7 +325,10 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  presetType: 0
+  deathBehavior: 0
+  onEnableInitialize: 1
+  applyPreset: 0
+  presetType: 1
   preset: {fileID: 11400000, guid: c961c139eb179e14084b5a4d39290e1f, type: 2}
   damageHeirarchy: 
 --- !u!1 &988282955

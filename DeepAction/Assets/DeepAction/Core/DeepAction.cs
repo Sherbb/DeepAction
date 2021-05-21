@@ -8,7 +8,7 @@ namespace DeepAction
     [HideReferenceObjectPicker]
     public abstract class DeepAction
     {
-        [HideInInspector]//mommy
+        [HideInInspector][Newtonsoft.Json.JsonIgnore]//mommy
         public DeepBehavior behavior;
 
         /// <summary>

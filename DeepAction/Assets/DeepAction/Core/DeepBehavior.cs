@@ -5,6 +5,8 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using System.Linq;
+using Newtonsoft.Json;
+
 namespace DeepAction
 {
     [System.Serializable][HideReferenceObjectPicker]
@@ -23,11 +25,11 @@ namespace DeepAction
         public List<DeepAction> actions = new List<DeepAction>();
 
 
-        [HideInInspector]
+        [HideInInspector][JsonIgnore]
         public DeepEntity parent;
-        [HideInInspector]
+        [HideInInspector][JsonIgnore]
         public DeepEntity behaviorTarget;   //a target that a behavior HOLDS. this is NOT the same as the target that gets passed in Trigger()
-        [HideInInspector]
+        [HideInInspector][JsonIgnore]
         public Events events;
 
         public class Events

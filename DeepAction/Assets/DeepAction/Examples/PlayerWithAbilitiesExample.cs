@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 namespace DeepAction
 {
     [RequireComponent(typeof(DeepEntity))]
@@ -8,8 +10,8 @@ namespace DeepAction
     {
         public AbilityObject abilityObject;
         private DeepEntity actionEntity;
-
-        public DeepBehavior ability1;
+        [ShowInInspector,ReadOnly]
+        private DeepBehavior ability1;
 
         private void Start()
         {

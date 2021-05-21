@@ -9,7 +9,7 @@ namespace DeepAction
         public DeepAttributeModifier modifier = new DeepAttributeModifier();
         public D_Attribute attributeToModify;
 
-        [HideInEditorMode,ReadOnly]
+        [HideInEditorMode,ReadOnly][Newtonsoft.Json.JsonIgnore]
         public DeepAttributeModifier activeModifier;
 
         public override void IntitializeAction()
