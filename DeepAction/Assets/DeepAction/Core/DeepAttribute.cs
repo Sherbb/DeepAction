@@ -171,9 +171,6 @@ namespace DeepAction
     {
         //BaseValue + baseAdd * multiplier + postAdd
 
-        //overrideBaseValue REPLACES baseValue
-
-        //overridePostValue REPLACES the FINAL value. It does not get added to or multiplied at all.
         [SuffixLabel("Source",true),HideLabel][Newtonsoft.Json.JsonIgnore]
         public string source = "Unknown";//exists just to help you keep track of stuff in inspectors.
 

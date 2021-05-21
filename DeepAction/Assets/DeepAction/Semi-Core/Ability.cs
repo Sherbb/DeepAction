@@ -10,13 +10,14 @@ namespace DeepAction
     [System.Serializable]
     public class Ability
     {
-        public string abilityName = "what";
-        public float baseAbilityCooldown;
+
+        //unfinished
+        //
+        //An ability would have extra information that is only relevant to the player.
+        //stuff like aim method, descriptions, icons.
+
         public enum AbilityAimMethod
         {
-            rayPoint,//cast a ray. send hit point, direction, and entity if hit
-            self,//send self point, forward direction, self entity
-            noAim,
         }
 
         //[System.NonSerialized, OdinSerialize, HideReferenceObjectPicker, HideLabel]

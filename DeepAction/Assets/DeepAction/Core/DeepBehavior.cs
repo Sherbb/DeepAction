@@ -14,7 +14,7 @@ namespace DeepAction
     {
         //a behavior is just something that holds a bunch of actions.
 
-        //all behaviors on an actionEntity are in the same list. they all invoke the same events. Except:
+        //all behaviors on a deepEntity are in the same list. they all invoke the same events. Except:
         //You can trigger a particular behavior with Trigger()
         public string behaviorID = "NOTSET";
         [Tooltip("Literally just a place to leave notes about the behavior. This should NOT be used for any functionality."),SerializeField,TextArea]

@@ -7,29 +7,42 @@ using System;
 
 namespace DeepAction
 {
-    public class DeepEntity : SerializedMonoBehaviour, IHit
-    {
+
         ///An action entity has:
         ///Resources
         ///Attributes
         ///Behaviors
 
+        ///Resources are just floats with some special properties
+        ///They have a maxValue, regen, and can be driven by attributes.
+
+        ///Attributes are floats that can have modifiers applied to them
+        ///use them to drive other scripts
+
+        ///Behaviors are blocks of data that execute code depending on the deepEntities state.
         ///Behaviors can be:
         ///Abilities
         ///Status Effects
         ///Modifiers
         ///Whatever you can imagine
+        ///
+        ///Behaviors are made up of DeepActions, small classes that do whatever you want....
 
-        ///An action entity is:
+
+        ///A DeepEntity is:
         ///
         ///the player
         ///ability projectiles
         ///enemies
         ///structures
+        ///Anything that you want to use behaviors on
+
+    public class DeepEntity : SerializedMonoBehaviour, IHit
+    {
+
         [OnInspectorGUI("InspectorValidate")]//prolly remove this
 
 
-        //[Title("Preset", "Determines where the entity will pull its start values from", TitleAlignments.Centered)]
         [BoxGroup("Settings")]
         public OnDeathBehavior deathBehavior = OnDeathBehavior.Destroy;
         public enum OnDeathBehavior{Disable,Destroy,Nothing}
@@ -54,20 +67,24 @@ namespace DeepAction
 
 
 
-
+        //Resources
         [Space]
         [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
         [Title("Resources", "", TitleAlignments.Centered)]
         public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
+
+        //Damage heirarchy
         [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
         [Tooltip("The order in which resources will be drained when the enity takes damage. Starting from the top, and working down. If the bottom resources in the heirarchy is drained, the entity will Die()")]
         public D_Resource[] damageHeirarchy;
 
+        //Attributes
         [Space]
         [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
         [Title("Attributes", "", TitleAlignments.Centered)]
         public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
+        //Behaviors
         [Space]
         [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
         [Title("Behaviors", "", TitleAlignments.Centered),ListDrawerSettings(NumberOfItemsPerPage = 1)]
@@ -137,6 +154,7 @@ namespace DeepAction
                     }
                     damageHeirarchy = inspectorDamageHeirarchy;
                     break;
+
                 case EntityPresetType.PresetObject:
                     if (preset != null)
                     {
@@ -165,6 +183,7 @@ namespace DeepAction
                         damageHeirarchy = new D_Resource[0];
                     }
                     break;
+
                 case EntityPresetType.None:
                     attributes = new Dictionary<D_Attribute, DeepAttribute>();
                     resources = new Dictionary<D_Resource, DeepResource>();
