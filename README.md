@@ -1,3 +1,6 @@
+Status:
+Right now im using this system in another project with lots of changes. I'll update THIS repo with all the lessons learned from then when im done.
+
 # DeepAction
 A platform to create ability based action games in Unity.
 This HEAVILY relies on ODIN, and can not function without it. 
