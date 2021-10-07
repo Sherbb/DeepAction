@@ -1,5 +1,21 @@
-Status:
+# Status
 Right now im using this system in another project with lots of changes. I'll update THIS repo with all the lessons learned from then when im done.
+
+IN OTHER WORDS...THIS REPO IS LIKE 4 MONTHS BEHIND AND COMPLETELY UNFINISHED.
+
+
+
+.
+
+.
+
+.
+
+.
+  
+   
+   
+
 
 # DeepAction
 A platform to create ability based action games in Unity.
