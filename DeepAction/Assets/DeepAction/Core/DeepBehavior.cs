@@ -46,14 +46,8 @@ namespace DeepAction
             return true;
         }
 
-        public void IntitializeBehavior()
-        {
-        }
-
-        
-        public void RemoveBehavior()
-        {
-        }
+        public abstract void IntitializeBehavior();
+        public abstract void DestroyBehavior();
     }
 
     //lets us have an action with a ref.

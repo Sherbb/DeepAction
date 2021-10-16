@@ -23,8 +23,8 @@ namespace DeepAction
         public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
         // * Behaviors
-        [Title("Behaviors", "", TitleAlignments.Centered), ListDrawerSettings(NumberOfItemsPerPage = 1)]
-        [Space,HideInEditorMode,System.NonSerialized, OdinSerialize]
+        [Title("Behaviors", "", TitleAlignments.Centered)]
+        [Space,HideInEditorMode]
         public List<DeepBehavior> behaviors = new List<DeepBehavior>();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,6 @@ namespace DeepAction
 
         /// <summary>
         /// Removes the behavior from the entity and calls DestroyAction() on all actions.
-        /// Remember that the object won't actually be destroyed if you are still holding a reference to it somewhere.
         /// </summary>
         /// <returns>Returns true if the enity had the behavior</returns>
         public bool RemoveBehavior(DeepBehavior behavior)
@@ -127,8 +126,6 @@ namespace DeepAction
             {
                 return false;
             }
-
-            behavior.RemoveBehavior();
             behaviors.Remove(behavior);
             return true;
         }
