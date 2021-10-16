@@ -7,124 +7,82 @@ using System;
 
 namespace DeepAction
 {
-
-        ///An action entity has:
-        ///Resources
-        ///Attributes
-        ///Behaviors
-
-        ///Resources are just floats with some special properties
-        ///They have a maxValue, regen, and can be driven by attributes.
-
-        ///Attributes are floats that can have modifiers applied to them
-        ///use them to drive other scripts
-
-        ///Behaviors are blocks of data that execute code depending on the deepEntities state.
-        ///Behaviors can be:
-        ///Abilities
-        ///Status Effects
-        ///Modifiers
-        ///Whatever you can imagine
-        ///
-        ///Behaviors are made up of DeepActions, small classes that do whatever you want....
-
-
-        ///A DeepEntity is:
-        ///
-        ///the player
-        ///ability projectiles
-        ///enemies
-        ///structures
-        ///Anything that you want to use behaviors on
-
-    public class DeepEntity : SerializedMonoBehaviour, IHit
+    public class DeepEntity : MonoBehaviour, IHit
     {
+        // * Preset
+        public DeepEntityPreset preset;
 
-        [OnInspectorGUI("InspectorValidate")]//prolly remove this
+        // * Resources
+        [Title("Resources", "", TitleAlignments.Centered)]
+        [Space,HideInEditorMode]
+        public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
 
+        // * Attributes
+        [Title("Attributes", "", TitleAlignments.Centered)]
+        [Space,HideInEditorMode]
+        public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
-        [BoxGroup("Settings")]
-        public OnDeathBehavior deathBehavior = OnDeathBehavior.Destroy;
-        public enum OnDeathBehavior{Disable,Destroy,Nothing}
+        // * Behaviors
+        [Title("Behaviors", "", TitleAlignments.Centered), ListDrawerSettings(NumberOfItemsPerPage = 1)]
+        [Space,HideInEditorMode,System.NonSerialized, OdinSerialize]
+        public List<DeepBehavior> behaviors = new List<DeepBehavior>();
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
         [HideInInspector]
         public Action OnDeath;
 
-        public enum InitializeOnEnable {Always, AfterDeath, Never}
-        
-        [HorizontalGroup("Settings/hoz")][Tooltip("AfterDeath = After being intialized once, the entity must DIE to be initialized on enable again.")]
-        public InitializeOnEnable onEnableInitialize = InitializeOnEnable.AfterDeath;
-        [HorizontalGroup("Settings/hoz")][ToggleLeft][Tooltip("This will completly reset all resources, attributes, and behaviors. This will create a lot of garbage! If you code your behaviors nicely you usually won't need this. Entities will always pull from preset on AWAKE.")]
-        public bool applyPreset = false;
+        public static readonly D_Resource[] damageHeirarchy = {D_Resource.Health};//Damage is done from left to right    This does not have to be static.        
+
         private bool hasDied;//used to track for after death
-        [BoxGroup("Settings")]//[Title("Preset Type","Determines where the entity will draw its default values from")]
-        public enum EntityPresetType { UseInspector, PresetObject, CompositeObjects, None }
-        [BoxGroup("Settings")][Tooltip("Determines where the entity will draw its default values from")]
-        /*[InfoBox("$EnumExplanation", InfoMessageType.None)]*/[ HideInPlayMode]
-        public EntityPresetType presetType = EntityPresetType.UseInspector;
-        [BoxGroup("Settings")]
-        [ShowIf("@presetType == EntityPresetType.PresetObject &&  !UnityEngine.Application.isPlaying"),InlineEditor]
-        public DeepEntityPreset preset;
 
+        public Events events;
+        public class Events
+        {//seperate class just to organize.
 
+            public Action<Vector3,Vector3,DeepEntity> Trigger;
 
-        //Resources
-        [Space]
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Title("Resources", "", TitleAlignments.Centered)]
-        public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
+            public Action OnEntityEnable;
+            public Action OnEntityDisable;
+            public Action OnEntityDie;
 
-        //Damage heirarchy
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Tooltip("The order in which resources will be drained when the enity takes damage. Starting from the top, and working down. If the bottom resources in the heirarchy is drained, the entity will Die()")]
-        public D_Resource[] damageHeirarchy;
+            public Action Update;
+            public Action FixedUpdate;
+            public Action LateUpdate;
 
-        //Attributes
-        [Space]
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Title("Attributes", "", TitleAlignments.Centered)]
-        public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
-
-        //Behaviors
-        [Space]
-        [ShowIf("@presetType == EntityPresetType.UseInspector || UnityEngine.Application.isPlaying")]
-        [Title("Behaviors", "", TitleAlignments.Centered),ListDrawerSettings(NumberOfItemsPerPage = 1)]
-        [System.NonSerialized, OdinSerialize]
-        public List<DeepBehavior> behaviors = new List<DeepBehavior>();
-
-        #region inspectorPreset
-        private Dictionary<D_Resource, DeepResource> inspectorResources = new Dictionary<D_Resource, DeepResource>();
-        private Dictionary<D_Attribute, DeepAttribute> inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>();
-        private List<DeepBehavior> inspectorBehaviors = new List<DeepBehavior>();
-        private D_Resource[] inspectorDamageHeirarchy;
-        #endregion
-
-
-        //other
-        
-
-
-
-
-        private void Awake()
-        {
-            if (presetType == EntityPresetType.UseInspector)
-            {
-                //because we sometimes Reset entities we need to save their orginal data if we are using the inspector preset type.
-                inspectorAttributes = new Dictionary<D_Attribute, DeepAttribute>(attributes);
-                inspectorResources = new Dictionary<D_Resource, DeepResource>(resources);
-                inspectorBehaviors = new List<DeepBehavior>(behaviors);
-                inspectorDamageHeirarchy = (D_Resource[])damageHeirarchy.Clone();
-            }
-            InitializeEntity(true);
+            public Action<float> OnTakeDamage;
+            public ActionRef<float> OnTakeDamageRef;
+            public Action<float> OnDealDamage;
         }
 
-        public void InitializeEntity(bool doPresetApply)
+        private void OnEnable()//having this on enable has huge implications that you may not be ok with....
         {
-            if (doPresetApply)
+            if (preset != null)
             {
-                ApplyPreset();
+                attributes = new Dictionary<D_Attribute, DeepAttribute>(preset.attributes);
+                foreach (D_Attribute key in preset.attributes.Keys)
+                {
+                    attributes[key] = attributes[key].Clone();
+                }
+                resources = new Dictionary<D_Resource, DeepResource>(preset.resources);
+                foreach (D_Resource key in preset.resources.Keys)
+                {
+                    resources[key] = resources[key].Clone();
+                }
+                behaviors = new List<DeepBehavior>();
+                foreach (DeepBehavior b in preset.behaviors)
+                {
+                    AddBehavior(b);
+                }
             }
-            foreach(DeepResource res in resources.Values)
+            else
+            {
+                
+                attributes = new Dictionary<D_Attribute, DeepAttribute>();
+                resources = new Dictionary<D_Resource, DeepResource>();
+                behaviors = new List<DeepBehavior>();
+            }
+            foreach (DeepResource res in resources.Values)
             {
                 res.parentEntity = this;
                 res.SetValueWithRatio(res.defaultRatio);
@@ -132,74 +90,24 @@ namespace DeepAction
             hasDied = false;
         }
 
-        public void ApplyPreset()
+        public DeepBehavior AddBehavior(Type T)
         {
-            switch (presetType)
+            if (T.IsAssignableFrom(typeof(DeepBehavior)))
             {
-                case EntityPresetType.UseInspector:
-                    attributes = new Dictionary<D_Attribute, DeepAttribute>(inspectorAttributes);
-                    foreach (D_Attribute key in inspectorAttributes.Keys)
-                    {
-                        attributes[key] = attributes[key].Clone();
-                    }
-                    resources = new Dictionary<D_Resource, DeepResource>(inspectorResources);
-                    foreach (D_Resource key in inspectorResources.Keys)
-                    {
-                        resources[key] = resources[key].Clone();
-                    }
-                    behaviors = new List<DeepBehavior>();
-                    foreach (DeepBehavior b in inspectorBehaviors)
-                    {
-                        AddBehavior(b);
-                    }
-                    damageHeirarchy = inspectorDamageHeirarchy;
-                    break;
-
-                case EntityPresetType.PresetObject:
-                    if (preset != null)
-                    {
-                        attributes = new Dictionary<D_Attribute, DeepAttribute>(preset.attributes);
-                        foreach (D_Attribute key in preset.attributes.Keys)
-                        {
-                            attributes[key] = attributes[key].Clone();
-                        }
-                        resources = new Dictionary<D_Resource, DeepResource>(preset.resources);
-                        foreach (D_Resource key in preset.resources.Keys)
-                        {
-                            resources[key] = resources[key].Clone();
-                        }
-                        behaviors = new List<DeepBehavior>();
-                        foreach (DeepBehavior b in preset.behaviors)
-                        {
-                            AddBehavior(b);
-                        }
-                        damageHeirarchy = preset.damageHeirarchy;
-                    }
-                    else
-                    {
-                        attributes = new Dictionary<D_Attribute, DeepAttribute>();
-                        resources = new Dictionary<D_Resource, DeepResource>();
-                        behaviors = new List<DeepBehavior>();
-                        damageHeirarchy = new D_Resource[0];
-                    }
-                    break;
-
-                case EntityPresetType.None:
-                    attributes = new Dictionary<D_Attribute, DeepAttribute>();
-                    resources = new Dictionary<D_Resource, DeepResource>();
-                    behaviors = new List<DeepBehavior>();
-                    damageHeirarchy = new D_Resource[0];
-                    break;
-                default:
-                    break;
+                DeepBehavior b = (DeepBehavior)Activator.CreateInstance(T);
+                behaviors.Add(b);
+                return b;
             }
-
-
+            else
+            {
+                Debug.LogError("Non DeepBehavior type used in AddBehavior:  " + T.ToString());
+                return null;
+            }
         }
 
         public DeepBehavior AddBehavior(DeepBehavior behavior)
         {
-            DeepBehavior b = behavior.Clone();
+            DeepBehavior b = behavior;
             b.parent = this;
             behaviors.Add(b);
 
@@ -227,10 +135,6 @@ namespace DeepAction
 
         //End Maintanance stuff.
 
-        /// <summary>
-        /// Use to get an attribute when you are ok with 0 as a null
-        /// </summary>
-        /// <returns>Returns 0 if the attribute is null</returns>
         public float GetAttributeValue(D_Attribute attribute)
         {
             if (attributes.ContainsKey(attribute))
@@ -251,16 +155,13 @@ namespace DeepAction
             return false;
         }
 
-
-        //Start behavior event stuff
-
         public void Hit(float damage)
         {
             float d = damage;
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.OnTakeDamage?.Invoke(d);
-                b.events.OnTakeDamageRef?.Invoke(ref d);
+                events.OnTakeDamage?.Invoke(d);
+                events.OnTakeDamageRef?.Invoke(ref d);
             }
 
             if (damageHeirarchy.Length == 0)
@@ -277,7 +178,7 @@ namespace DeepAction
                 }
             }
 
-            if (resources[damageHeirarchy[damageHeirarchy.Length-1]].GetValue() <= 0)
+            if (resources[damageHeirarchy[damageHeirarchy.Length - 1]].GetValue() <= 0)
             {
                 Die();
             }
@@ -289,123 +190,57 @@ namespace DeepAction
 
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.OnEntityDie?.Invoke();
+                events.OnEntityDie?.Invoke();
             }
 
             hasDied = true;
 
-            switch (deathBehavior)
-            {
-                case OnDeathBehavior.Disable:
-                    gameObject.SetActive(false);
-                    break;
-                case OnDeathBehavior.Destroy:
-                    Destroy(gameObject);
-                    break;
-                case OnDeathBehavior.Nothing:
-                    //uhh
-                    break;
-            }
-
-
-
+            gameObject.SetActive(false);
         }
 
         //standard unity stuff
         private void Update()
         {
-
-            foreach(DeepResource res in resources.Values)
+            foreach (DeepResource res in resources.Values)
             {
                 res.Tick();
             }
-            if (resources[damageHeirarchy[damageHeirarchy.Length-1]].GetValue() <= 0)
+            //If you make the damageHeirarchy non const or empty, you need to update this. 
+            if (resources[damageHeirarchy[damageHeirarchy.Length - 1]].GetValue() <= 0)
             {
-                //resources can have - regen. 
-                //So if your hp has negative regen we wanna see if you died here
+                //resources can have -regen. 
+                //So if your [hp] has negative regen we wanna see if you died here
                 Die();
             }
 
-
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.Update?.Invoke();
+                events.Update?.Invoke();
             }
         }
+
         private void FixedUpdate()
         {
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.FixedUpdate?.Invoke();
+                events.FixedUpdate?.Invoke();
             }
         }
+
         private void LateUpdate()
         {
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.LateUpdate?.Invoke();
+                events.LateUpdate?.Invoke();
             }
         }
-        private void OnEnable()
-        {
-            switch (onEnableInitialize)
-            {
-                case InitializeOnEnable.Always:
-                    InitializeEntity(applyPreset);
-                    break;
-                case InitializeOnEnable.AfterDeath:
-                    if (hasDied)
-                    {
-                        InitializeEntity(applyPreset);
-                    }
-                    break;
-                case InitializeOnEnable.Never:
-                    //nope
-                    break;
-            }
 
-
-            foreach (DeepBehavior b in behaviors)
-            {
-                b.events.OnEntityEnable?.Invoke();
-            }
-        }
         private void OnDisable()
         {
             foreach (DeepBehavior b in behaviors)
             {
-                b.events.OnEntityDisable?.Invoke();
+                events.OnEntityDisable?.Invoke();
             }
         }
-
-        #region InspectorStuff
-        private string EnumExplanation()
-        {
-            switch (presetType)
-            {
-                case EntityPresetType.UseInspector:
-                    return "Will use the values that are saved in this inspector.";
-                case EntityPresetType.PresetObject:
-                    return "Will use the values in the supplied object.";
-                case EntityPresetType.CompositeObjects:
-                    return "Will use the multiple supplied objects to build the preset.";
-                case EntityPresetType.None:
-                    return "Entity values will be wiped on start.";
-                default:
-                    return "";
-            }
-        }
-
-        private void InspectorValidate()
-        {
-            foreach(DeepResource r in resources.Values)
-            {
-                if (r.parentEntity == null)
-                {
-                    r.parentEntity = this;
-                }
-            }
-        }
-        #endregion
     }
 }

@@ -180,7 +180,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 845308495}
-  - component: {fileID: 845308496}
   - component: {fileID: 845308493}
   - component: {fileID: 845308492}
   m_Layer: 0
@@ -191,52 +190,6 @@ GameObject:
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!114 &845308492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 845308491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b94a1b009b0d4c242ba2cdeb3327e113, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  abilityObject: {fileID: 11400000, guid: 650520c74d0486a45a403c843b5c73a3, type: 2}
---- !u!114 &845308493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 845308491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ad4418a56c8ea49ae5f5240eb2f7da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profile: asdf
-  abilityRef: {fileID: 11400000, guid: 650520c74d0486a45a403c843b5c73a3, type: 2}
-  activeSave:
-    behaviorID: TestAbility
-    notes: 
-    parent: {fileID: 0}
-    behaviorTarget: {fileID: 0}
---- !u!4 &845308495
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 845308491}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &845308496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -325,12 +278,41 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  deathBehavior: 0
-  onEnableInitialize: 1
-  applyPreset: 0
-  presetType: 1
   preset: {fileID: 11400000, guid: c961c139eb179e14084b5a4d39290e1f, type: 2}
   damageHeirarchy: 
+--- !u!114 &845308493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845308491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ad4418a56c8ea49ae5f5240eb2f7da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: asdf
+  abilityRef: {fileID: 0}
+  activeSave:
+    behaviorID: TestAbility
+    notes: 
+    parent: {fileID: 0}
+    behaviorTarget: {fileID: 0}
+--- !u!4 &845308495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845308491}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &988282955
 GameObject:
   m_ObjectHideFlags: 0

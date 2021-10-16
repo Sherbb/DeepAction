@@ -10,45 +10,14 @@ using Newtonsoft.Json;
 namespace DeepAction
 {
     [System.Serializable][HideReferenceObjectPicker]
-    public class DeepBehavior
+    public abstract class DeepBehavior
     {
-        //a behavior is just something that holds a bunch of actions.
-
-        //all behaviors on a deepEntity are in the same list. they all invoke the same events. Except:
-        //You can trigger a particular behavior with Trigger()
-        public string behaviorID = "NOTSET";
-        [Tooltip("Literally just a place to leave notes about the behavior. This should NOT be used for any functionality."),SerializeField,TextArea]
-        private string notes = "";
-        [Space]
+        public abstract string behaviorID {get;}
         public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();//resources require to TRIGGER the behavior. This is where you put the spell cost. Can be set by actions.
-        [TypeFilter("GetFilteredTypeList")][Space]
-        public List<DeepAction> actions = new List<DeepAction>();
 
-
-        [HideInInspector][JsonIgnore]
+        [HideInInspector]
         public DeepEntity parent;
-        [HideInInspector][JsonIgnore]
-        public DeepEntity behaviorTarget;   //a target that a behavior HOLDS. this is NOT the same as the target that gets passed in Trigger()
-        [HideInInspector][JsonIgnore]
-        public Events events;
 
-        public class Events
-        {
-            public Action<Vector3,Vector3,DeepEntity> Trigger;
-
-            public Action OnEntityEnable;
-            public Action OnEntityDisable;
-            public Action OnEntityDie;
-
-            public Action Update;
-            public Action FixedUpdate;
-            public Action LateUpdate;
-
-            public Action<float>OnTakeDamage;
-            public ActionRef<float>OnTakeDamageRef;
-            public Action<float>OnDealDamage;
-            
-        }
 
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
         {
@@ -72,63 +41,23 @@ namespace DeepAction
                 parent.resources[key].TryToConsume(resourcesToTrigger[key]);
             }
 
-            events.Trigger?.Invoke(point,direction,target);
+            parent.events.Trigger?.Invoke(point,direction,target);
 
             return true;
         }
-        #region Trigger Overloads
-        public bool Trigger() { return Trigger(Vector3.zero, Vector3.zero, null); }
-        public bool Trigger(Vector3 position) { return Trigger(position, Vector3.zero, null); }
-        public bool Trigger(Vector3 position, Vector3 direction) { return Trigger(position, direction, null); }
-        public bool Trigger(DeepEntity target) { return Trigger(Vector3.zero, Vector3.zero, target); }
-        #endregion
 
         public void IntitializeBehavior()
         {
-            foreach(DeepAction a in actions)
-            {
-                a.IntitializeAction();
-            }
         }
 
         
         public void RemoveBehavior()
         {
-            foreach(DeepAction a in actions)
-            {
-                a.DestroyAction();
-            }
-        }
-
-        public virtual DeepBehavior Clone()
-        {
-            DeepBehavior newB = (DeepBehavior)this.MemberwiseClone();
-            newB.actions = new List<DeepAction>();
-
-            newB.events = new Events();
-
-            foreach (DeepAction a in this.actions)
-            {
-                DeepAction newA = a.Clone();
-                newA.behavior = newB;
-                newB.actions.Add(newA);
-            }
-            return newB;
-        }
-
-        //for odin
-        private IEnumerable<Type> GetFilteredTypeList()
-        {
-            var q = typeof(DeepAction).Assembly.GetTypes()
-                .Where(x => !x.IsAbstract)                                          // Excludes BaseClass
-                .Where(x => typeof(DeepAction).IsAssignableFrom(x));                // Excludes classes not inheriting from BaseClass
-            return q;
         }
     }
 
     //lets us have an action with a ref.
     //
     //for example we can give OnTakeDamage a REF float allowing behaviors to modify incoming damage before it is applied.
-
     public delegate void ActionRef<T>(ref T item);
 }
