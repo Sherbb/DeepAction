@@ -23,7 +23,7 @@ namespace DeepAction
         [BoxGroup("Max"), Delayed, MinValue(0f)]
         public float baseMax = 1f;
         [ShowIf("showSettings")]
-        [BoxGroup("Max"), ShowInInspector, ReadOnly, SerializeField]
+        [BoxGroup("Max"), ReadOnly, SerializeField]
         private float currentMaxValue;
 
 

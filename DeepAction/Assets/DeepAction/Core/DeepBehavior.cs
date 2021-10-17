@@ -9,11 +9,11 @@ using Newtonsoft.Json;
 
 namespace DeepAction
 {
-    [System.Serializable][HideReferenceObjectPicker]
+    [System.Serializable]
     public abstract class DeepBehavior
     {
         public abstract string behaviorID {get;}
-        public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();//resources require to TRIGGER the behavior. This is where you put the spell cost. Can be set by actions.
+        public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();
 
         [HideInInspector]
         public DeepEntity parent;
@@ -50,7 +50,7 @@ namespace DeepAction
         public abstract void DestroyBehavior();
     }
 
-    //lets us have an action with a ref.
+    //lets us have an action with a ref. MOVE THIS
     //
     //for example we can give OnTakeDamage a REF float allowing behaviors to modify incoming damage before it is applied.
     public delegate void ActionRef<T>(ref T item);
