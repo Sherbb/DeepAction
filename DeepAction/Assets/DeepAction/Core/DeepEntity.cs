@@ -23,6 +23,11 @@ namespace DeepAction
         [Space, HideInEditorMode, ShowInInspector]
         public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
 
+        // * States
+        [Title("States", "", TitleAlignments.Centered)]
+        [Space,HideInEditorMode,ShowInInspector]
+        public Dictionary<D_State, DeepState> states = new Dictionary<D_State, DeepState>();
+
         // * Behaviors
         [Title("Behaviors", "", TitleAlignments.Centered)]
         [Space, HideInEditorMode, ShowInInspector]
@@ -33,9 +38,7 @@ namespace DeepAction
         [HideInInspector]
         public Action OnDeath;
 
-        public static readonly D_Resource[] damageHeirarchy = { D_Resource.Health };//Damage is done from left to right    This does not have to be static.        
-
-        private bool hasDied;//used to track for after death
+        public static readonly D_Resource[] damageHeirarchy = { D_Resource.Health };//Damage is done from left to right       
 
         public Events events;
         public class Events
@@ -87,12 +90,16 @@ namespace DeepAction
                 resources = new Dictionary<D_Resource, DeepResource>();
                 behaviors = new List<DeepBehavior>();
             }
+            states = new Dictionary<D_State, DeepState>();
+            foreach(D_State state in Enum.GetValues(typeof(D_State)))
+            {
+                states.Add(state,new DeepState());
+            }
             foreach (DeepResource res in resources.Values)
             {
                 res.parentEntity = this;
                 res.SetValueWithRatio(res.defaultRatio);
             }
-            hasDied = false;
         }
 
         public DeepBehavior AddBehavior<T>() where T : DeepBehavior
@@ -189,7 +196,6 @@ namespace DeepAction
                 events.OnEntityDie?.Invoke();
             }
 
-            hasDied = true;
             gameObject.SetActive(false);
         }
 
@@ -205,7 +211,6 @@ namespace DeepAction
                 //So if your [hp] has negative regen we wanna see if you died here
                 Die();
             }
-
             events.Update?.Invoke();
         }
         private void FixedUpdate()

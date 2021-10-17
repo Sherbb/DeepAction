@@ -12,7 +12,7 @@ namespace DeepAction
     [System.Serializable]
     public abstract class DeepBehavior
     {
-        public abstract string behaviorID {get;}
+        public abstract string behaviorID {get;} //once upon a time this was used to id behaviors, now we use a type. If i don't see a use for it soon it will be removed.
         public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();
 
         [HideInInspector]
