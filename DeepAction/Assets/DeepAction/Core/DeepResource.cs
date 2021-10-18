@@ -146,8 +146,6 @@ namespace DeepAction
             {
                 UpdateValues();
             }
-
-
             if (value >= f)
             {
                 value -= f;

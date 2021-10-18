@@ -171,7 +171,7 @@ namespace DeepAction
     {
         //BaseValue + baseAdd * multiplier + postAdd
 
-        [SuffixLabel("Source",true),HideLabel][Newtonsoft.Json.JsonIgnore]
+        [SuffixLabel("Source",true),HideLabel]
         public string source = "Unknown";//exists just to help you keep track of stuff in inspectors.
 
         [HorizontalGroup("hoz"),SuffixLabel("BaseAdd",true),HideLabel]
