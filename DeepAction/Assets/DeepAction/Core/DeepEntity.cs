@@ -35,16 +35,15 @@ namespace DeepAction
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        [HideInInspector]
-        public Action OnDeath;
-
         public static readonly D_Resource[] damageHeirarchy = { D_Resource.Health };//Damage is done from left to right       
+
+        // * Flags
+        public bool dying;//entity will be killed next LateUpdate()
 
         public Events events;
         public class Events
-        {//seperate class just to organize.
-
-            public Action<Vector3, Vector3, DeepEntity> Trigger;
+        {
+            public Action<Vector3, Vector3, DeepEntity> Trigger;//idk...
 
             public Action OnEntityEnable;
             public Action OnEntityDisable;
@@ -52,7 +51,6 @@ namespace DeepAction
 
             public Action Update;
             public Action FixedUpdate;
-            public Action LateUpdate;
 
             public Action<float> OnTakeDamage;
             public ActionRef<float> OnTakeDamageRef;
@@ -66,6 +64,7 @@ namespace DeepAction
 
         private void OnEnable()//having this on enable has huge implications that you may not be ok with....
         {
+            dying = false;
             if (preset != null)
             {
                 attributes = new Dictionary<D_Attribute, DeepAttribute>(preset.attributes);
@@ -100,6 +99,15 @@ namespace DeepAction
                 res.parentEntity = this;
                 res.SetValueWithRatio(res.defaultRatio);
             }
+
+            DeepManager.instance.activeEntities.Add(this);
+        }
+
+        void OnDisable()
+        {
+            dying = false;
+            events.OnEntityDisable?.Invoke();
+            DeepManager.instance.activeEntities.Remove(this);
         }
 
         public DeepBehavior AddBehavior<T>() where T : DeepBehavior
@@ -189,41 +197,11 @@ namespace DeepAction
 
         public void Die()
         {
-            OnDeath?.Invoke();
-
             foreach (DeepBehavior b in behaviors)
             {
                 events.OnEntityDie?.Invoke();
             }
-
-            gameObject.SetActive(false);
-        }
-
-        private void Update()
-        {
-            foreach (DeepResource res in resources.Values)
-            {
-                res.Tick();
-            }
-            if (resources[damageHeirarchy[damageHeirarchy.Length - 1]].GetValue() <= 0)
-            {
-                //resources can have -regen. 
-                //So if your [hp] has negative regen we wanna see if you died here
-                Die();
-            }
-            events.Update?.Invoke();
-        }
-        private void FixedUpdate()
-        {
-            events.FixedUpdate?.Invoke();
-        }
-        private void LateUpdate()
-        {
-            events.LateUpdate?.Invoke();
-        }
-        private void OnDisable()
-        {
-            events.OnEntityDisable?.Invoke();
+            dying = true;
         }
     }
 }
