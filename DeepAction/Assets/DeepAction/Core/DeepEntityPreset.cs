@@ -9,7 +9,7 @@ namespace DeepAction
     [CreateAssetMenu(menuName ="DeepAction/EntityPreset")]
     public class DeepEntityPreset : SerializedScriptableObject
     {
-        [Title("Resources", "Deep Action by @AlanSherba", TitleAlignments.Centered)]
+        [Title("Resources", "", TitleAlignments.Centered)]
         public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
 
         [Title("Attributes", "", TitleAlignments.Centered)]

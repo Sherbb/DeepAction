@@ -5,7 +5,6 @@ using Sirenix.OdinInspector;
 
 namespace DeepAction
 {
-
     public class DeepManager : MonoBehaviour
     {
         //Every DeepEntity adds itself to the manager
@@ -19,6 +18,7 @@ namespace DeepAction
         void Awake()
         {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
 
         // All entity logic runs during UPDATE
@@ -46,7 +46,6 @@ namespace DeepAction
                 if (activeEntities[i].dying) activeEntities[i].gameObject.SetActive(false);
             }
         }
-
 
         void FixedUpdate()
         {

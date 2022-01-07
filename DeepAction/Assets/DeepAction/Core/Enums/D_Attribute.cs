@@ -10,7 +10,7 @@ namespace DeepAction
         Strength,
         Dexterity,
         Inteligence,
-
+        MoveSpeed,
 
 
 

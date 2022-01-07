@@ -202,7 +202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: c961c139eb179e14084b5a4d39290e1f, type: 2}
-  dying: 0
 --- !u!114 &845308493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,7 +228,7 @@ MonoBehaviour:
       Data: 0|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: DeepAction.ExampleBehavior, Assembly-CSharp
+      Data: DeepAction.DecayingSlow, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

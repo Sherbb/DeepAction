@@ -10,6 +10,7 @@ namespace DeepAction
     public class DeepEntity : MonoBehaviour, IHit
     {
         // * Preset
+        [InlineEditor,HideLabel,Title("Preset", "", TitleAlignment = TitleAlignments.Centered),HideInPlayMode]
         public DeepEntityPreset preset;
 
         // * Resources
@@ -38,7 +39,7 @@ namespace DeepAction
 
         // * Flags
         [HideInInspector]
-        public bool dying;//entity will be killed next LateUpdate()
+        public bool dying {get; private set;}//entity will be killed(disabled) next LateUpdate()
 
         public Events events;
         public class Events
@@ -86,7 +87,6 @@ namespace DeepAction
                 {
                     states.Add(key, new DeepState());
                 }
-
             }
             //else set the values to some deafult. Maybe 1 for everything? idk
         }
@@ -102,6 +102,15 @@ namespace DeepAction
                 res.parentEntity = this;
                 res.SetValueWithRatio(res.defaultRatio);
             }
+
+            if (preset != null)
+            {
+                foreach(System.Type t in preset.behaviors)
+                {
+                    AddBehavior(t);
+                }
+            }
+
             DeepManager.instance.activeEntities.Add(this);
         }
 

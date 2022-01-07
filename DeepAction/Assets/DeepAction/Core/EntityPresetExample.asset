@@ -529,7 +529,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 7
       Data: 
@@ -621,6 +621,36 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 26|DeepAction.DeepAttribute, Assembly-CSharp
+    - Name: baseValue
+      Entry: 4
+      Data: 100
+    - Name: clamp
+      Entry: 5
+      Data: false
+    - Name: minValue
+      Entry: 4
+      Data: 0
+    - Name: maxValue
+      Entry: 4
+      Data: 100
+    - Name: overrideToMax
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -628,19 +658,22 @@ MonoBehaviour:
       Data: 
     - Name: behaviors
       Entry: 7
-      Data: 26|System.Collections.Generic.List`1[[System.Type, mscorlib]], mscorlib
+      Data: 27|System.Collections.Generic.List`1[[System.Type, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
-      Data: 27|System.RuntimeType, mscorlib
+      Data: 28|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
       Data: DeepAction.ExampleBehavior, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 9
+      Data: 28
     - Name: 
       Entry: 13
       Data: 
