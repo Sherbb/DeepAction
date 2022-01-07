@@ -4,7 +4,7 @@ using UnityEngine;
 using DeepAction;
 using Sirenix.OdinInspector;
 using System;
-public class AddBehaviorToEntity : MonoBehaviour
+public class AddBehaviorToEntity : SerializedMonoBehaviour
 {
     public DeepEntity entity;
     public Type behavior;
@@ -12,6 +12,6 @@ public class AddBehaviorToEntity : MonoBehaviour
     [Button]
     public void AddBehavior()
     {
-        entity.AddBehavior<ExampleBehavior>();   
+        entity.AddBehavior(behavior);
     }
 }

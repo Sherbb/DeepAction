@@ -140,7 +140,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 4
-      Data: -1
+      Data: 0.1
     - Name: 
       Entry: 8
       Data: 
@@ -628,15 +628,22 @@ MonoBehaviour:
       Data: 
     - Name: behaviors
       Entry: 7
-      Data: 26|System.Collections.Generic.List`1[[DeepAction.DeepBehavior, Assembly-CSharp]],
-        mscorlib
+      Data: 26|System.Collections.Generic.List`1[[System.Type, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 27|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: DeepAction.ExampleBehavior, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  damageHeirarchy: 00000000

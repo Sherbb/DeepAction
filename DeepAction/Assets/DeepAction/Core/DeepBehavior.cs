@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 namespace DeepAction
 {
-    [System.Serializable]
+    [DoNotDrawAsReference]
     public abstract class DeepBehavior
     {
-        public abstract string behaviorID {get;} //once upon a time this was used to id behaviors, now we use a type. If i don't see a use for it soon it will be removed.
         public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();
 
         [HideInInspector]
         public DeepEntity parent;
 
-
+        //todo
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
         {
             foreach (D_Resource key in resourcesToTrigger.Keys)

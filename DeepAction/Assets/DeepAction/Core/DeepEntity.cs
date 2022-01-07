@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using System;
 using System.Linq;
 
@@ -25,7 +24,7 @@ namespace DeepAction
 
         // * States
         [Title("States", "", TitleAlignments.Centered)]
-        [Space,HideInEditorMode,ShowInInspector]
+        [Space, HideInEditorMode, ShowInInspector]
         public Dictionary<D_State, DeepState> states = new Dictionary<D_State, DeepState>();
 
         // * Behaviors
@@ -38,6 +37,7 @@ namespace DeepAction
         public static readonly D_Resource[] damageHeirarchy = { D_Resource.Health };//Damage is done from left to right       
 
         // * Flags
+        [HideInInspector]
         public bool dying;//entity will be killed next LateUpdate()
 
         public Events events;
@@ -60,46 +60,48 @@ namespace DeepAction
         void Awake()
         {
             events = new Events();
-        }
+            attributes = new Dictionary<D_Attribute, DeepAttribute>();
+            resources = new Dictionary<D_Resource, DeepResource>();
+            states = new Dictionary<D_State, DeepState>();
 
-        private void OnEnable()//having this on enable has huge implications that you may not be ok with....
-        {
-            dying = false;
             if (preset != null)
             {
-                attributes = new Dictionary<D_Attribute, DeepAttribute>(preset.attributes);
-                foreach (D_Attribute key in preset.attributes.Keys)
+                DeepAttribute presetAtt;
+                foreach (D_Attribute key in Enum.GetValues(typeof(D_Attribute)))
                 {
-                    attributes[key] = attributes[key].Clone();
+                    if (preset.attributes.TryGetValue(key, out presetAtt))
+                    {
+                        attributes.Add(key, presetAtt.Clone());
+                    }
+                    else
+                    {
+                        attributes.Add(key, new DeepAttribute());
+                    }
                 }
-                resources = new Dictionary<D_Resource, DeepResource>(preset.resources);
-                foreach (D_Resource key in preset.resources.Keys)
+                foreach (D_Resource key in Enum.GetValues(typeof(D_Resource)))
                 {
-                    resources[key] = resources[key].Clone();
+                    resources[key] = preset.resources[key].Clone();
                 }
-                behaviors = new List<DeepBehavior>();
-                foreach (DeepBehavior b in preset.behaviors)
+                foreach (D_State key in Enum.GetValues(typeof(D_State)))
                 {
-                    AddBehavior(b);
+                    states.Add(key, new DeepState());
                 }
+
             }
-            else
-            {
-                attributes = new Dictionary<D_Attribute, DeepAttribute>();
-                resources = new Dictionary<D_Resource, DeepResource>();
-                behaviors = new List<DeepBehavior>();
-            }
-            states = new Dictionary<D_State, DeepState>();
-            foreach(D_State state in Enum.GetValues(typeof(D_State)))
-            {
-                states.Add(state,new DeepState());
-            }
+            //else set the values to some deafult. Maybe 1 for everything? idk
+        }
+
+        private void OnEnable()
+        {
+            dying = false;
+
+            //? We should not need to touch attributes or states because they should 100% be driven by behaviors.
+
             foreach (DeepResource res in resources.Values)
             {
                 res.parentEntity = this;
                 res.SetValueWithRatio(res.defaultRatio);
             }
-
             DeepManager.instance.activeEntities.Add(this);
         }
 
@@ -118,6 +120,17 @@ namespace DeepAction
             b.IntitializeBehavior();
             return b;
         }
+
+        public DeepBehavior AddBehavior(Type behavior)
+        {
+            if (!typeof(DeepBehavior).IsAssignableFrom(behavior)) return null;// >:(
+            DeepBehavior b = (DeepBehavior)Activator.CreateInstance(behavior);
+            b.parent = this;
+            behaviors.Add(b);
+            b.IntitializeBehavior();
+            return b;
+        }
+
         public DeepBehavior AddBehavior(DeepBehavior behavior)
         {
             behavior.parent = this;
@@ -136,12 +149,14 @@ namespace DeepAction
             }
             return false;
         }
+
         public bool RemoveBehavior(DeepBehavior behavior)
         {
             if (!behaviors.Contains(behavior))
             {
                 return false;
             }
+            behavior.DestroyBehavior();
             behaviors.Remove(behavior);
             return true;
         }
