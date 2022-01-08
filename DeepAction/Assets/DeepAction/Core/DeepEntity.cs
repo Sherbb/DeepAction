@@ -10,7 +10,7 @@ namespace DeepAction
     public class DeepEntity : MonoBehaviour, IHit
     {
         // * Preset
-        [InlineEditor,HideLabel,Title("Preset", "", TitleAlignment = TitleAlignments.Centered),HideInPlayMode]
+        [InlineEditor, HideLabel, Title("Preset", "", TitleAlignment = TitleAlignments.Centered), HideInPlayMode]
         public DeepEntityPreset preset;
 
         // * Resources
@@ -39,7 +39,7 @@ namespace DeepAction
 
         // * Flags
         [HideInInspector]
-        public bool dying {get; private set;}//entity will be killed(disabled) next LateUpdate()
+        public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
 
         public Events events;
         public class Events
@@ -105,7 +105,7 @@ namespace DeepAction
 
             if (preset != null)
             {
-                foreach(System.Type t in preset.behaviors)
+                foreach (System.Type t in preset.behaviors)
                 {
                     AddBehavior(t);
                 }
@@ -124,20 +124,14 @@ namespace DeepAction
         public DeepBehavior AddBehavior<T>() where T : DeepBehavior
         {
             DeepBehavior b = (DeepBehavior)Activator.CreateInstance(typeof(T));
-            b.parent = this;
-            behaviors.Add(b);
-            b.IntitializeBehavior();
-            return b;
+            return AddBehavior(b);
         }
 
         public DeepBehavior AddBehavior(Type behavior)
         {
             if (!typeof(DeepBehavior).IsAssignableFrom(behavior)) return null;// >:(
             DeepBehavior b = (DeepBehavior)Activator.CreateInstance(behavior);
-            b.parent = this;
-            behaviors.Add(b);
-            b.IntitializeBehavior();
-            return b;
+            return AddBehavior(b);
         }
 
         public DeepBehavior AddBehavior(DeepBehavior behavior)
@@ -221,10 +215,7 @@ namespace DeepAction
 
         public void Die()
         {
-            foreach (DeepBehavior b in behaviors)
-            {
-                events.OnEntityDie?.Invoke();
-            }
+            events.OnEntityDie?.Invoke();
             dying = true;
         }
     }

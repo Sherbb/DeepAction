@@ -11,6 +11,12 @@ namespace DeepAction
         [HideInInspector]
         public DeepEntity parent;
 
+        //* Flags
+        [HideInInspector]
+        public bool removeOnDeath = true;
+
+
+
         //todo
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
         {

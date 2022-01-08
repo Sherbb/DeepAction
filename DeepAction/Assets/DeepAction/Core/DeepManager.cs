@@ -43,7 +43,15 @@ namespace DeepAction
         {
             for (int i = activeEntities.Count - 1; i >= 0; i--)
             {
-                if (activeEntities[i].dying) activeEntities[i].gameObject.SetActive(false);
+                if (activeEntities[i].dying)
+                {
+                    //Remove all behaviors with [RemoveOnDeath] flag
+                    for (int j = activeEntities[i].behaviors.Count - 1; j >= 0; j--)
+                    {
+                        if (activeEntities[i].behaviors[j].removeOnDeath) activeEntities[i].RemoveBehavior(activeEntities[i].behaviors[j]);
+                    }
+                    activeEntities[i].gameObject.SetActive(false);
+                }
             }
         }
 

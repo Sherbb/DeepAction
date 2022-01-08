@@ -84,7 +84,6 @@ namespace DeepAction
                 OnStateChanged?.Invoke(state);
             }
             return;
-
         }
 
         private Color GetColor()//for inspector use only
