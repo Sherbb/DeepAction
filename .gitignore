@@ -56,5 +56,5 @@ sysinfo.txt
 *.unitypackage
 
 # Crashlytics generated file
-crashlytics-build.properties
-DeepAction/Assets/Plugins/Sirenix/
+Plugins/
+Other/
