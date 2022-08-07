@@ -13,7 +13,7 @@ namespace DeepAction
         public static DeepManager instance;
 
         [ReadOnly]
-        public List<DeepEntity> activeEntities = new List<DeepEntity>();
+        public List<DeepEntity> activeEntities = new List<DeepEntity>();//todo make array
 
         void Awake()
         {
@@ -26,14 +26,6 @@ namespace DeepAction
         {
             for (int i = activeEntities.Count - 1; i >= 0; i--)
             {
-                foreach (DeepResource res in activeEntities[i].resources.Values)
-                {
-                    res.Tick();
-                }
-                if (activeEntities[i].resources[DeepEntity.damageHeirarchy[DeepEntity.damageHeirarchy.Length - 1]].GetValue() <= 0)
-                {
-                    activeEntities[i].Die();
-                }
                 activeEntities[i].events.Update?.Invoke();
             }
         }

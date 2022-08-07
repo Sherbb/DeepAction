@@ -7,41 +7,48 @@ namespace DeepAction
     [HideReferenceObjectPicker]
     public class DeepAttribute
     {
-        [OnInspectorGUI("UpdateValue")]
-        [OnInspectorInit("@showModifiers = false")]
-        //
+        public float baseValue { get; private set; }
+        public float value { get; private set; }
 
-        [SerializeField, HideLabel,SuffixLabel("Base Value",true), HorizontalGroup("hoz"), InlineButton("M"), InlineButton("C")]
-        private float baseValue;
-        [HideLabel, ShowInInspector,SuffixLabel("Final Value",true), ReadOnly, HorizontalGroup("hoz")]
-        private float value;
+        private bool clamp;
+        public Vector2 minMax { get; private set; }
 
-        [OnValueChanged("UpdateReadOnlyPreview")]
-        [SerializeField, HideInInspector]
-        private bool clamp;/// 
-        private bool showModifiers;//non essential
+        private List<DeepAttributeModifier> modifiers;
 
-        [SerializeField, ShowIf("clamp"), HorizontalGroup("hoz2"), LabelWidth(70)]
-        private float minValue;
-        [SerializeField, ShowIf("clamp"), HorizontalGroup("hoz2"), LabelWidth(70)]
-        private float maxValue = 100f;
+        public DeepAttribute()
+        {
+            this.baseValue = 0f;
+            clamp = false;
+            modifiers = new List<DeepAttributeModifier>();
+            UpdateValue();
+        }
+        public DeepAttribute(float baseValue)
+        {
+            this.baseValue = baseValue;
+            clamp = false;
+            modifiers = new List<DeepAttributeModifier>();
+            UpdateValue();
+        }
+        public DeepAttribute(float baseValue, Vector2 minMax)
+        {
+            this.baseValue = baseValue;
+            this.minMax = minMax;
+            clamp = true;
+            modifiers = new List<DeepAttributeModifier>();
+            UpdateValue();
+        }
 
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector,ReadOnly]
-        private List<DeepAttributeModifier> modifiers = new List<DeepAttributeModifier>();
-
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers")][Tooltip("If true the HIGHEST override will be chosen.")]
-        public bool overrideToMax;//if true we will pick the largest override value.
-
-        [BoxGroup("Active Modifiers"), ShowIf("showModifiers"), ShowInInspector,ReadOnly]
-        private List<float> overrides = new List<float>();
+        public void SetBaseValue(float b)
+        {
+            baseValue = b;
+            UpdateValue();
+        }
 
         public DeepAttributeModifier AddModifier(DeepAttributeModifier modifier)
         {
-            if (modifiers == null)
-            {
-                modifiers = new List<DeepAttributeModifier>();
-            }
             modifiers.Add(modifier);
+            modifier.onUpdate += UpdateValue;
+            UpdateValue();
             return modifier;
         }
 
@@ -50,21 +57,8 @@ namespace DeepAction
             if (modifiers.Contains(modifier))
             {
                 modifiers.Remove(modifier);
-                return true;
-            }
-            return false;
-        }
-
-        public void AddOverride(float value)
-        {
-            overrides.Add(value);
-        }
-
-        public bool RemoveOverride(float value)
-        {
-            if (overrides.Contains(value))
-            {
-                overrides.Remove(value);
+                modifier.onUpdate -= UpdateValue;
+                UpdateValue();
                 return true;
             }
             return false;
@@ -76,110 +70,48 @@ namespace DeepAction
             return newA;
         }
 
-        public float GetValue()
-        {
-            UpdateValue();
-            return value;
-        }
-
         public void UpdateValue()
         {
-            //baseValue + baseAdd * baseMultiply + postAdd
-
-            if (overrides == null)
-            {
-                overrides = new List<float>();
-            }
-
-            if (modifiers == null)
-            {
-                modifiers = new List<DeepAttributeModifier>();
-            }
-
             float f = baseValue;
 
-            //override
-            if (overrides.Count > 0)
-            {
-                f = overrides[0];
-
-                if (overrideToMax)
-                {
-                    foreach(float ovr in overrides)
-                    {
-                        if (ovr > f)
-                        {
-                            f = ovr;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach(float ovr in overrides)
-                    {
-                        if (ovr < f)
-                        {
-                            f = ovr;
-                        }
-                    }
-                }
-                value = f;
-                return;
-            }
-
-            foreach(DeepAttributeModifier mod in modifiers)
+            foreach (DeepAttributeModifier mod in modifiers)
             {
                 f += mod.baseAdd;
             }
 
             float newBase = f;
 
-            foreach(DeepAttributeModifier mod in modifiers)
+            foreach (DeepAttributeModifier mod in modifiers)
             {
                 f += (newBase * mod.multiplier);
             }
 
-            foreach(DeepAttributeModifier mod in modifiers)
+            foreach (DeepAttributeModifier mod in modifiers)
             {
                 f += mod.postAdd;
             }
 
             if (clamp)
             {
-                value = Mathf.Clamp(f, minValue, maxValue);
+                value = Mathf.Clamp(f, minMax.x, minMax.y);
             }
             else
             {
                 value = f;
             }
         }
-
-        #region InspectorStuff
-        private void C()
-        {
-            clamp = !clamp;
-        }
-        private void M()
-        {
-            showModifiers = !showModifiers;
-        }
-        #endregion
     }
 
-    [HideReferenceObjectPicker,InlineProperty]
     public class DeepAttributeModifier
     {
         //BaseValue + baseAdd * multiplier + postAdd
+        public DeepBehavior source;
 
-        [SuffixLabel("Source",true),HideLabel]
-        public string source = "Unknown";//exists just to help you keep track of stuff in inspectors.
+        public float baseAdd { get; private set; }
+        public float multiplier { get; private set; }
+        public float postAdd { get; private set; }
 
-        [HorizontalGroup("hoz"),SuffixLabel("BaseAdd",true),HideLabel]
-        public float baseAdd;
-        [HorizontalGroup("hoz"),SuffixLabel("Multiplier",true),HideLabel]
-        public float multiplier;
-        [HorizontalGroup("hoz"),SuffixLabel("Post Add",true),HideLabel]
-        public float postAdd;
+        public System.Action onUpdate;
 
         public DeepAttributeModifier()
         {
@@ -187,7 +119,7 @@ namespace DeepAction
             this.multiplier = 0f;
             this.postAdd = 0f;
         }
-        public DeepAttributeModifier(float baseAdd,float multiplier,float postAdd)
+        public DeepAttributeModifier(float baseAdd, float multiplier, float postAdd)
         {
             this.baseAdd = baseAdd;
             this.postAdd = postAdd;
@@ -201,5 +133,12 @@ namespace DeepAction
             this.source = other.source;
         }
 
+        public void UpdateModifier(float baseAdd, float multiplier, float postAdd)
+        {
+            this.baseAdd = baseAdd;
+            this.multiplier = multiplier;
+            this.postAdd = postAdd;
+            onUpdate?.Invoke();//if this mod is on an attribute it will cause the attribute to recalculate
+        }
     }
 }

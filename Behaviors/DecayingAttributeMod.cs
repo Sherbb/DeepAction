@@ -17,7 +17,7 @@ namespace DeepAction
 
         public override void IntitializeBehavior()
         {
-            attMod = new DeepAttributeModifier(modBase.x,modBase.y,modBase.z);
+            attMod = new DeepAttributeModifier(modBase.x, modBase.y, modBase.z);
             parent.attributes[attribute].AddModifier(attMod);
             parent.StartCoroutine(Decay());
         }
@@ -26,9 +26,11 @@ namespace DeepAction
         {
             while (timer < duration)
             {
-                attMod.baseAdd = Mathf.Lerp(modBase.x,0f,timer/duration);
-                attMod.multiplier = Mathf.Lerp(modBase.y,0f,timer/duration);
-                attMod.postAdd = Mathf.Lerp(modBase.z,0f,timer/duration);
+                attMod.UpdateModifier(
+                Mathf.Lerp(modBase.x, 0f, timer / duration),
+                Mathf.Lerp(modBase.y, 0f, timer / duration),
+                Mathf.Lerp(modBase.z, 0f, timer / duration)
+                );
 
                 timer += Time.deltaTime;
                 yield return null;

@@ -10,8 +10,19 @@ public class AddBehaviorToEntity : SerializedMonoBehaviour
     public Type behavior;
 
     [Button]
-    public void AddBehavior()
+    public void AddBehaviorTypeVariable()
     {
         entity.AddBehavior(behavior);
+    }
+
+    public void AddBehaviorType()
+    {
+        entity.AddBehavior<DecayingSlow>();
+    }
+
+    public void AddBehaviorRef()
+    {
+        DeepBehavior b = new DecayingSlow();
+        entity.AddBehavior(b);
     }
 }

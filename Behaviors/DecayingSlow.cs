@@ -11,7 +11,7 @@ namespace DeepAction
 
         public override void IntitializeBehavior()
         {
-            speedMod = new DeepAttributeModifier(0f,modValue,0f);
+            speedMod = new DeepAttributeModifier(0f, modValue, 0f);
             parent.attributes[D_Attribute.MoveSpeed].AddModifier(speedMod);
             parent.StartCoroutine(Decay());
         }
@@ -21,7 +21,7 @@ namespace DeepAction
         {
             while (timer < duration)
             {
-                speedMod.multiplier = Mathf.Lerp(modValue,0f,timer/duration);
+                speedMod.UpdateModifier(0f, Mathf.Lerp(modValue, 0f, timer / duration), 0f);
                 timer += Time.deltaTime;
                 yield return null;
             }

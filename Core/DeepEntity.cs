@@ -9,106 +9,86 @@ namespace DeepAction
 {
     public class DeepEntity : MonoBehaviour, IHit
     {
-        // * Preset
-        [InlineEditor, HideLabel, Title("Preset", "", TitleAlignment = TitleAlignments.Centered), HideInPlayMode]
-        public DeepEntityPreset preset;
-
         // * Resources
-        [Title("Resources", "", TitleAlignments.Centered)]
-        [Space, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_Resource, DeepResource> resources = new Dictionary<D_Resource, DeepResource>();
-
+        [Title("Resources", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+        public Dictionary<D_Resource, DeepResource> resources { get; private set; }
         // * Attributes
-        [Title("Attributes", "", TitleAlignments.Centered)]
-        [Space, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_Attribute, DeepAttribute> attributes = new Dictionary<D_Attribute, DeepAttribute>();
-
+        [Title("Attributes", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+        public Dictionary<D_Attribute, DeepAttribute> attributes { get; private set; }
         // * States
-        [Title("States", "", TitleAlignments.Centered)]
-        [Space, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_State, DeepState> states = new Dictionary<D_State, DeepState>();
-
+        [Title("States", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+        public Dictionary<D_State, DeepState> states { get; private set; }
         // * Behaviors
-        [Title("Behaviors", "", TitleAlignments.Centered)]
-        [Space, HideInEditorMode, ShowInInspector]
-        public List<DeepBehavior> behaviors = new List<DeepBehavior>();
+        [Title("Behaviors", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+        public List<DeepBehavior> behaviors { get; private set; }
+        // * Events
+        public DeepEntityEvents events;
+        // * Flags
+        [HideInInspector]
+        //todo
+        public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         public static readonly D_Resource[] damageHeirarchy = { D_Resource.Health };//Damage is done from left to right       
 
-        // * Flags
-        [HideInInspector]
-        public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
+        public Rigidbody2D rb { get; private set; }
+        private EntityTemplate template;
 
-        public Events events;
-        public class Events
+        public DeepEntity Initialize(EntityTemplate t)
         {
-            public Action<Vector3, Vector3, DeepEntity> Trigger;//idk...
+            template = t;
 
-            public Action OnEntityEnable;
-            public Action OnEntityDisable;
-            public Action OnEntityDie;
-
-            public Action Update;
-            public Action FixedUpdate;
-
-            public Action<float> OnTakeDamage;
-            public ActionRef<float> OnTakeDamageRef;
-            public Action<float> OnDealDamage;
-        }
-
-        void Awake()
-        {
-            events = new Events();
+            events = new DeepEntityEvents();
             attributes = new Dictionary<D_Attribute, DeepAttribute>();
             resources = new Dictionary<D_Resource, DeepResource>();
             states = new Dictionary<D_State, DeepState>();
+            rb = gameObject.AddComponent<Rigidbody2D>();
 
-            if (preset != null)
+            foreach (A att in template.attributes)
             {
-                DeepAttribute presetAtt;
-                foreach (D_Attribute key in Enum.GetValues(typeof(D_Attribute)))
+                this.AddAttribute(att);
+            }
+            //fill in missing attributes
+            foreach (D_Attribute a in Enum.GetValues(typeof(D_Attribute)))
+            {
+                if (!attributes.ContainsKey(a))
                 {
-                    if (preset.attributes.TryGetValue(key, out presetAtt))
-                    {
-                        attributes.Add(key, presetAtt.Clone());
-                    }
-                    else
-                    {
-                        attributes.Add(key, new DeepAttribute());
-                    }
-                }
-                foreach (D_Resource key in Enum.GetValues(typeof(D_Resource)))
-                {
-                    resources[key] = preset.resources[key].Clone();
-                }
-                foreach (D_State key in Enum.GetValues(typeof(D_State)))
-                {
-                    states.Add(key, new DeepState());
+                    this.AddAttribute(a, new DeepAttribute(0f));
                 }
             }
-            //else set the values to some deafult. Maybe 1 for everything? idk
+            foreach (R res in template.resources)
+            {
+                this.AddResource(res);
+            }
+            //fill in missing resources
+            foreach (D_Resource r in Enum.GetValues(typeof(D_Resource)))
+            {
+                if (!resources.ContainsKey(r))
+                {
+                    this.AddResource(r, new DeepResource(1, 0));
+                }
+            }
+            foreach (D_State s in Enum.GetValues(typeof(D_State)))
+            {
+                this.AddState(s);
+            }
+            foreach (DeepBehavior b in template.behaviors)
+            {
+                this.AddBehavior(b);
+            }
+
+            return this;
         }
+
 
         private void OnEnable()
         {
             dying = false;
 
-            //? We should not need to touch attributes or states because they should 100% be driven by behaviors.
-
-            foreach (DeepResource res in resources.Values)
+            foreach (R r in template.resources)
             {
-                res.parentEntity = this;
-                res.SetValueWithRatio(res.defaultRatio);
-            }
-
-            if (preset != null)
-            {
-                foreach (System.Type t in preset.behaviors)
-                {
-                    AddBehavior(t);
-                }
+                resources[r.type].SetValue(r.baseValue);
             }
 
             DeepManager.instance.activeEntities.Add(this);
@@ -168,7 +148,7 @@ namespace DeepAction
         {
             if (attributes.ContainsKey(attribute))
             {
-                return attributes[attribute].GetValue();
+                return attributes[attribute].value;
             }
             return 0f;
         }
@@ -177,7 +157,7 @@ namespace DeepAction
         {
             if (attributes.ContainsKey(attribute))
             {
-                value = attributes[attribute].GetValue();
+                value = attributes[attribute].value;
                 return true;
             }
             value = 0f;
@@ -192,25 +172,7 @@ namespace DeepAction
                 events.OnTakeDamage?.Invoke(d);
                 events.OnTakeDamageRef?.Invoke(ref d);
             }
-
-            if (damageHeirarchy.Length == 0)
-            {
-                Die();
-            }
-
-            for (int i = 0; i < damageHeirarchy.Length; i++)
-            {
-                d = resources[damageHeirarchy[i]].ConsumeWithRemainder(d);
-                if (d <= 0f)
-                {
-                    break;
-                }
-            }
-
-            if (resources[damageHeirarchy[damageHeirarchy.Length - 1]].GetValue() <= 0)
-            {
-                Die();
-            }
+            //todo
         }
 
         public void Die()

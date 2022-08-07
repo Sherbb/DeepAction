@@ -6,18 +6,18 @@ namespace DeepAction
     [DoNotDrawAsReference]
     public abstract class DeepBehavior
     {
-        public Dictionary<D_Resource, float> resourcesToTrigger = new Dictionary<D_Resource, float>();
+        public Dictionary<D_Resource, int> resourcesToTrigger = new Dictionary<D_Resource, int>();
 
         [HideInInspector]
         public DeepEntity parent;
 
         //* Flags
         [HideInInspector]
-        public bool removeOnDeath = true;
+        public bool removeOnDeath { get; private set; }
 
 
 
-        //todo
+        //todo, idk what the point of this will be.
         public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
         {
             foreach (D_Resource key in resourcesToTrigger.Keys)
@@ -28,7 +28,7 @@ namespace DeepAction
                 }
                 else
                 {
-                    if (parent.resources[key].GetValue() < resourcesToTrigger[key])
+                    if (parent.resources[key].value < resourcesToTrigger[key])
                     {
                         return false;
                     }
@@ -40,7 +40,7 @@ namespace DeepAction
                 parent.resources[key].TryToConsume(resourcesToTrigger[key]);
             }
 
-            parent.events.Trigger?.Invoke(point,direction,target);
+            parent.events.Trigger?.Invoke(point, direction, target);
 
             return true;
         }
