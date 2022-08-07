@@ -1,9 +1,7 @@
 # DeepAction
 A platform to create complex rpg/moba like action games in Unity.
 
-THIS IS STIL A WORK IN PROGRESS!
-
-![image](https://user-images.githubusercontent.com/13370191/118415689-de314100-b679-11eb-8341-ad8b1f94cc23.png)
+Its basically just a custom component system.
 
 ## Structure
 
