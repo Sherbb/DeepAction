@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace DeepAction
         public Vector2 minMax { get; private set; }
 
         private List<DeepAttributeModifier> modifiers;
+        public Action<float> onValueChanged;
 
         public DeepAttribute()
         {
@@ -72,6 +74,7 @@ namespace DeepAction
 
         public void UpdateValue()
         {
+            float oldValue = value;
             float f = baseValue;
 
             foreach (DeepAttributeModifier mod in modifiers)
@@ -98,6 +101,11 @@ namespace DeepAction
             else
             {
                 value = f;
+            }
+
+            if (oldValue != value)
+            {
+                onValueChanged(value);
             }
         }
     }
