@@ -27,6 +27,7 @@ namespace DeepAction
         [HideInInspector]
         //todo
         public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
+        public bool initialized { get; private set; }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +44,8 @@ namespace DeepAction
             attributes = new Dictionary<D_Attribute, DeepAttribute>();
             resources = new Dictionary<D_Resource, DeepResource>();
             states = new Dictionary<D_State, DeepState>();
-            rb = gameObject.AddComponent<Rigidbody2D>();
+            behaviors = new List<DeepBehavior>();
+            rb = gameObject.GetComponent<Rigidbody2D>();
 
             foreach (A att in template.attributes)
             {
@@ -78,6 +80,7 @@ namespace DeepAction
                 this.AddBehavior(b);
             }
 
+            initialized = true;
             return this;
         }
 
@@ -86,9 +89,12 @@ namespace DeepAction
         {
             dying = false;
 
-            foreach (R r in template.resources)
+            if (initialized)
             {
-                resources[r.type].SetValue(r.baseValue);
+                foreach (R r in template.resources)
+                {
+                    resources[r.type].SetValue(r.baseValue);
+                }
             }
 
             DeepManager.instance.activeEntities.Add(this);

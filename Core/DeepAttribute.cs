@@ -9,12 +9,14 @@ namespace DeepAction
     public class DeepAttribute
     {
         public float baseValue { get; private set; }
+        [ShowInInspector]
         public float value { get; private set; }
 
         private bool clamp;
         public Vector2 minMax { get; private set; }
 
         private List<DeepAttributeModifier> modifiers;
+        [HideInInspector]
         public Action<float> onValueChanged;
 
         public DeepAttribute()
@@ -105,7 +107,7 @@ namespace DeepAction
 
             if (oldValue != value)
             {
-                onValueChanged(value);
+                onValueChanged?.Invoke(value);
             }
         }
     }

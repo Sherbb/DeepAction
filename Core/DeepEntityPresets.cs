@@ -14,7 +14,7 @@ namespace DeepAction
             },
             new[] {
                 new A(D_Attribute.Strength,0),
-                new A(D_Attribute.Inteligence,0),
+                new A(D_Attribute.Inteligence,1),
                 new A(D_Attribute.Dexterity,0),
             },
             new DeepBehavior[0]
