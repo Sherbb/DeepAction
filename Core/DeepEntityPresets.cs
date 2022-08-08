@@ -6,28 +6,29 @@ namespace DeepAction
 {
     public class DeepEntityPresets
     {
+        //example
         public static EntityTemplate StaticBaseEntity = new EntityTemplate(
             new[] {
                 new R(D_Resource.Health,1),
+                new R(D_Resource.Shield,1,0),
                 new R(D_Resource.Mana,1),
-                new R(D_Resource.Energy,1),
             },
             new[] {
                 new A(D_Attribute.Strength,0),
                 new A(D_Attribute.Inteligence,1),
                 new A(D_Attribute.Dexterity,0),
             },
-            new DeepBehavior[0]
+            new DeepBehavior[0],
+            D_Team.Neutral
         );
 
-
-
+        //example
         public EntityTemplate BaseEntity(int lvl)
         {
             R[] resources = {
                 new R(D_Resource.Health,lvl),
                 new R(D_Resource.Mana,lvl),
-                new R(D_Resource.Energy,lvl)
+                new R(D_Resource.Shield,lvl,0)
             };
 
             A[] attributes = {
@@ -39,7 +40,7 @@ namespace DeepAction
             DeepBehavior[] behaviors = {
             };
 
-            return new EntityTemplate(resources, attributes, behaviors);
+            return new EntityTemplate(resources, attributes, behaviors, D_Team.Neutral);
         }
 
         public EntityTemplate ExampleEnemy(int lvl)
@@ -57,7 +58,8 @@ namespace DeepAction
     //            Structs
     //-----------------------------------
 
-    public struct R//single letter to make defining a template really clean ^
+    //resource template
+    public struct R//single letter to make defining a template really clean ^ if this annoys you change
     {
         public D_Resource type { get; private set; }
         public int baseMax { get; private set; }
@@ -77,6 +79,7 @@ namespace DeepAction
         }
     }
 
+    //attribute template
     public struct A
     {
         public D_Attribute type { get; private set; }
@@ -105,12 +108,14 @@ namespace DeepAction
         public R[] resources;
         public A[] attributes;
         public DeepBehavior[] behaviors;
+        public D_Team team;
 
-        public EntityTemplate(R[] resources, A[] attributes, DeepBehavior[] behaviors)
+        public EntityTemplate(R[] resources, A[] attributes, DeepBehavior[] behaviors, D_Team team)
         {
             this.resources = resources;
             this.attributes = attributes;
             this.behaviors = behaviors;
+            this.team = team;
         }
     }
 }

@@ -58,9 +58,13 @@ namespace DeepAction
             return false;
         }
 
-        public void Consume(int c)
+        /// <summary>
+        /// Subtract the value from the resource
+        /// </summary>
+        /// <returns>Returns the remainder</returns>
+        public int Consume(int c)
         {
-            if (value == 0) return;
+            if (value == 0) return c;
             int newV = Mathf.Clamp(value - c, 0, currentMax);
             int consumed = value - newV;
             value = newV;
@@ -69,6 +73,7 @@ namespace DeepAction
             {
                 onDeplete?.Invoke();
             }
+            return c;
         }
 
         /// <summary>
