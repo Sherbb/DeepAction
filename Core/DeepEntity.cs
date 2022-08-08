@@ -112,49 +112,6 @@ namespace DeepAction
             DeepManager.instance.activeEntities.Remove(this);
         }
 
-        public DeepBehavior AddBehavior<T>() where T : DeepBehavior
-        {
-            DeepBehavior b = (DeepBehavior)Activator.CreateInstance(typeof(T));
-            return AddBehavior(b);
-        }
-
-        public DeepBehavior AddBehavior(Type behavior)
-        {
-            if (!typeof(DeepBehavior).IsAssignableFrom(behavior)) return null;// >:(
-            DeepBehavior b = (DeepBehavior)Activator.CreateInstance(behavior);
-            return AddBehavior(b);
-        }
-
-        public DeepBehavior AddBehavior(DeepBehavior behavior)
-        {
-            behavior.parent = this;
-            behaviors.Add(behavior);
-            behavior.IntitializeBehavior();
-            return behavior;
-        }
-
-        public bool RemoveBehavior<T>() where T : DeepBehavior
-        {
-            foreach (T b in behaviors.OfType<T>())
-            {
-                b.DestroyBehavior();
-                behaviors.Remove(b);
-                return true;
-            }
-            return false;
-        }
-
-        public bool RemoveBehavior(DeepBehavior behavior)
-        {
-            if (!behaviors.Contains(behavior))
-            {
-                return false;
-            }
-            behavior.DestroyBehavior();
-            behaviors.Remove(behavior);
-            return true;
-        }
-
         /// <summary>
         /// Apply damage to an entity. Damage can be applied to ANY resource, but note that HEALTH directly affects
         /// the life of an entity, and SHIELD will be consumed instead of HEALTH by default if possible. 
