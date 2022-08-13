@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
@@ -26,6 +24,22 @@ namespace DeepAction
         {
             DeepEntity e = GameObject.Instantiate(baseEntity, DeepManager.instance.transform).GetComponent<DeepEntity>();
             e.Initialize(DeepEntityPresets.StaticBaseEntity);
+
+            return e;
+        }
+        [Button]
+        public DeepEntity Enemy()
+        {
+            DeepEntity e = GameObject.Instantiate(baseEntity, DeepManager.instance.transform).GetComponent<DeepEntity>();
+            e.Initialize(DeepEntityPresets.ExampleEnemy());
+
+            return e;
+        }
+        [Button]
+        public DeepEntity Player()
+        {
+            DeepEntity e = GameObject.Instantiate(baseEntity, DeepManager.instance.transform).GetComponent<DeepEntity>();
+            e.Initialize(DeepEntityPresets.ExamplePlayer());
 
             return e;
         }

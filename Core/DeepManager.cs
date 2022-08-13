@@ -45,6 +45,9 @@ namespace DeepAction
         void Awake()
         {
             //initialize lookups
+            entityByTeamLookup = new Dictionary<D_Team, List<DeepEntity>>();
+            entityByTypeLookup = new Dictionary<D_EntityType, List<DeepEntity>>();
+            entityByTeamAndTypeLookup = new Dictionary<D_Team, Dictionary<D_EntityType, List<DeepEntity>>>();
             foreach (D_Team team in Enum.GetValues(typeof(D_Team)))
             {
                 entityByTeamLookup.Add(team, new List<DeepEntity>());

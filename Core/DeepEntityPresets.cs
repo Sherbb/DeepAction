@@ -24,7 +24,7 @@ namespace DeepAction
         );
 
         //example
-        public EntityTemplate BaseEntity(int lvl)
+        public static EntityTemplate BaseEntity(int lvl)
         {
             R[] resources = {
                 new R(D_Resource.Health,lvl),
@@ -44,12 +44,22 @@ namespace DeepAction
             return new EntityTemplate(resources, attributes, behaviors, D_Team.Neutral, D_EntityType.Actor);
         }
 
-        public EntityTemplate ExampleEnemy(int lvl)
+        public static EntityTemplate ExampleEnemy()
         {
-            EntityTemplate t = BaseEntity(lvl);
+            EntityTemplate t = BaseEntity(1);
             t.behaviors = new[]{
-                new DecayingSlow()
+                new MoveTowardsPlayer()
             };
+            t.team = D_Team.Enemy;
+            t.type = D_EntityType.Actor;
+
+            return t;
+        }
+        public static EntityTemplate ExamplePlayer()
+        {
+            EntityTemplate t = BaseEntity(1);
+            t.team = D_Team.Player;
+            t.type = D_EntityType.Actor;
 
             return t;
         }

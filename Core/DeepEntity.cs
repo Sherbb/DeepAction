@@ -24,13 +24,15 @@ namespace DeepAction
         // * Events
         public DeepEntityEvents events;
         // * Team
+        [HideInEditorMode]
         public D_Team team { get; private set; }
         // * Type
+        [HideInEditorMode]
         public D_EntityType type { get; private set; }
         // * Flags
-        [HideInInspector]
+        [HideInEditorMode]
         public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
-        [HideInInspector]
+        [HideInEditorMode]
         public bool initialized { get; private set; }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +80,6 @@ namespace DeepAction
                     this.AddResource(r, new DeepResource(1, 0));
                 }
             }
-            resources[D_Resource.Health].onDeplete += Die;
             foreach (D_State s in Enum.GetValues(typeof(D_State)))
             {
                 this.AddState(s);
@@ -88,10 +89,12 @@ namespace DeepAction
                 this.AddBehavior(b);
             }
 
+            // * Kill entity when health runs out
+            resources[D_Resource.Health].onDeplete += Die;
+
             initialized = true;
             return this;
         }
-
 
         private void OnEnable()
         {
