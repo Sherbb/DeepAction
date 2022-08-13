@@ -24,7 +24,9 @@ namespace DeepAction
         // * Events
         public DeepEntityEvents events;
         // * Team
-        public D_Team team;
+        public D_Team team { get; private set; }
+        // * Type
+        public D_EntityType type { get; private set; }
         // * Flags
         [HideInInspector]
         public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
@@ -50,6 +52,7 @@ namespace DeepAction
             rb = gameObject.GetComponent<Rigidbody2D>();
 
             team = t.team;
+            type = t.type;
 
             foreach (A att in template.attributes)
             {
@@ -102,14 +105,14 @@ namespace DeepAction
                 }
             }
 
-            DeepManager.instance.activeEntities.Add(this);
+            DeepManager.instance.RegisterEntity(this);
         }
 
         void OnDisable()
         {
             dying = false;
             events.OnEntityDisable?.Invoke();
-            DeepManager.instance.activeEntities.Remove(this);
+            DeepManager.instance.DeregisterEntity(this);
         }
 
         /// <summary>

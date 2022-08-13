@@ -9,6 +9,9 @@ namespace DeepAction
         public Dictionary<D_Resource, int> resourcesToTrigger = new Dictionary<D_Resource, int>();
 
         [HideInInspector]
+        /// <summary>
+        /// The deepEntity that this behavior is on.
+        /// </summary>
         public DeepEntity parent;
 
         //* Flags

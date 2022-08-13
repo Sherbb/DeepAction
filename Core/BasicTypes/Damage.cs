@@ -1,5 +1,6 @@
 namespace DeepAction
 {
+    //thought "DeepDamage" sounded stupid
     public struct Damage
     {
         public int damage;

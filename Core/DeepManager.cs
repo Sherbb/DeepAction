@@ -2,21 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using System;
 
 namespace DeepAction
 {
     public class DeepManager : MonoBehaviour
     {
         //Every DeepEntity adds itself to the manager
-        //Gives us a nice place to iterate over entities while being a tiny bit more performant.
+        //Gives us a nice place to iterate and organize entities while being a tiny bit more performant.
 
-        public static DeepManager instance;
+        public static DeepManager instance { get; private set; }
 
         [ReadOnly]
-        public List<DeepEntity> activeEntities = new List<DeepEntity>();//todo make array
+        public List<DeepEntity> activeEntities { get; private set; }
+
+        // * Lookups
+        public Dictionary<D_EntityType, List<DeepEntity>> entityByTypeLookup { get; private set; }
+        public Dictionary<D_Team, List<DeepEntity>> entityByTeamLookup { get; private set; }
+        /// <summary>
+        /// Sort entities by team, then by type. example of getting all player actors:
+        /// 
+        /// entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor].Count;
+        /// </summary>
+        public Dictionary<D_Team, Dictionary<D_EntityType, List<DeepEntity>>> entityByTeamAndTypeLookup { get; private set; }
+
+        public void RegisterEntity(DeepEntity e)
+        {
+            activeEntities.Add(e);
+            entityByTypeLookup[e.type].Add(e);
+            entityByTeamLookup[e.team].Add(e);
+            entityByTeamAndTypeLookup[e.team][e.type].Add(e);
+        }
+
+        public void DeregisterEntity(DeepEntity e)
+        {
+            activeEntities.Remove(e);
+            entityByTypeLookup[e.type].Remove(e);
+            entityByTeamLookup[e.team].Remove(e);
+            entityByTeamAndTypeLookup[e.team][e.type].Remove(e);
+        }
 
         void Awake()
         {
+            //initialize lookups
+            foreach (D_Team team in Enum.GetValues(typeof(D_Team)))
+            {
+                entityByTeamLookup.Add(team, new List<DeepEntity>());
+                entityByTeamAndTypeLookup.Add(team, new Dictionary<D_EntityType, List<DeepEntity>>());
+            }
+            foreach (D_EntityType type in Enum.GetValues(typeof(D_EntityType)))
+            {
+                entityByTypeLookup.Add(type, new List<DeepEntity>());
+                foreach (D_Team team in Enum.GetValues(typeof(D_Team)))
+                {
+                    entityByTeamAndTypeLookup[team].Add(type, new List<DeepEntity>());
+                }
+            }
+
+            activeEntities = new List<DeepEntity>();
             instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
@@ -30,7 +73,7 @@ namespace DeepAction
             }
         }
 
-        // Entites are killed during LATEUPDATE
+        // Entites are killed (disabled) during LATEUPDATE
         void LateUpdate()
         {
             for (int i = activeEntities.Count - 1; i >= 0; i--)

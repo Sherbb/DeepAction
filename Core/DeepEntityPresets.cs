@@ -19,7 +19,8 @@ namespace DeepAction
                 new A(D_Attribute.Dexterity,0),
             },
             new DeepBehavior[0],
-            D_Team.Neutral
+            D_Team.Neutral,
+            D_EntityType.Actor
         );
 
         //example
@@ -40,7 +41,7 @@ namespace DeepAction
             DeepBehavior[] behaviors = {
             };
 
-            return new EntityTemplate(resources, attributes, behaviors, D_Team.Neutral);
+            return new EntityTemplate(resources, attributes, behaviors, D_Team.Neutral, D_EntityType.Actor);
         }
 
         public EntityTemplate ExampleEnemy(int lvl)
@@ -109,13 +110,15 @@ namespace DeepAction
         public A[] attributes;
         public DeepBehavior[] behaviors;
         public D_Team team;
+        public D_EntityType type;
 
-        public EntityTemplate(R[] resources, A[] attributes, DeepBehavior[] behaviors, D_Team team)
+        public EntityTemplate(R[] resources, A[] attributes, DeepBehavior[] behaviors, D_Team team, D_EntityType type)
         {
             this.resources = resources;
             this.attributes = attributes;
             this.behaviors = behaviors;
             this.team = team;
+            this.type = type;
         }
     }
 }
