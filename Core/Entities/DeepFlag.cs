@@ -7,7 +7,7 @@ using System;
 namespace DeepAction
 {
     [HideReferenceObjectPicker]
-    public class DeepState
+    public class DeepFlag
     {
         [GUIColor("@GetColor()")]
         [DisplayAsString, ShowInInspector, ReadOnly, LabelText("Current Status:")]

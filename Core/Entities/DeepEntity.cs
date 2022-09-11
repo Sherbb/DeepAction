@@ -15,22 +15,22 @@ namespace DeepAction
         // * Attributes
         [Title("Attributes", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
         public Dictionary<D_Attribute, DeepAttribute> attributes { get; private set; }
-        // * States
+        // * Flags
         [Title("States", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_State, DeepState> states { get; private set; }
+        public Dictionary<D_State, DeepFlag> flags { get; private set; }
         // * Behaviors
         [Title("Behaviors", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
         public List<DeepBehavior> behaviors { get; private set; }
         // * Events
         public DeepEntityEvents events;
         // * Team
-        [HideInEditorMode]
+        [HideInEditorMode, ShowInInspector]
         public D_Team team { get; private set; }
         // * Type
-        [HideInEditorMode]
+        [HideInEditorMode, ShowInInspector]
         public D_EntityType type { get; private set; }
         // * Flags
-        [HideInEditorMode]
+        [HideInEditorMode, ShowInInspector]
         public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
         [HideInEditorMode]
         public bool initialized { get; private set; }
@@ -49,7 +49,7 @@ namespace DeepAction
             events = new DeepEntityEvents();
             attributes = new Dictionary<D_Attribute, DeepAttribute>();
             resources = new Dictionary<D_Resource, DeepResource>();
-            states = new Dictionary<D_State, DeepState>();
+            flags = new Dictionary<D_State, DeepFlag>();
             behaviors = new List<DeepBehavior>();
             rb = gameObject.GetComponent<Rigidbody2D>();
 
@@ -93,6 +93,8 @@ namespace DeepAction
             resources[D_Resource.Health].onDeplete += Die;
 
             initialized = true;
+            //OnEnable gets called before this, so we need to initialize here when entities are created.
+            DeepManager.instance.RegisterEntity(this);
             return this;
         }
 
@@ -106,9 +108,8 @@ namespace DeepAction
                 {
                     resources[r.type].SetValue(r.baseValue);
                 }
+                DeepManager.instance.RegisterEntity(this);
             }
-
-            DeepManager.instance.RegisterEntity(this);
         }
 
         void OnDisable()

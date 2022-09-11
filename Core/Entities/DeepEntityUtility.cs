@@ -59,11 +59,11 @@ namespace DeepAction
 
         public static bool AddState(this DeepEntity e, D_State s)
         {
-            if (e.states.ContainsKey(s))
+            if (e.flags.ContainsKey(s))
             {
                 return false;
             }
-            e.states.Add(s, new DeepState());
+            e.flags.Add(s, new DeepFlag());
             return true;
         }
 
