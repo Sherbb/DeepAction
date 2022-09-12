@@ -94,7 +94,7 @@ namespace DeepAction
 
             initialized = true;
             //OnEnable gets called before this, so we need to initialize here when entities are created.
-            DeepManager.instance.RegisterEntity(this);
+            App.state.game.RegisterEntity(this);
             return this;
         }
 
@@ -108,7 +108,7 @@ namespace DeepAction
                 {
                     resources[r.type].SetValue(r.baseValue);
                 }
-                DeepManager.instance.RegisterEntity(this);
+                App.state.game.RegisterEntity(this);
             }
         }
 
@@ -116,7 +116,7 @@ namespace DeepAction
         {
             dying = false;
             events.OnEntityDisable?.Invoke();
-            DeepManager.instance.DeregisterEntity(this);
+            App.state.game.DeregisterEntity(this);
         }
 
         /// <summary>

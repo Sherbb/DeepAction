@@ -42,7 +42,7 @@ namespace DeepAction
     public class DeepStateList<T>
     {
         [ShowInInspector, HideLabel]
-        public List<T> collection { get; private set; }
+        public List<T> list { get; private set; }
 
         /// <summary>
         /// called when an objects is added/removed
@@ -52,20 +52,20 @@ namespace DeepAction
 
         public DeepStateList()
         {
-            collection = new List<T>();
+            list = new List<T>();
         }
 
         public void Add(T entry)
         {
-            collection.Add(entry);
-            onCollectionChanged?.Invoke(collection);
+            list.Add(entry);
+            onCollectionChanged?.Invoke(list);
         }
 
         public bool Remove(T entry)
         {
-            if (collection.Remove(entry))
+            if (list.Remove(entry))
             {
-                onCollectionChanged?.Invoke(collection);
+                onCollectionChanged?.Invoke(list);
                 return true;
             }
             return false;

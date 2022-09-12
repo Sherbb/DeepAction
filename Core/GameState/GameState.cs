@@ -6,8 +6,6 @@ using UnityEngine;
 
 namespace DeepAction
 {
-    // Read notation like:
-    // S_Game => "GameState
     [Serializable]
     public class S_App
     {
@@ -28,6 +26,7 @@ namespace DeepAction
         public Dictionary<D_EntityType, DeepStateList<DeepEntity>> entityByTypeLookup { get; private set; } = new Dictionary<D_EntityType, DeepStateList<DeepEntity>>();
         [ShowInInspector]
         public Dictionary<D_Team, DeepStateList<DeepEntity>> entityByTeamLookup { get; private set; } = new Dictionary<D_Team, DeepStateList<DeepEntity>>();
+
         /// <summary>
         /// Sort entities by team, then by type. example of getting all player actors:
         /// 
@@ -36,7 +35,7 @@ namespace DeepAction
         [ShowInInspector]
         public Dictionary<D_Team, Dictionary<D_EntityType, DeepStateList<DeepEntity>>> entityByTeamAndTypeLookup { get; private set; } = new Dictionary<D_Team, Dictionary<D_EntityType, DeepStateList<DeepEntity>>>();
 
-        public S_Game() 
+        public S_Game()
         {
             foreach (D_Team team in Enum.GetValues(typeof(D_Team)))
             {
@@ -54,6 +53,22 @@ namespace DeepAction
             activeEntities = new DeepStateList<DeepEntity>();
         }
 
+        public void RegisterEntity(DeepEntity e)
+        {
+            //entities are added to global state.
+            App.state.game.activeEntities.Add(e);
+            App.state.game.entityByTypeLookup[e.type].Add(e);
+            App.state.game.entityByTeamLookup[e.team].Add(e);
+            App.state.game.entityByTeamAndTypeLookup[e.team][e.type].Add(e);
+        }
+
+        public void DeregisterEntity(DeepEntity e)
+        {
+            App.state.game.activeEntities.Remove(e);
+            App.state.game.entityByTypeLookup[e.type].Remove(e);
+            App.state.game.entityByTeamLookup[e.team].Remove(e);
+            App.state.game.entityByTeamAndTypeLookup[e.team][e.type].Remove(e);
+        }
     }
 
     [Serializable]
