@@ -57,7 +57,7 @@ namespace DeepAction
             return true;
         }
 
-        public static bool AddState(this DeepEntity e, D_State s)
+        public static bool AddFlag(this DeepEntity e, D_Flag s)
         {
             if (e.flags.ContainsKey(s))
             {

@@ -42,21 +42,5 @@ namespace DeepAction
         {
             parent.attributes[attribute].RemoveModifer(attMod);
         }
-
-        /*
-        private void ExampleUsage()
-        {
-            DeepEntity e = new DeepEntity();
-
-            DecayingAttributeMod b = new DecayingAttributeMod();
-            b.modBase = new Vector3(0f,.5f,0f);
-            b.attribute = D_Attribute.MoveSpeed;
-            b.duration = 2f;
-
-            //add a 50% move speed buff to entity
-            //the buff will decay over 2 seconds.
-            e.AddBehavior(b);
-        }
-        */
     }
 }

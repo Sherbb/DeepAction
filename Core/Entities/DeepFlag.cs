@@ -9,35 +9,35 @@ namespace DeepAction
     [HideReferenceObjectPicker]
     public class DeepFlag
     {
-        [GUIColor("@GetColor()")]
         [DisplayAsString, ShowInInspector, ReadOnly, LabelText("Current Status:")]
-        public bool state { get; private set; }
+        public bool flag { get; private set; }
 
         [HideInInspector]
-        public Action OnStateActivated;
+        public Action OnFlagActivated;
         [HideInInspector]
-        public Action OnStateDeactivated;
+        public Action OnFlagDeactivated;
         [HideInInspector]
-        public Action<bool> OnStateChanged;
+        public Action<bool> OnFlagChanged;
 
-        private List<DeepStateModifier> modifiers;
-        private bool oldState;
-        public DeepStateModifier AddModifier(DeepStateModifier modifier)
+        private List<DeepFlagModifier> modifiers;
+        private bool oldFlag;
+
+        public DeepFlagModifier AddModifier(DeepFlagModifier modifier)
         {
             if (modifiers == null)
             {
-                modifiers = new List<DeepStateModifier>();
+                modifiers = new List<DeepFlagModifier>();
             }
             modifiers.Add(modifier);
             UpdateValue();
             return modifier;
         }
 
-        public bool RemoveModifier(DeepStateModifier modifier)
+        public bool RemoveModifier(DeepFlagModifier modifier)
         {
             if (modifiers == null)
             {
-                modifiers = new List<DeepStateModifier>();
+                modifiers = new List<DeepFlagModifier>();
                 return false;
             }
 
@@ -51,70 +51,32 @@ namespace DeepAction
 
         public void UpdateValue()
         {
-            oldState = state;
-            if (modifiers.Count == 0)
+            oldFlag = flag;
+            flag = modifiers.Count > 0;
+
+            if (flag != oldFlag)
             {
-                state = false;
-                if (state != oldState)
+                OnFlagChanged?.Invoke(flag);
+                if (flag)
                 {
-                    OnStateDeactivated?.Invoke();
-                    OnStateChanged?.Invoke(state);
+                    OnFlagActivated?.Invoke();
                 }
-                return;
-            }
-
-            foreach (DeepStateModifier m in modifiers)
-            {
-                if (m.modType == DeepStateModifier.ModifyType.PreventActive)
+                else
                 {
-                    state = false;
-                    if (state != oldState)
-                    {
-                        OnStateDeactivated?.Invoke();
-                        OnStateChanged?.Invoke(state);
-                    }
-                    return;
+                    OnFlagDeactivated?.Invoke();
                 }
-            }
-
-            state = true;
-            if (state != oldState)
-            {
-                OnStateActivated?.Invoke();
-                OnStateChanged?.Invoke(state);
-            }
-            return;
-        }
-
-        private Color GetColor()//for inspector use only
-        {
-            if (state)
-            {
-                return new Color(.7f, 1f, .7f);
-            }
-            else
-            {
-                return new Color(1f, .7f, .7f);
             }
         }
     }
 
     [HideReferenceObjectPicker]
-    public class DeepStateModifier
+    public class DeepFlagModifier
     {
-        public enum ModifyType
+        public DeepBehavior source { get; private set; }
+
+        public DeepFlagModifier(DeepBehavior source = null)
         {
-            Active,//turns state on
-            PreventActive,//prevents state from turning on.
-        }
-        public ModifyType modType;
-        public DeepStateModifier(DeepStateModifier other)
-        {
-            modType = other.modType;
-        }
-        public DeepStateModifier(ModifyType modType)
-        {
-            this.modType = modType;
+            this.source = source;
         }
     }
 }

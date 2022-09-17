@@ -17,7 +17,7 @@ namespace DeepAction
         public Dictionary<D_Attribute, DeepAttribute> attributes { get; private set; }
         // * Flags
         [Title("States", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_State, DeepFlag> flags { get; private set; }
+        public Dictionary<D_Flag, DeepFlag> flags { get; private set; }
         // * Behaviors
         [Title("Behaviors", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
         public List<DeepBehavior> behaviors { get; private set; }
@@ -29,7 +29,8 @@ namespace DeepAction
         // * Type
         [HideInEditorMode, ShowInInspector]
         public D_EntityType type { get; private set; }
-        // * Flags
+
+        // * Status
         [HideInEditorMode, ShowInInspector]
         public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
         [HideInEditorMode]
@@ -49,7 +50,7 @@ namespace DeepAction
             events = new DeepEntityEvents();
             attributes = new Dictionary<D_Attribute, DeepAttribute>();
             resources = new Dictionary<D_Resource, DeepResource>();
-            flags = new Dictionary<D_State, DeepFlag>();
+            flags = new Dictionary<D_Flag, DeepFlag>();
             behaviors = new List<DeepBehavior>();
             rb = gameObject.GetComponent<Rigidbody2D>();
 
@@ -80,9 +81,9 @@ namespace DeepAction
                     this.AddResource(r, new DeepResource(1, 0));
                 }
             }
-            foreach (D_State s in Enum.GetValues(typeof(D_State)))
+            foreach (D_Flag s in Enum.GetValues(typeof(D_Flag)))
             {
-                this.AddState(s);
+                this.AddFlag(s);
             }
             foreach (DeepBehavior b in template.behaviors)
             {
@@ -127,7 +128,7 @@ namespace DeepAction
         {
             foreach (Damage d in hits)
             {
-                if (d.target == D_Resource.Shield)
+                if (d.target == D_Resource.Health)
                 {
                     //Game dependant, you might want a totally different damage calc.
                     int r = resources[D_Resource.Shield].Consume(d.damage);
@@ -142,6 +143,7 @@ namespace DeepAction
         public void Die()
         {
             if (dying) return;
+
             events.OnEntityDie?.Invoke();
             dying = true;
         }
