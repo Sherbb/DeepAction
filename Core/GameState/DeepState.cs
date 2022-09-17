@@ -1,18 +1,16 @@
 using System;
-using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DeepAction
 {
     [Serializable, ShowInInspector, InlineProperty, HideReferenceObjectPicker]
     public class DeepState<T>
     {
-        //JsonProperty here is required for DeepStateSet<> etc to deserialize properly... idk why
+        //need to rename the json property here because "value" can be interperated weirdly in json collections
         [ShowInInspector, HideLabel, JsonProperty("State")]
         public T value { get; private set; }
 
@@ -39,86 +37,57 @@ namespace DeepAction
 
     [Serializable]
     //todo this needs to implement enumerable or something so that we can use []
-    public class DeepStateList<T>
+    public class DeepStateList<T> : IEnumerable<T>
     {
         [ShowInInspector, HideLabel]
         public List<T> list { get; private set; }
 
-        /// <summary>
-        /// called when an objects is added/removed
-        /// </summary>
+        /// <summary>called when an objects is added/removed</summary>
         [HideInInspector, JsonIgnore]
-        public Action<List<T>> onCollectionChanged;
+        public Action onCollectionChanged;
 
         public DeepStateList()
         {
             list = new List<T>();
         }
 
+        public T this[int index]
+        {
+            get
+            {
+                return list[index];
+            }
+        }
+
         public void Add(T entry)
         {
             list.Add(entry);
-            onCollectionChanged?.Invoke(list);
+            onCollectionChanged?.Invoke();
         }
 
         public bool Remove(T entry)
         {
             if (list.Remove(entry))
             {
-                onCollectionChanged?.Invoke(list);
+                onCollectionChanged?.Invoke();
                 return true;
             }
             return false;
         }
-    }
-/*
-    [Serializable]
-    public class DeepStateList<T>
-    {
-        [ShowInInspector, HideLabel]
-        public List<DeepState<T>> collection { get; private set; }
 
-        /// <summary>
-        /// called when an objects is added/removed
-        /// </summary>
-        [HideInInspector, JsonIgnore]
-        public Action<List<DeepState<T>>> onCollectionChanged;
-
-        /// <summary>
-        /// when a member of the set is changed this is triggered
-        /// </summary>
-        [HideInInspector, JsonIgnore]
-        public Action onValueChanged;
-
-        public DeepStateList()
+        public IEnumerator<T> GetEnumerator()
         {
-            collection = new List<DeepState<T>>();
-        }
-
-        public void Add(DeepState<T> entry)
-        {
-            collection.Add(entry);
-            entry.onValueChanged += ValueChanged;
-            onCollectionChanged?.Invoke(collection);
-        }
-
-        public bool Remove(DeepState<T> entry)
-        {
-            if (collection.Remove(entry))
+            foreach (T v in list)
             {
-                entry.onValueChanged -= ValueChanged;
-                onCollectionChanged?.Invoke(collection);
-                return true;
+                yield return v;
             }
-            return false;
         }
 
-        private void ValueChanged(T value)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            onValueChanged?.Invoke();
+            return GetEnumerator();
         }
     }
-*/
 
     //todo dont think we will use this....
     public class DeepStateDictionary<TKey, TValue>

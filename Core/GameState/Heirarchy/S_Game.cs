@@ -1,20 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace DeepAction
 {
-    [Serializable]
-    public class S_App
-    {
-        [ShowInInspector]
-        public S_Game game { get; private set; } = new S_Game();
-        [ShowInInspector]
-        public S_UI ui { get; private set; } = new S_UI();
-    }
-
     [Serializable]
     public class S_Game
     {
@@ -69,11 +58,5 @@ namespace DeepAction
             App.state.game.entityByTeamLookup[e.team].Remove(e);
             App.state.game.entityByTeamAndTypeLookup[e.team][e.type].Remove(e);
         }
-    }
-
-    [Serializable]
-    public class S_UI
-    {
-
     }
 }
