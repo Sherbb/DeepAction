@@ -38,8 +38,6 @@ namespace DeepAction
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public static readonly D_Resource[] damageHeirarchy = { D_Resource.Health };//Damage is done from left to right       
-
         public Rigidbody2D rb { get; private set; }
         private EntityTemplate template;
 
@@ -113,7 +111,7 @@ namespace DeepAction
             }
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             dying = false;
             events.OnEntityDisable?.Invoke();
