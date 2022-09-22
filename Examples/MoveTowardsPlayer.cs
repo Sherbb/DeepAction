@@ -21,8 +21,9 @@ namespace DeepAction
             if (App.state.game.entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor].list.Count > 0)
             {
                 Vector2 force = App.state.game.entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor][0].transform.position - parent.transform.position;
-                force = force.normalized * Time.fixedDeltaTime * parent.attributes[D_Attribute.MoveSpeed].value;
+                force = force.normalized * parent.attributes[D_Attribute.MoveSpeed].value;
                 parent.rb.AddForce(force, ForceMode2D.Force);
+                parent.rb.velocity = Vector2.ClampMagnitude(parent.rb.velocity, parent.attributes[D_Attribute.MoveSpeed].value);
             }
         }
     }

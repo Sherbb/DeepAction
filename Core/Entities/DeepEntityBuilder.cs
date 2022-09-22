@@ -5,7 +5,7 @@ namespace DeepAction
 {
     public class DeepEntityBuilder : MonoBehaviour
     {
-        private const string baseEntityPath = "BaseEntity";
+        private const string baseEntityPath = "CubeEnemy";
         private GameObject _baseEntity;
         private GameObject baseEntity
         {
@@ -19,6 +19,10 @@ namespace DeepAction
                 return _baseEntity;
             }
         }
+
+        public GameObject player;
+        public GameObject enemy;
+
         [Button]
         public DeepEntity CreateFromPrefab()
         {
@@ -30,7 +34,7 @@ namespace DeepAction
         [Button]
         public DeepEntity Enemy()
         {
-            DeepEntity e = GameObject.Instantiate(baseEntity, DeepManager.instance.transform).GetComponent<DeepEntity>();
+            DeepEntity e = GameObject.Instantiate(enemy, DeepManager.instance.transform).GetComponent<DeepEntity>();
             e.Initialize(DeepEntityPresets.ExampleEnemy());
 
             return e;
@@ -38,7 +42,7 @@ namespace DeepAction
         [Button]
         public DeepEntity Player()
         {
-            DeepEntity e = GameObject.Instantiate(baseEntity, DeepManager.instance.transform).GetComponent<DeepEntity>();
+            DeepEntity e = GameObject.Instantiate(player, DeepManager.instance.transform).GetComponent<DeepEntity>();
             e.Initialize(DeepEntityPresets.ExamplePlayer());
 
             return e;
