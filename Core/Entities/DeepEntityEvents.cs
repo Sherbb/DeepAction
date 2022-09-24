@@ -16,9 +16,22 @@ namespace DeepAction
         public Action OnEntityDisable;
         public Action OnEntityDie;
 
+        // * Hearbeat
         public Action Update;
         public Action FixedUpdate;
 
+        // * Collision
+        //pass through of the standard unity events
+        public Action<Collision2D> OnCollisionEnter2D;
+        public Action<Collision2D> OnCollisionExit2D;
+        public Action<Collision2D> OnCollisionStay2D;
+
+        //only passes when colliding with anotherDeepEntity
+        public Action<DeepEntity> OnEntityCollisionEnter;
+        public Action<DeepEntity> OnEntityCollisionExit;
+        public Action<DeepEntity> OnEntityCollisionStay;
+
+        // * Damage
         public Action<float> OnTakeDamage;
         public ActionRef<float> OnTakeDamageRef;
         public Action<float> OnDealDamage;

@@ -145,5 +145,34 @@ namespace DeepAction
             events.OnEntityDie?.Invoke();
             dying = true;
         }
+
+        //////////////////////////////////////////////////////////////
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            events.OnCollisionEnter2D?.Invoke(col);
+            if (col.gameObject.TryGetComponent(out DeepEntity e))
+            {
+                events.OnEntityCollisionEnter?.Invoke(e);
+            }
+        }
+
+        private void OnCollisionExit2D(Collision2D col)
+        {
+            events.OnCollisionExit2D?.Invoke(col);
+            if (col.gameObject.TryGetComponent(out DeepEntity e))
+            {
+                events.OnEntityCollisionExit?.Invoke(e);
+            }
+        }
+
+        private void OnCollisionStay2D(Collision2D col)
+        {
+            events.OnCollisionStay2D?.Invoke(col);
+            if (col.gameObject.TryGetComponent(out DeepEntity e))
+            {
+                events.OnEntityCollisionStay?.Invoke(e);
+            }
+        }
     }
 }

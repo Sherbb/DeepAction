@@ -48,7 +48,7 @@ namespace DeepAction
         public static EntityTemplate ExampleEnemy()
         {
             EntityTemplate t = BaseEntity();
-            t.behaviors = new[]{
+            t.behaviors = new DeepBehavior[]{
                 new MoveTowardsPlayer()
             };
             t.team = D_Team.Enemy;
@@ -60,9 +60,12 @@ namespace DeepAction
         public static EntityTemplate ExamplePlayer()
         {
             EntityTemplate t = BaseEntity();
-            t.behaviors = new[]{
-                new PlayerMovement()
+
+            t.behaviors = new DeepBehavior[]{
+                new PlayerMovement(),
+                new PlayerTouch(20f,500f),
             };
+
             t.team = D_Team.Player;
             t.type = D_EntityType.Actor;
 
