@@ -8,28 +8,35 @@ namespace DeepAction
 {
     public class DecayingAttributeMod : DeepBehavior
     {
-        public Vector3 modBase;
-        public float duration = 1f;
-        public D_Attribute attribute;
+        private D_Attribute _attribute;
+        private ModValues _modBase;
+        private float _duration = 1f;
 
         private DeepAttributeModifier attMod;
         private float timer;
 
+        public DecayingAttributeMod(D_Attribute attribute, ModValues mod, float duration)
+        {
+            _attribute = attribute;
+            _modBase = mod;
+            _duration = duration;
+        }
+
         public override void IntitializeBehavior()
         {
-            attMod = new DeepAttributeModifier(modBase.x, modBase.y, modBase.z);
-            parent.attributes[attribute].AddModifier(attMod);
+            attMod = new DeepAttributeModifier(_modBase);
+            parent.attributes[_attribute].AddModifier(attMod);
             parent.StartCoroutine(Decay());
         }
 
         public IEnumerator Decay()
         {
-            while (timer < duration)
+            while (timer < _duration)
             {
                 attMod.UpdateModifier(
-                Mathf.Lerp(modBase.x, 0f, timer / duration),
-                Mathf.Lerp(modBase.y, 0f, timer / duration),
-                Mathf.Lerp(modBase.z, 0f, timer / duration)
+                Mathf.Lerp(_modBase.baseAdd, 0f, timer / _duration),
+                Mathf.Lerp(_modBase.multiplier, 0f, timer / _duration),
+                Mathf.Lerp(_modBase.postAdd, 0f, timer / _duration)
                 );
 
                 timer += Time.deltaTime;
@@ -40,7 +47,7 @@ namespace DeepAction
 
         public override void DestroyBehavior()
         {
-            parent.attributes[attribute].RemoveModifer(attMod);
+            parent.attributes[_attribute].RemoveModifer(attMod);
         }
     }
 }

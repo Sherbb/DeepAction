@@ -39,6 +39,8 @@ namespace DeepAction
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Rigidbody2D rb { get; private set; }
+        public Vector2 aimDirection { get; set; }
+
         private EntityTemplate template;
 
         public DeepEntity Initialize(EntityTemplate t)
@@ -94,6 +96,7 @@ namespace DeepAction
             initialized = true;
             //OnEnable gets called before this, so we need to initialize here when entities are created.
             App.state.game.RegisterEntity(this);
+            events.OnEntityEnable?.Invoke();
             return this;
         }
 
@@ -108,6 +111,7 @@ namespace DeepAction
                     resources[r.type].SetValue(r.baseValue);
                 }
                 App.state.game.RegisterEntity(this);
+                events?.OnEntityEnable?.Invoke();
             }
         }
 
@@ -173,6 +177,11 @@ namespace DeepAction
             {
                 events.OnEntityCollisionStay?.Invoke(e);
             }
+        }
+
+        public void SetAimDirection(Vector2 aimDirection)
+        {
+            this.aimDirection = aimDirection;
         }
     }
 }

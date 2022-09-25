@@ -88,7 +88,7 @@ namespace DeepAction
 
             foreach (DeepAttributeModifier mod in modifiers)
             {
-                f += (newBase * mod.multiplier);
+                f *= (1f + mod.multiplier);
             }
 
             foreach (DeepAttributeModifier mod in modifiers)
@@ -129,6 +129,12 @@ namespace DeepAction
             this.multiplier = 0f;
             this.postAdd = 0f;
         }
+        public DeepAttributeModifier(ModValues mod)
+        {
+            this.baseAdd = mod.baseAdd;
+            this.multiplier = mod.multiplier;
+            this.postAdd = mod.postAdd;
+        }
         public DeepAttributeModifier(float baseAdd, float multiplier, float postAdd)
         {
             this.baseAdd = baseAdd;
@@ -149,6 +155,20 @@ namespace DeepAction
             this.multiplier = multiplier;
             this.postAdd = postAdd;
             onUpdate?.Invoke();//if this mod is on an attribute it will cause the attribute to recalculate
+        }
+    }
+
+    public struct ModValues
+    {
+        public float baseAdd { get; private set; }
+        public float multiplier { get; private set; }
+        public float postAdd { get; private set; }
+
+        public ModValues(float baseAdd, float multiplier, float postAdd)
+        {
+            this.baseAdd = baseAdd;
+            this.multiplier = multiplier;
+            this.postAdd = postAdd;
         }
     }
 }

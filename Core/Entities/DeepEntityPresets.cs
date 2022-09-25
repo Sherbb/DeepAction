@@ -27,7 +27,7 @@ namespace DeepAction
         public static EntityTemplate BaseEntity()
         {
             R[] resources = {
-                new R(D_Resource.Health,1),
+                new R(D_Resource.Health,3),
                 new R(D_Resource.Mana,1),
                 new R(D_Resource.Shield,1,0)
             };
@@ -36,7 +36,8 @@ namespace DeepAction
                 new A(D_Attribute.Strength,1),
                 new A(D_Attribute.Inteligence,1),
                 new A(D_Attribute.Dexterity,1),
-                new A(D_Attribute.MoveSpeed,50f),
+                new A(D_Attribute.MoveSpeed,40f),
+                new A(D_Attribute.MaxMoveSpeed,40f),
             };
 
             DeepBehavior[] behaviors = {
@@ -64,10 +65,27 @@ namespace DeepAction
             t.behaviors = new DeepBehavior[]{
                 new PlayerMovement(),
                 new PlayerTouch(20f,500f),
+                new PlayerAim(),
+                new PlayerShoot(),
             };
 
             t.team = D_Team.Player;
             t.type = D_EntityType.Actor;
+
+            return t;
+        }
+
+        public static EntityTemplate ExamplePlayerProjectile()
+        {
+            EntityTemplate t = BaseEntity();
+
+            t.behaviors = new DeepBehavior[]{
+                new BasicProjectile(1,D_Team.Enemy),
+                new MoveForwards(),
+            };
+
+            t.team = D_Team.Player;
+            t.type = D_EntityType.Projectile;
 
             return t;
         }

@@ -23,6 +23,11 @@ namespace DeepAction
         public GameObject player;
         public GameObject enemy;
 
+        void Start()
+        {
+            Player();
+        }
+
         [Button]
         public DeepEntity CreateFromPrefab()
         {

@@ -30,6 +30,11 @@ namespace DeepAction
             if (e.team == D_Team.Enemy)
             {
                 DeepActions.AreaImpulse(parent.transform.position, _aoeRadius, _force, D_Team.Enemy);
+                DeepActions.AreaBehavior(
+                    parent.transform.position,
+                    _aoeRadius,
+                    new DecayingAttributeMod(D_Attribute.MoveSpeed, new ModValues(0f, -.9f, 0f), 3f),
+                    D_Team.Enemy);
             }
         }
     }

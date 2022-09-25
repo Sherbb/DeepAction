@@ -50,6 +50,12 @@ namespace DeepAction
 
         public abstract void IntitializeBehavior();
         public abstract void DestroyBehavior();
+
+        public DeepBehavior Clone()
+        {
+            DeepBehavior b = (DeepBehavior)this.MemberwiseClone();
+            return b;
+        }
     }
 
     //lets us have an action with a ref. MOVE THIS

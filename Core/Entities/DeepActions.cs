@@ -23,5 +23,18 @@ namespace DeepAction
             }
             return hits.Length > 0;
         }
+
+        public static bool AreaBehavior(Vector2 position, float radius, DeepBehavior behavior, D_Team targetTeam)
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(position, radius, enityLayerMask);
+            foreach (Collider2D hit in hits)
+            {
+                if (hit.TryGetComponent(out DeepEntity entity) && entity.team == targetTeam)
+                {
+                    entity.AddBehavior(behavior.Clone());
+                }
+            }
+            return hits.Length > 0;
+        }
     }
 }

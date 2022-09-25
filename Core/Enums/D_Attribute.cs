@@ -6,5 +6,6 @@ namespace DeepAction
         Dexterity,
         Inteligence,
         MoveSpeed,
+        MaxMoveSpeed,
     }
 }
