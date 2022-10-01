@@ -23,9 +23,10 @@ namespace DeepAction
         // * Collision & Movement
         //pass through of the standard unity events
         public Action<Vector2> OnBounce;//vec2 = bounce point
-        public Action<Collision2D> OnCollisionEnter2D;
-        public Action<Collision2D> OnCollisionExit2D;
-        public Action<Collision2D> OnCollisionStay2D;
+
+        public Action<Collider2D> OnTriggerEnter2D;
+        public Action<Collider2D> OnTriggerExit2D;
+        public Action<Collider2D> OnTriggerStay2D;
 
         //only passes when colliding with anotherDeepEntity
         public Action<DeepEntity> OnEntityCollisionEnter;

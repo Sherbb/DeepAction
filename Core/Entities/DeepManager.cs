@@ -25,6 +25,11 @@ namespace DeepAction
             {
                 game.activeEntities.list[i].events.Update?.Invoke();
             }
+
+            for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
+            {
+                game.activeEntities.list[i].CheckCollisionStay();
+            }
         }
 
         // Entites are killed (disabled) during LATEUPDATE

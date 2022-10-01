@@ -54,7 +54,8 @@ namespace DeepAction
         {
             EntityTemplate t = BaseEntity();
             t.behaviors = new DeepBehavior[]{
-                new MoveTowardsPlayer()
+                new MoveTowardsPlayer(),
+                new AvoidOtherEntities(D_Team.Enemy,D_EntityType.Actor,25f),
             };
             t.team = D_Team.Enemy;
             t.type = D_EntityType.Actor;

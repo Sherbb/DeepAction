@@ -156,30 +156,39 @@ namespace DeepAction
 
         //////////////////////////////////////////////////////////////
 
-        private void OnCollisionEnter2D(Collision2D col)
+        [ShowInInspector]//
+        private Dictionary<Collider2D, DeepEntity> activeCollisions = new Dictionary<Collider2D, DeepEntity>();
+
+        private void OnTriggerEnter2D(Collider2D col)
         {
-            events.OnCollisionEnter2D?.Invoke(col);
+            events.OnTriggerEnter2D?.Invoke(col);
+            activeCollisions.Add(col, null);
             if (col.gameObject.TryGetComponent(out DeepEntity e))
             {
+                activeCollisions[col] = e;
                 events.OnEntityCollisionEnter?.Invoke(e);
             }
-        }
 
-        private void OnCollisionExit2D(Collision2D col)
+        }
+        private void OnTriggerExit2D(Collider2D col)
         {
-            events.OnCollisionExit2D?.Invoke(col);
+            events.OnTriggerExit2D?.Invoke(col);
+            activeCollisions.Remove(col);
             if (col.gameObject.TryGetComponent(out DeepEntity e))
             {
                 events.OnEntityCollisionExit?.Invoke(e);
             }
         }
 
-        private void OnCollisionStay2D(Collision2D col)
+        public void CheckCollisionStay()
         {
-            events.OnCollisionStay2D?.Invoke(col);
-            if (col.gameObject.TryGetComponent(out DeepEntity e))
+            foreach (KeyValuePair<Collider2D, DeepEntity> col in activeCollisions)
             {
-                events.OnEntityCollisionStay?.Invoke(e);
+                events.OnTriggerStay2D?.Invoke(col.Key);
+                if (col.Value != null)
+                {
+                    events.OnEntityCollisionStay?.Invoke(col.Value);
+                }
             }
         }
 

@@ -20,9 +20,9 @@ namespace DeepAction
         {
             if (App.state.game.entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor].list.Count > 0)
             {
-                Vector2 force = App.state.game.entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor][0].transform.position - parent.transform.position;
-                force = force.normalized * parent.attributes[D_Attribute.MoveSpeed].value;
-                parent.mb.AddForce(force);
+                Vector2 move = App.state.game.entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor][0].transform.position - parent.transform.position;
+                Vector2 force = move.normalized * parent.attributes[D_Attribute.MoveSpeed].value;
+                parent.mb.SetVelocity(Vector2.Lerp(Vector2.ClampMagnitude(parent.mb.velocity, parent.mb.effectiveVelocity.magnitude), force, 5f * Time.deltaTime));
             }
         }
     }
