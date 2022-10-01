@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace DeepAction
 {
+    [RequireComponent(typeof(DeepMovementBody)), RequireComponent(typeof(Rigidbody2D))]
     public class DeepEntity : MonoBehaviour, IHit
     {
         // * Resources
@@ -39,6 +40,7 @@ namespace DeepAction
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Rigidbody2D rb { get; private set; }
+        public DeepMovementBody mb { get; private set; }
         public Vector2 aimDirection { get; set; }
 
         private EntityTemplate template;
@@ -53,6 +55,8 @@ namespace DeepAction
             flags = new Dictionary<D_Flag, DeepFlag>();
             behaviors = new List<DeepBehavior>();
             rb = gameObject.GetComponent<Rigidbody2D>();
+            mb = gameObject.GetComponent<DeepMovementBody>();
+            mb.entity = this;
 
             team = t.team;
             type = t.type;

@@ -5,7 +5,13 @@ namespace DeepAction
         Strength,
         Dexterity,
         Inteligence,
+
+        //* Movement
         MoveSpeed,
         MaxMoveSpeed,
+        Drag,
+        Bounciness,//0-1 normally
+        SlideFriction,
+        MovementRadius,
     }
 }

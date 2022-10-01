@@ -20,8 +20,9 @@ namespace DeepAction
         public Action Update;
         public Action FixedUpdate;
 
-        // * Collision
+        // * Collision & Movement
         //pass through of the standard unity events
+        public Action<Vector2> OnBounce;//vec2 = bounce point
         public Action<Collision2D> OnCollisionEnter2D;
         public Action<Collision2D> OnCollisionExit2D;
         public Action<Collision2D> OnCollisionStay2D;

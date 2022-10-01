@@ -22,7 +22,7 @@ namespace DeepAction
             {
                 Vector2 force = App.state.game.entityByTeamAndTypeLookup[D_Team.Player][D_EntityType.Actor][0].transform.position - parent.transform.position;
                 force = force.normalized * parent.attributes[D_Attribute.MoveSpeed].value;
-                parent.rb.AddForce(force, ForceMode2D.Force);
+                parent.mb.AddForce(force);
             }
         }
     }

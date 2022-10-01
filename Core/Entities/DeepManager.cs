@@ -58,7 +58,7 @@ namespace DeepAction
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
                 var e = game.activeEntities.list[i];
-                e.rb.velocity = Vector2.ClampMagnitude(e.rb.velocity, e.attributes[D_Attribute.MaxMoveSpeed].value);
+                //e.rb.velocity = Vector2.ClampMagnitude(e.rb.velocity, e.attributes[D_Attribute.MaxMoveSpeed].value);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace DeepAction
             {
                 if (hit.TryGetComponent(out DeepEntity entity) && entity.team == targetTeam)
                 {
-                    entity.rb.AddForce(((Vector2)entity.transform.position - position).normalized * force, ForceMode2D.Impulse);
+                    entity.mb.AddForce(((Vector2)entity.transform.position - position).normalized * force);
                 }
             }
             return hits.Length > 0;

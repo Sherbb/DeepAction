@@ -38,6 +38,10 @@ namespace DeepAction
                 new A(D_Attribute.Dexterity,1),
                 new A(D_Attribute.MoveSpeed,40f),
                 new A(D_Attribute.MaxMoveSpeed,40f),
+                new A(D_Attribute.Drag,0f),
+                new A(D_Attribute.Bounciness,1f),
+                new A(D_Attribute.SlideFriction,.1f),
+                new A(D_Attribute.MovementRadius,1f),
             };
 
             DeepBehavior[] behaviors = {
