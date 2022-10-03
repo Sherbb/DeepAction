@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DeepAction
@@ -35,7 +33,7 @@ namespace DeepAction
 
         // * Damage
         public Action<float> OnTakeDamage;
-        public ActionRef<float> OnTakeDamageRef;
-        public Action<float> OnDealDamage;
+        public ActionRef<float> OnTakeDamageRef;//remove plz
+        public Action<float> OnDealDamage;//todo
     }
 }

@@ -16,13 +16,13 @@ namespace DeepAction
             e.resources.Add(type, resource);
             return true;
         }
-        public static bool AddResource(this DeepEntity e, R resourceTemplate)
+        public static bool AddResource(this DeepEntity e, D_Resource type, R resourceTemplate)
         {
-            if (e.resources.ContainsKey(resourceTemplate.type))
+            if (e.resources.ContainsKey(type))
             {
                 return false;
             }
-            e.resources.Add(resourceTemplate.type, new DeepResource(resourceTemplate.baseMax, resourceTemplate.baseValue));
+            e.resources.Add(type, new DeepResource(resourceTemplate.baseMax, resourceTemplate.baseValue));
             return true;
         }
 
@@ -36,12 +36,13 @@ namespace DeepAction
             return true;
         }
 
-        public static bool AddAttribute(this DeepEntity e, A attributeTemplate)
+        public static bool AddAttribute(this DeepEntity e, D_Attribute type, A attributeTemplate)
         {
-            if (e.attributes.ContainsKey(attributeTemplate.type))
+            if (e.attributes.ContainsKey(type))
             {
                 return false;
             }
+
             DeepAttribute attribute;
 
             if (attributeTemplate.clamp)
@@ -53,7 +54,7 @@ namespace DeepAction
                 attribute = new DeepAttribute(attributeTemplate.baseValue);
             }
 
-            e.attributes.Add(attributeTemplate.type, attribute);
+            e.attributes.Add(type, attribute);
             return true;
         }
 
@@ -88,7 +89,7 @@ namespace DeepAction
         {
             behavior.parent = e;
             e.behaviors.Add(behavior);
-            behavior.IntitializeBehavior();
+            behavior.InitializeBehavior();
             return behavior;
         }
 

@@ -9,7 +9,7 @@ namespace DeepAction
         DeepAttributeModifier speedMod;
         public float duration = 5f;
 
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             speedMod = new DeepAttributeModifier(0f, modValue, 0f);
             parent.attributes[D_Attribute.MoveSpeed].AddModifier(speedMod);

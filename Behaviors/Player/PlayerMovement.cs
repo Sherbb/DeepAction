@@ -4,7 +4,7 @@ namespace DeepAction
 {
     public class PlayerMovement : DeepBehavior
     {
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             parent.events.FixedUpdate += Move;
         }

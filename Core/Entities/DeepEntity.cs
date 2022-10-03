@@ -61,33 +61,33 @@ namespace DeepAction
             team = t.team;
             type = t.type;
 
-            foreach (A att in template.attributes)
+            foreach (KeyValuePair<D_Attribute, A> attPair in template.attributes)
             {
-                this.AddAttribute(att);
+                this.AddAttribute(attPair.Key, attPair.Value);
             }
             //fill in missing attributes
-            foreach (D_Attribute a in Enum.GetValues(typeof(D_Attribute)))
+            foreach (D_Attribute att in Enum.GetValues(typeof(D_Attribute)))
             {
-                if (!attributes.ContainsKey(a))
+                if (!attributes.ContainsKey(att))
                 {
-                    this.AddAttribute(a, new DeepAttribute(0f));
+                    this.AddAttribute(att, new DeepAttribute(0f));
                 }
             }
-            foreach (R res in template.resources)
+            foreach (KeyValuePair<D_Resource, R> res in template.resources)
             {
-                this.AddResource(res);
+                this.AddResource(res.Key, res.Value);
             }
             //fill in missing resources
-            foreach (D_Resource r in Enum.GetValues(typeof(D_Resource)))
+            foreach (D_Resource res in Enum.GetValues(typeof(D_Resource)))
             {
-                if (!resources.ContainsKey(r))
+                if (!resources.ContainsKey(res))
                 {
-                    this.AddResource(r, new DeepResource(1, 0));
+                    this.AddResource(res, new DeepResource(1, 0));
                 }
             }
-            foreach (D_Flag s in Enum.GetValues(typeof(D_Flag)))
+            foreach (D_Flag flag in Enum.GetValues(typeof(D_Flag)))
             {
-                this.AddFlag(s);
+                this.AddFlag(flag);
             }
             foreach (DeepBehavior b in template.behaviors)
             {
@@ -110,9 +110,9 @@ namespace DeepAction
 
             if (initialized)
             {
-                foreach (R r in template.resources)
+                foreach (KeyValuePair<D_Resource, R> r in template.resources)
                 {
-                    resources[r.type].SetValue(r.baseValue);
+                    resources[r.Key].SetValue(r.Value.baseValue);
                 }
                 App.state.game.RegisterEntity(this);
                 events?.OnEntityEnable?.Invoke();

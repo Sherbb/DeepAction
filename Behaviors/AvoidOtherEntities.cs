@@ -18,7 +18,7 @@ namespace DeepAction
             avoidStrength = force;
         }
 
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             parent.events.OnEntityCollisionStay += Avoid;
         }

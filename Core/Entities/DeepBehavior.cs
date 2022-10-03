@@ -48,7 +48,7 @@ namespace DeepAction
             return true;
         }
 
-        public abstract void IntitializeBehavior();
+        public abstract void InitializeBehavior();
         public abstract void DestroyBehavior();
 
         public DeepBehavior Clone()

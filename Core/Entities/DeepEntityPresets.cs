@@ -8,17 +8,22 @@ namespace DeepAction
     {
         //example
         public static EntityTemplate StaticBaseEntity = new EntityTemplate(
-            new[] {
-                new R(D_Resource.Health,1),
-                new R(D_Resource.Shield,1,0),
-                new R(D_Resource.Mana,1),
+
+            new Dictionary<D_Resource, R>
+            {
+                {D_Resource.Health, new R(3)},
+                {D_Resource.Mana, new R(3)},
+                {D_Resource.Shield, new R(3,0)},
             },
-            new[] {
-                new A(D_Attribute.Strength,0),
-                new A(D_Attribute.Inteligence,1),
-                new A(D_Attribute.Dexterity,0),
+
+            new Dictionary<D_Attribute, A>
+            {
+                {D_Attribute.Strength,new A(0)},
+                {D_Attribute.Dexterity,new A(0)},
+                {D_Attribute.Inteligence,new A(0)},
             },
-            new DeepBehavior[0],
+
+        new DeepBehavior[0],
             D_Team.Neutral,
             D_EntityType.Actor
         );
@@ -26,22 +31,52 @@ namespace DeepAction
         //example
         public static EntityTemplate BaseEntity()
         {
-            R[] resources = {
-                new R(D_Resource.Health,3),
-                new R(D_Resource.Mana,1),
-                new R(D_Resource.Shield,1,0)
+            var resources = new Dictionary<D_Resource, R>
+            {
+                {D_Resource.Health, new R(3)},
+                {D_Resource.Mana, new R(3)},
+                {D_Resource.Shield, new R(3,0)},
             };
 
-            A[] attributes = {
-                new A(D_Attribute.Strength,1),
-                new A(D_Attribute.Inteligence,1),
-                new A(D_Attribute.Dexterity,1),
-                new A(D_Attribute.MoveSpeed,40f),
-                new A(D_Attribute.MaxMoveSpeed,40f),
-                new A(D_Attribute.Drag,0f),
-                new A(D_Attribute.Bounciness,1f),
-                new A(D_Attribute.SlideFriction,.1f),
-                new A(D_Attribute.MovementRadius,1f),
+            var attributes = new Dictionary<D_Attribute, A>
+             {
+                {D_Attribute.Strength,new A(1)},
+                {D_Attribute.Inteligence,new A(1)},
+                {D_Attribute.Dexterity,new A(1)},
+                {D_Attribute.MoveSpeed,new A(40)},
+                {D_Attribute.MaxMoveSpeed,new A(40)},
+                {D_Attribute.Drag,new A(0)},
+                {D_Attribute.Bounciness,new A(1)},
+                {D_Attribute.SlideFriction,new A(1)},
+                {D_Attribute.MovementRadius,new A(1)},
+             };
+
+            DeepBehavior[] behaviors = {
+            };
+
+            return new EntityTemplate(resources, attributes, behaviors, D_Team.Neutral, D_EntityType.Actor);
+        }
+
+        public static EntityTemplate BaseProjectile()
+        {
+            var resources = new Dictionary<D_Resource, R>
+            {
+                {D_Resource.Health, new R(3)},
+                {D_Resource.Mana, new R(3)},
+                {D_Resource.Shield, new R(3,0)},
+            };
+
+            var attributes = new Dictionary<D_Attribute, A>
+            {
+                {D_Attribute.Strength,new A(1)},
+                {D_Attribute.Inteligence,new A(1)},
+                {D_Attribute.Dexterity,new A(1)},
+                {D_Attribute.MoveSpeed,new A(150)},
+                {D_Attribute.MaxMoveSpeed,new A(100)},
+                {D_Attribute.Drag,new A(0)},
+                {D_Attribute.Bounciness,new A(1)},
+                {D_Attribute.SlideFriction,new A(1)},
+                {D_Attribute.MovementRadius,new A(1)},
             };
 
             DeepBehavior[] behaviors = {
@@ -53,9 +88,13 @@ namespace DeepAction
         public static EntityTemplate ExampleEnemy()
         {
             EntityTemplate t = BaseEntity();
+
+            t.attributes[D_Attribute.MoveSpeed] = new A(Random.Range(20f, 40f));
+            t.attributes[D_Attribute.MaxMoveSpeed] = new A(Random.Range(20f, 40f));
+
             t.behaviors = new DeepBehavior[]{
                 new MoveTowardsPlayer(),
-                new AvoidOtherEntities(D_Team.Enemy,D_EntityType.Actor,25f),
+                new AvoidOtherEntities(D_Team.Enemy,D_EntityType.Actor,60f),
             };
             t.team = D_Team.Enemy;
             t.type = D_EntityType.Actor;
@@ -82,11 +121,14 @@ namespace DeepAction
 
         public static EntityTemplate ExamplePlayerProjectile()
         {
-            EntityTemplate t = BaseEntity();
+            EntityTemplate t = BaseProjectile();
 
             t.behaviors = new DeepBehavior[]{
                 new BasicProjectile(1,D_Team.Enemy),
                 new MoveForwards(),
+                new DieOnBounce(),
+                new AreaDamageOnDeath(10f,new Damage(1),D_Team.Enemy),
+                new AreaImpulseOnDeath(10f, 100f,D_Team.Enemy),
             };
 
             t.team = D_Team.Player;
@@ -101,21 +143,18 @@ namespace DeepAction
     //-----------------------------------
 
     //resource template
-    public struct R//single letter to make defining a template really clean ^ if this annoys you change
+    public struct R//single letter to make defining a template really clean 
     {
-        public D_Resource type { get; private set; }
         public int baseMax { get; private set; }
         public int baseValue { get; private set; }
 
-        public R(D_Resource type, int baseMax)
+        public R(int baseMax)
         {
-            this.type = type;
             this.baseMax = baseMax;
             this.baseValue = baseMax;
         }
-        public R(D_Resource type, int baseMax, int startValue)
+        public R(int baseMax, int startValue)
         {
-            this.type = type;
             this.baseMax = baseMax;
             this.baseValue = startValue;
         }
@@ -124,21 +163,18 @@ namespace DeepAction
     //attribute template
     public struct A
     {
-        public D_Attribute type { get; private set; }
         public float baseValue { get; private set; }
         public bool clamp { get; private set; }
         public Vector2 minMax { get; private set; }
 
-        public A(D_Attribute type, float baseValue)
+        public A(float baseValue)
         {
-            this.type = type;
             this.baseValue = baseValue;
             this.clamp = false;
             this.minMax = Vector2.zero;
         }
-        public A(D_Attribute type, float baseValue, Vector2 minMax)
+        public A(float baseValue, Vector2 minMax)
         {
-            this.type = type;
             this.baseValue = baseValue;
             this.clamp = true;
             this.minMax = minMax;
@@ -147,13 +183,13 @@ namespace DeepAction
 
     public struct EntityTemplate
     {
-        public R[] resources;
-        public A[] attributes;
+        public Dictionary<D_Resource, R> resources;
+        public Dictionary<D_Attribute, A> attributes;
         public DeepBehavior[] behaviors;
         public D_Team team;
         public D_EntityType type;
 
-        public EntityTemplate(R[] resources, A[] attributes, DeepBehavior[] behaviors, D_Team team, D_EntityType type)
+        public EntityTemplate(Dictionary<D_Resource, R> resources, Dictionary<D_Attribute, A> attributes, DeepBehavior[] behaviors, D_Team team, D_EntityType type)
         {
             this.resources = resources;
             this.attributes = attributes;

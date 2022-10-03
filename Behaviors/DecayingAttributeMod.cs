@@ -22,7 +22,7 @@ namespace DeepAction
             _duration = duration;
         }
 
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             attMod = new DeepAttributeModifier(_modBase);
             parent.attributes[_attribute].AddModifier(attMod);

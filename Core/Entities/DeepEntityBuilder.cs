@@ -23,10 +23,24 @@ namespace DeepAction
         public GameObject player;
         public GameObject enemy;
 
+        public float spawnPerSec = 0f;
+        private float spawnTimer;
+
         void Start()
         {
             Player();
         }
+
+        void Update()
+        {
+            spawnTimer += Time.deltaTime * spawnPerSec;
+            if (spawnTimer >= 1f)
+            {
+                Enemy();
+                spawnTimer -= 1f;
+            }
+        }
+
 
         [Button]
         public DeepEntity CreateFromPrefab()

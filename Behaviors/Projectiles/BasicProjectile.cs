@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace DeepAction
 {
     public class BasicProjectile : DeepBehavior
@@ -15,7 +11,7 @@ namespace DeepAction
             _targetTeam = targetTeam;
         }
 
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             parent.events.OnEntityCollisionEnter += HandleCollision;
         }

@@ -6,7 +6,7 @@ namespace DeepAction
 {
     public class MoveForwards : DeepBehavior
     {
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             parent.events.OnEntityEnable += Move;
         }

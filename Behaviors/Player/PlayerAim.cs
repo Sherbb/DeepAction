@@ -6,7 +6,7 @@ namespace DeepAction
     {
         public static LayerMask mouseLayerMask = 1 << 6;
 
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             parent.events.Update += Aim;
         }

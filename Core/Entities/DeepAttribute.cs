@@ -74,6 +74,7 @@ namespace DeepAction
             return newA;
         }
 
+        //todo only update once per frame (normally)
         public void UpdateValue()
         {
             float oldValue = value;

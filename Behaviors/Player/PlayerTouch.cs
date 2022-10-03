@@ -16,7 +16,7 @@ namespace DeepAction
             _force = force;
         }
 
-        public override void IntitializeBehavior()
+        public override void InitializeBehavior()
         {
             parent.events.OnEntityCollisionEnter += OnCollision;
         }
