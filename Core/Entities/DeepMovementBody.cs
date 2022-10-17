@@ -15,6 +15,9 @@ namespace DeepAction
         //todo find a static place to put these layer masks....
         private static LayerMask _entityWallMask = 1 << 11;
 
+        //? if you have really fast projectiles, or lots of overlapping walls consider raising this.
+        private static int raycastPoolSize = 5;
+
         [HideInInspector]
         public DeepEntity entity;
 
@@ -33,8 +36,8 @@ namespace DeepAction
         public Vector2 effectiveVelocity { get; private set; }
 
         private Vector2 _futurePosition;
-        private RaycastHit2D[] _hits;
         private RaycastHit2D _hit;
+        private RaycastHit2D[] _hitpool = new RaycastHit2D[raycastPoolSize];
 
         public void AddForce(Vector2 force)
         {
@@ -78,16 +81,17 @@ namespace DeepAction
             do
             {
                 //todo nonAlloc
-                _hits = Physics2D.CircleCastAll(transform.position, entity.attributes[D_Attribute.MovementRadius].value, velocity.normalized, frameDistance, _entityWallMask);
+                //_hits = Physics2D.CircleCastAll(transform.position, entity.attributes[D_Attribute.MovementRadius].value, velocity.normalized, frameDistance, _entityWallMask);
+                int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, velocity.normalized, _hitpool, frameDistance, _entityWallMask);
 
-                if (_hits.Length == 0)
+                if (hits == 0)
                 {
                     transform.position = (Vector2)transform.position + (velocity.normalized * frameDistance);
                     return;
                 }
 
-                System.Array.Sort(_hits, (x, y) => x.distance.CompareTo(y.distance));
-                _hit = _hits[0];
+                System.Array.Sort(_hitpool, (x, y) => x.distance.CompareTo(y.distance));
+                _hit = _hitpool[0];
 
                 if (_hit.point == Vector2.zero)
                 {
@@ -113,9 +117,9 @@ namespace DeepAction
             do
             {
                 //todo nonaAlloc
-                _hits = Physics2D.CircleCastAll(transform.position, entity.attributes[D_Attribute.MovementRadius].value, slideDir, frameDistance, _entityWallMask);
+                int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, slideDir, _hitpool, frameDistance, _entityWallMask);
 
-                if (_hits.Length == 0)
+                if (hits == 0)
                 {
                     transform.position = (Vector2)transform.position + (slideDir * frameDistance);
                     return slideThisFrame;
@@ -123,8 +127,8 @@ namespace DeepAction
 
                 slideThisFrame = true;
 
-                System.Array.Sort(_hits, (x, y) => x.distance.CompareTo(y.distance));
-                _hit = _hits[0];
+                System.Array.Sort(_hitpool, (x, y) => x.distance.CompareTo(y.distance));
+                _hit = _hitpool[0];
 
                 if (_hit.point == Vector2.zero)
                 {
