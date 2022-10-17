@@ -1,9 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using System;
-using System.Linq;
 
 namespace DeepAction
 {
@@ -45,6 +43,8 @@ namespace DeepAction
 
         private EntityTemplate template;
 
+        private Dictionary<Collider2D, DeepEntity> activeCollisions = new Dictionary<Collider2D, DeepEntity>();
+
         public DeepEntity Initialize(EntityTemplate t)
         {
             template = t;
@@ -55,12 +55,24 @@ namespace DeepAction
             flags = new Dictionary<D_Flag, DeepFlag>();
             behaviors = new List<DeepBehavior>();
             rb = gameObject.GetComponent<Rigidbody2D>();
+
+            if (rb == null)
+            {
+                Debug.LogError("DeepEntity does not have a rigidbody: " + this.gameObject.name, this.gameObject);
+            }
+            //If you arent using movementBody you probably don't need this.
+            if (rb.bodyType != RigidbodyType2D.Kinematic)
+            {
+                Debug.LogError("DeepEntity has non-kinematic rigidbody: " + this.gameObject.name, this.gameObject);
+            }
+
             mb = gameObject.GetComponent<DeepMovementBody>();
             mb.entity = this;
 
             team = t.team;
             type = t.type;
 
+            //get attributes from template
             foreach (KeyValuePair<D_Attribute, A> attPair in template.attributes)
             {
                 this.AddAttribute(attPair.Key, attPair.Value);
@@ -73,6 +85,7 @@ namespace DeepAction
                     this.AddAttribute(att, new DeepAttribute(0f));
                 }
             }
+            //get resources from template
             foreach (KeyValuePair<D_Resource, R> res in template.resources)
             {
                 this.AddResource(res.Key, res.Value);
@@ -85,10 +98,12 @@ namespace DeepAction
                     this.AddResource(res, new DeepResource(1, 0));
                 }
             }
+            //fill in flags (they are all false by default)
             foreach (D_Flag flag in Enum.GetValues(typeof(D_Flag)))
             {
                 this.AddFlag(flag);
             }
+            //add behaviors from template
             foreach (DeepBehavior b in template.behaviors)
             {
                 this.AddBehavior(b);
@@ -145,7 +160,7 @@ namespace DeepAction
             }
         }
 
-        //todo maybe private
+        //todo consider adding a source entity to this.
         public void Die()
         {
             if (dying) return;
@@ -155,9 +170,6 @@ namespace DeepAction
         }
 
         //////////////////////////////////////////////////////////////
-
-        [ShowInInspector]//
-        private Dictionary<Collider2D, DeepEntity> activeCollisions = new Dictionary<Collider2D, DeepEntity>();
 
         private void OnTriggerEnter2D(Collider2D col)
         {
@@ -170,6 +182,7 @@ namespace DeepAction
             }
 
         }
+
         private void OnTriggerExit2D(Collider2D col)
         {
             events.OnTriggerExit2D?.Invoke(col);

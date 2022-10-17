@@ -8,8 +8,6 @@ namespace DeepAction
     /// </summary>
     public class DeepEntityEvents
     {
-        public Action<Vector3, Vector3, DeepEntity> Trigger;//idk...
-
         public Action OnEntityEnable;
         public Action OnEntityDisable;
         public Action OnEntityDie;
@@ -19,9 +17,9 @@ namespace DeepAction
         public Action FixedUpdate;
 
         // * Collision & Movement
-        //pass through of the standard unity events
         public Action<Vector2> OnBounce;//vec2 = bounce point
 
+        //pass through of the standard unity events
         public Action<Collider2D> OnTriggerEnter2D;
         public Action<Collider2D> OnTriggerExit2D;
         public Action<Collider2D> OnTriggerStay2D;
@@ -33,7 +31,6 @@ namespace DeepAction
 
         // * Damage
         public Action<float> OnTakeDamage;
-        public ActionRef<float> OnTakeDamageRef;//remove plz
         public Action<float> OnDealDamage;//todo
     }
 }

@@ -18,10 +18,7 @@ namespace DeepAction
         [HideInInspector]
         public bool removeOnDeath { get; private set; }
 
-
-
-        //todo, idk what the point of this will be.
-        public bool Trigger(Vector3 point, Vector3 direction, DeepEntity target)
+        public bool Trigger()
         {
             foreach (D_Resource key in resourcesToTrigger.Keys)
             {
@@ -43,7 +40,6 @@ namespace DeepAction
                 parent.resources[key].TryToConsume(resourcesToTrigger[key]);
             }
 
-            parent.events.Trigger?.Invoke(point, direction, target);
 
             return true;
         }
@@ -57,9 +53,4 @@ namespace DeepAction
             return b;
         }
     }
-
-    //lets us have an action with a ref. MOVE THIS
-    //
-    //for example we can give OnTakeDamage a REF float allowing behaviors to modify incoming damage before it is applied.
-    public delegate void ActionRef<T>(ref T item);
 }
