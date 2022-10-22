@@ -51,6 +51,7 @@ namespace DeepAction
 
             GameObject g = new GameObject("vfx_" + vfx);
             effect = g.AddComponent<VisualEffect>();
+            g.layer = 12; //VFX layer
             g.transform.parent = instance.transform;
             g.transform.position = Vector3.zero;//should already be set, just in case THIS object is accidentally moved
 

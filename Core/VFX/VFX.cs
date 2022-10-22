@@ -23,12 +23,13 @@ namespace DeepAction
     //example
     public class SimpleSparks : DeepVFXAction
     {
-        public SimpleSparks(Color color, float radius)
+        public SimpleSparks(int count, Color color, float radius)
         {
             if (DeepVFX.Pull("sparks", out _effect, out _attribute))
             {
                 _attribute.SetVector3("color", new Vector4(color.r, color.g, color.b));
                 _attribute.SetFloat("radius", radius);
+                _attribute.SetFloat("spawnCount", count);
             }
         }
     }
