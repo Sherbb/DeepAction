@@ -127,6 +127,10 @@ namespace DeepAction
                 new DieOnBounce(),
                 new AreaDamageOnDeath(10f,new Damage(1),D_Team.Enemy),
                 new AreaImpulseOnDeath(10f, 100f,D_Team.Enemy),
+                new VFXOnDeath(new SimpleSparks(Color.red,3f)),
+                new VFXOnDeath(new SimpleSparks(Color.green,3f)),
+                new VFXOnDeath(new SimpleSparks(Color.blue,3f)),
+                new VFXOnDeath(new SimpleSparks(Color.magenta,3f)),
             };
 
             t.team = D_Team.Player;
