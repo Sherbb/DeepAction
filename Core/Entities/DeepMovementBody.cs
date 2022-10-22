@@ -80,8 +80,6 @@ namespace DeepAction
             float frameDistance = velocity.magnitude * Time.deltaTime;
             do
             {
-                //todo nonAlloc
-                //_hits = Physics2D.CircleCastAll(transform.position, entity.attributes[D_Attribute.MovementRadius].value, velocity.normalized, frameDistance, _entityWallMask);
                 int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, velocity.normalized, _hitpool, frameDistance, _entityWallMask);
 
                 if (hits == 0)
@@ -109,6 +107,10 @@ namespace DeepAction
 
         }
 
+        //todo
+        //theres a bug where you can jump a huge distance while sliding against a surface. Your forward has to be
+        //about parallel to the surface. I reprod it easly for a minute, and havent been able to since.....
+
         private bool SlideCollision()
         {
             float frameDistance = velocity.magnitude * Time.deltaTime;
@@ -116,7 +118,6 @@ namespace DeepAction
             bool slideThisFrame = false;
             do
             {
-                //todo nonaAlloc
                 int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, slideDir, _hitpool, frameDistance, _entityWallMask);
 
                 if (hits == 0)

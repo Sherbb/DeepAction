@@ -35,6 +35,9 @@ namespace DeepAction
         [HideInEditorMode]
         public bool initialized { get; private set; }
 
+        // * Lookups
+        public List<DeepBehavior> castableBehaviors { get; private set; }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Rigidbody2D rb { get; private set; }
@@ -101,7 +104,7 @@ namespace DeepAction
             //fill in flags (they are all false by default)
             foreach (D_Flag flag in Enum.GetValues(typeof(D_Flag)))
             {
-                this.AddFlag(flag);
+                this.SetupFlag(flag);
             }
             //add behaviors from template
             foreach (DeepBehavior b in template.behaviors)

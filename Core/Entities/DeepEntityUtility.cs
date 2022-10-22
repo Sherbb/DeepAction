@@ -11,11 +11,16 @@ namespace DeepAction
     /// </summary>
     public static class DeepEntityUtility
     {
+        //-----------------------------------
+        //            RESOURCES
+        //-----------------------------------
+
         public static bool AddResource(this DeepEntity e, D_Resource type, DeepResource resource)
         {
             e.resources.Add(type, resource);
             return true;
         }
+
         public static bool AddResource(this DeepEntity e, D_Resource type, R resourceTemplate)
         {
             if (e.resources.ContainsKey(type))
@@ -25,6 +30,10 @@ namespace DeepAction
             e.resources.Add(type, new DeepResource(resourceTemplate.baseMax, resourceTemplate.baseValue));
             return true;
         }
+
+        //-----------------------------------
+        //            ATTRIBUTES
+        //-----------------------------------
 
         public static bool AddAttribute(this DeepEntity e, D_Attribute type, DeepAttribute attribute)
         {
@@ -58,7 +67,11 @@ namespace DeepAction
             return true;
         }
 
-        public static bool AddFlag(this DeepEntity e, D_Flag s)
+        //-----------------------------------
+        //            FLAGS
+        //-----------------------------------
+
+        public static bool SetupFlag(this DeepEntity e, D_Flag s)
         {
             if (e.flags.ContainsKey(s))
             {
@@ -69,7 +82,7 @@ namespace DeepAction
         }
 
         //-----------------------------------
-        //            Behaviors
+        //            BEHAVIORS
         //-----------------------------------
 
         public static DeepBehavior AddBehavior<T>(this DeepEntity e) where T : DeepBehavior
@@ -80,7 +93,11 @@ namespace DeepAction
 
         public static DeepBehavior AddBehavior(this DeepEntity e, Type behavior)
         {
-            if (!typeof(DeepBehavior).IsAssignableFrom(behavior)) return null;// >:(
+            if (!typeof(DeepBehavior).IsAssignableFrom(behavior))
+            {
+                Debug.LogError("Non DeepBehavior type passed to AddBehavior: " + behavior.ToString());
+                return null;
+            }
             DeepBehavior b = (DeepBehavior)Activator.CreateInstance(behavior);
             return e.AddBehavior(b);
         }
@@ -90,6 +107,10 @@ namespace DeepAction
             behavior.parent = e;
             e.behaviors.Add(behavior);
             behavior.InitializeBehavior();
+            if (behavior.canBeCast)
+            {
+                e.castableBehaviors.Add(behavior);
+            }
             return behavior;
         }
 
@@ -97,21 +118,31 @@ namespace DeepAction
         {
             foreach (T b in e.behaviors.OfType<T>())
             {
+                //the .contains is not neccesary if you are feeling brave
                 b.DestroyBehavior();
+                if (b.canBeCast && e.castableBehaviors.Contains(b))
+                {
+                    e.castableBehaviors.Remove(b);
+                }
                 e.behaviors.Remove(b);
                 return true;
             }
             return false;
         }
 
-        public static bool RemoveBehavior(this DeepEntity e, DeepBehavior behavior)
+        public static bool RemoveBehavior(this DeepEntity e, DeepBehavior b)
         {
-            if (!e.behaviors.Contains(behavior))
+            if (!e.behaviors.Contains(b))
             {
                 return false;
             }
-            behavior.DestroyBehavior();
-            e.behaviors.Remove(behavior);
+            b.DestroyBehavior();
+            //the .contains is not neccesary if you are feeling brave
+            if (b.canBeCast && e.castableBehaviors.Contains(b))
+            {
+                e.castableBehaviors.Remove(b);
+            }
+            e.behaviors.Remove(b);
             return true;
         }
     }

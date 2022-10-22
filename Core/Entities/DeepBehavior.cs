@@ -6,46 +6,44 @@ namespace DeepAction
     [DoNotDrawAsReference]
     public abstract class DeepBehavior
     {
-        public Dictionary<D_Resource, int> resourcesToTrigger = new Dictionary<D_Resource, int>();
-
+        /// <summary>The deepEntity that this behavior is on.</summary>
         [HideInInspector]
-        /// <summary>
-        /// The deepEntity that this behavior is on.
-        /// </summary>
         public DeepEntity parent;
 
         //* Flags
         [HideInInspector]
-        public bool removeOnDeath { get; private set; }
+        public virtual bool removeOnDeath { get; private set; }
+        public virtual bool canBeCast { get; private set; }
 
-        public bool Trigger()
+        public virtual Dictionary<D_Resource, int> resourcesToCast { get; private set; } = new Dictionary<D_Resource, int>();
+
+        public virtual void InitializeBehavior() { }
+        public virtual void DestroyBehavior() { }
+        public virtual void OnCast() { }
+
+        public bool Cast()
         {
-            foreach (D_Resource key in resourcesToTrigger.Keys)
+            if (!canBeCast)
             {
-                if (!parent.resources.ContainsKey(key))
+                Debug.LogError("Cast called on behavior with canBeCast flag false", this.parent.gameObject);
+                return false;
+            }
+
+            foreach (D_Resource key in resourcesToCast.Keys)
+            {
+                if (parent.resources[key].value < resourcesToCast[key])
                 {
-                    Debug.LogError(parent.gameObject.name + "Does not have the resource: " + key);
-                }
-                else
-                {
-                    if (parent.resources[key].value < resourcesToTrigger[key])
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
-            foreach (D_Resource key in resourcesToTrigger.Keys)
+            foreach (D_Resource key in resourcesToCast.Keys)
             {
-                parent.resources[key].TryToConsume(resourcesToTrigger[key]);
+                parent.resources[key].Consume(resourcesToCast[key]);
             }
-
 
             return true;
         }
-
-        public abstract void InitializeBehavior();
-        public abstract void DestroyBehavior();
 
         public DeepBehavior Clone()
         {
