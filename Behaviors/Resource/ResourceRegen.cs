@@ -50,6 +50,7 @@ namespace DeepAction
             }
         }
 
+        //todo you can optimize this update call by enabling it based on isFull
         private void Update()
         {
             if (isFull)

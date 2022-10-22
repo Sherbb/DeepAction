@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6384074562676913088}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
+  collisionType: 0
 --- !u!50 &7503018921493587650
 Rigidbody2D:
   serializedVersion: 4
@@ -139,7 +140,7 @@ GameObject:
   - component: {fileID: 3667714033883213208}
   - component: {fileID: 1618190717595966682}
   - component: {fileID: 6192886592855049344}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

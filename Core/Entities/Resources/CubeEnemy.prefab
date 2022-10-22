@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2502928129934356327}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2502928129934356327
 Transform:
   m_ObjectHideFlags: 0
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 6384074562676913088}
   - component: {fileID: 2513652393644590737}
   - component: {fileID: 4231067454077953841}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 5863724525996712871}
   - component: {fileID: 7408414750742719490}
   - component: {fileID: 4695863250852010184}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: multiCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -287,7 +287,7 @@ GameObject:
   - component: {fileID: 7937925200263208540}
   - component: {fileID: 2225754970631567451}
   - component: {fileID: 5360655090338547145}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: multiCube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

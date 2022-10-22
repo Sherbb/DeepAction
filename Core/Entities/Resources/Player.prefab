@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8001273586697060176}
   - component: {fileID: 7982618744660991696}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AimPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8663955449443834570}
   - component: {fileID: 6546823174757390876}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AimPivot (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8551227513397641586}
   - component: {fileID: 6089122723284645533}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SpritePivot (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4089431972836770734}
   - component: {fileID: 3091468451438792323}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SpritePivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6384074562676913088}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,13 +338,13 @@ GameObject:
   - component: {fileID: 7356284784573689906}
   - component: {fileID: 1134789570674073216}
   - component: {fileID: 8515799869045419403}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7356284784573689906
 Transform:
   m_ObjectHideFlags: 0
@@ -418,7 +418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8567419350160575606}
   - component: {fileID: 1093132998415969271}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -501,7 +501,7 @@ GameObject:
   - component: {fileID: 2369333292160472438}
   - component: {fileID: 6766279519888464771}
   - component: {fileID: 7871916831962124946}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -581,13 +581,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2813561389576116815}
   - component: {fileID: 7468506267447990670}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2813561389576116815
 Transform:
   m_ObjectHideFlags: 0

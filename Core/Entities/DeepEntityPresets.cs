@@ -8,22 +8,19 @@ namespace DeepAction
     {
         //example
         public static EntityTemplate StaticBaseEntity = new EntityTemplate(
-
             new Dictionary<D_Resource, R>
             {
                 {D_Resource.Health, new R(3)},
                 {D_Resource.Mana, new R(3)},
                 {D_Resource.Shield, new R(3,0)},
             },
-
             new Dictionary<D_Attribute, A>
             {
                 {D_Attribute.Strength,new A(0)},
                 {D_Attribute.Dexterity,new A(0)},
                 {D_Attribute.Inteligence,new A(0)},
             },
-
-        new DeepBehavior[0],
+            new DeepBehavior[0],
             D_Team.Neutral,
             D_EntityType.Actor
         );
