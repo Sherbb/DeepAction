@@ -15,6 +15,7 @@ namespace DeepAction
         public virtual bool removeOnDeath { get; private set; }
         public virtual bool canBeCast { get; private set; }
 
+        [ShowInInspector, ShowIf("canBeCast")]
         public virtual Dictionary<D_Resource, int> resourcesToCast { get; private set; } = new Dictionary<D_Resource, int>();
 
         public virtual void InitializeBehavior() { }
@@ -41,7 +42,7 @@ namespace DeepAction
             {
                 parent.resources[key].Consume(resourcesToCast[key]);
             }
-
+            OnCast();
             return true;
         }
 

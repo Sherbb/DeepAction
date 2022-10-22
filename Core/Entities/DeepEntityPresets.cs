@@ -111,6 +111,7 @@ namespace DeepAction
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
                 new PlayerShoot(),
+                new ResourceRegen(D_Resource.Mana,1)
             };
 
             t.team = D_Team.Player;

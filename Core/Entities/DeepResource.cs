@@ -23,13 +23,22 @@ namespace DeepAction
         public int currentMax { get; private set; }
 
         [HideInInspector]
-        public Action<int> onConsume;
+        public Action<int> onConsumeVal;
         [HideInInspector]
-        public Action<int> onRegen;
+        public Action onConsume;//sometimes you dont want the int....
+        [HideInInspector]
+        public Action<int> onRegenVal;
+        [HideInInspector]
+        public Action onRegen;
         [HideInInspector]
         public Action onDeplete;
+        [HideInInspector]
+        public Action onFill;
 
         private List<DeepResourceModifier> modifiers;
+
+        public bool isFull => value == currentMax;
+        public bool isEmpty => value == 0;
 
         public DeepResource(int baseMax, int baseValue)
         {
@@ -41,10 +50,19 @@ namespace DeepAction
 
         public int Regen(int r)
         {
+            if (value == currentMax)
+            {
+                return value;
+            }
             int newV = Mathf.Clamp(value + r, 0, currentMax);
             int regened = newV - value;
             value = newV;
-            onRegen?.Invoke(regened);
+            onRegenVal?.Invoke(regened);
+            onRegen?.Invoke();
+            if (value == currentMax)
+            {
+                onFill.Invoke();
+            }
             return value;
         }
 
@@ -68,7 +86,8 @@ namespace DeepAction
             int newV = Mathf.Clamp(value - c, 0, currentMax);
             int consumed = value - newV;
             value = newV;
-            onConsume?.Invoke(consumed);
+            onConsumeVal?.Invoke(consumed);
+            onConsume?.Invoke();
             if (value <= 0)
             {
                 onDeplete?.Invoke();

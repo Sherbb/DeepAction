@@ -36,6 +36,7 @@ namespace DeepAction
         public bool initialized { get; private set; }
 
         // * Lookups
+        [HideInEditorMode, ShowInInspector]
         public List<DeepBehavior> castableBehaviors { get; private set; }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +58,7 @@ namespace DeepAction
             resources = new Dictionary<D_Resource, DeepResource>();
             flags = new Dictionary<D_Flag, DeepFlag>();
             behaviors = new List<DeepBehavior>();
+            castableBehaviors = new List<DeepBehavior>();
             rb = gameObject.GetComponent<Rigidbody2D>();
 
             if (rb == null)

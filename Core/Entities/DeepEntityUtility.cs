@@ -145,5 +145,20 @@ namespace DeepAction
             e.behaviors.Remove(b);
             return true;
         }
+
+        //-----------------------------------
+        //            CASTING
+        //-----------------------------------
+
+        public static bool TryToCast(this DeepEntity e, int index)
+        {
+            if (e.castableBehaviors.Count > index)
+            {
+                return e.castableBehaviors[index].Cast();
+            }
+            Debug.LogError("Tried to cast missing index on: " + e.name + " Index: " + index);
+            return false;
+        }
+
     }
 }
