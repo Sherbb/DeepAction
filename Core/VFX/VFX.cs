@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace DeepAction
+namespace DeepAction.VFX
 {
     public abstract class DeepVFXAction
     {
@@ -20,16 +20,40 @@ namespace DeepAction
         }
     }
 
-    //example
-    public class SimpleSparks : DeepVFXAction
+    public class Sparks : DeepVFXAction
     {
-        public SimpleSparks(int count, Color color, float radius)
+        public Sparks(Color color, int count = 10)
         {
             if (DeepVFX.Pull("sparks", out _effect, out _attribute))
             {
                 _attribute.SetVector3("color", new Vector3(color.r, color.g, color.b));
-                _attribute.SetFloat("radius", radius);
                 _attribute.SetFloat("spawnCount", count);
+            }
+        }
+    }
+
+    public class CirclePop : DeepVFXAction
+    {
+        public CirclePop(Color color, float radius = 1f, float lifetime = .25f)
+        {
+            if (DeepVFX.Pull("circlePop", out _effect, out _attribute))
+            {
+                _attribute.SetVector3("color", new Vector3(color.r, color.g, color.b));
+                _attribute.SetFloat("radius", radius);
+                _attribute.SetFloat("lifetime", lifetime);
+            }
+        }
+    }
+
+    public class SquarePop : DeepVFXAction
+    {
+        public SquarePop(Color color, float radius = 1f, float lifetime = .25f)
+        {
+            if (DeepVFX.Pull("squarePop", out _effect, out _attribute))
+            {
+                _attribute.SetVector3("color", new Vector3(color.r, color.g, color.b));
+                _attribute.SetFloat("radius", radius);
+                _attribute.SetFloat("lifetime", lifetime);
             }
         }
     }

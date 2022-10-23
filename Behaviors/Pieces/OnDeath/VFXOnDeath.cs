@@ -1,3 +1,5 @@
+using DeepAction.VFX;
+
 namespace DeepAction
 {
     public class VFXOnDeath : DeepBehavior

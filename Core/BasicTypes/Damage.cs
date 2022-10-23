@@ -6,13 +6,7 @@ namespace DeepAction
         public int damage;
         public D_Resource target;
 
-        public Damage(int damage)
-        {
-            this.damage = damage;
-            target = D_Resource.Health;
-        }
-
-        public Damage(int damage, D_Resource target)
+        public Damage(int damage, D_Resource target = D_Resource.Health)
         {
             this.damage = damage;
             this.target = target;

@@ -31,7 +31,7 @@ namespace DeepAction
             var resources = new Dictionary<D_Resource, R>
             {
                 {D_Resource.Health, new R(3)},
-                {D_Resource.Mana, new R(3)},
+                {D_Resource.Mana, new R(10)},
                 {D_Resource.Shield, new R(3,0)},
             };
 
@@ -69,7 +69,7 @@ namespace DeepAction
                 {D_Attribute.Inteligence,new A(1)},
                 {D_Attribute.Dexterity,new A(1)},
                 {D_Attribute.MoveSpeed,new A(150)},
-                {D_Attribute.MaxMoveSpeed,new A(100)},
+                {D_Attribute.MaxMoveSpeed,new A(200)},
                 {D_Attribute.Drag,new A(0)},
                 {D_Attribute.Bounciness,new A(1)},
                 {D_Attribute.SlideFriction,new A(1)},
@@ -92,6 +92,10 @@ namespace DeepAction
             t.behaviors = new DeepBehavior[]{
                 new MoveTowardsPlayer(),
                 new AvoidOtherEntities(D_Team.Enemy,D_EntityType.Actor,60f),
+                new VFXOnDeath(
+                    new VFX.Sparks(new Color(1f,.256f,.256f),5),
+                    new VFX.SquarePop(new Color(1f,.256f,.256f),5f,.2f)
+                ),
             };
             t.team = D_Team.Enemy;
             t.type = D_EntityType.Actor;
@@ -108,7 +112,7 @@ namespace DeepAction
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
                 new PlayerShoot(),
-                new ResourceRegen(D_Resource.Mana,1)
+                new ResourceRegen(D_Resource.Mana,5)
             };
 
             t.team = D_Team.Player;
@@ -121,16 +125,18 @@ namespace DeepAction
         {
             EntityTemplate t = BaseProjectile();
 
+            float aoeRadius = 7.5f;
+
             t.behaviors = new DeepBehavior[]{
                 new BasicProjectile(1,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
-                new AreaDamageOnDeath(10f,new Damage(1),D_Team.Enemy),
-                new AreaImpulseOnDeath(10f, 100f,D_Team.Enemy),
-                new VFXOnDeath(new SimpleSparks(10,Color.red,3f)),
-                new VFXOnDeath(new SimpleSparks(100,Color.green,3f)),
-                new VFXOnDeath(new SimpleSparks(200,Color.blue,3f)),
-                new VFXOnDeath(new SimpleSparks(400,Color.magenta,3f)),
+                new AreaDamageOnDeath(aoeRadius,new Damage(1),D_Team.Enemy),
+                new AreaImpulseOnDeath(aoeRadius, 100f,D_Team.Enemy),
+                new VFXOnDeath(
+                    new VFX.Sparks(Color.black,5),
+                    new VFX.CirclePop(Color.black,aoeRadius,.3f)
+                ),
             };
 
             t.team = D_Team.Player;
