@@ -36,7 +36,6 @@ namespace DeepAction
     }
 
     [Serializable]
-    //todo this needs to implement enumerable or something so that we can use []
     public class DeepStateList<T> : IEnumerable<T>
     {
         [ShowInInspector, HideLabel]

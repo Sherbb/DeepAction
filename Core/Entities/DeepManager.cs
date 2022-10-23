@@ -23,12 +23,12 @@ namespace DeepAction
         {
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
-                game.activeEntities.list[i].events.Update?.Invoke();
+                game.activeEntities[i].events.Update?.Invoke();
             }
 
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
-                game.activeEntities.list[i].CheckCollisionStay();
+                game.activeEntities[i].CheckCollisionStay();
             }
         }
 
@@ -37,17 +37,17 @@ namespace DeepAction
         {
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
-                if (game.activeEntities.list[i].dying)
+                if (game.activeEntities[i].dying)
                 {
                     //Remove all behaviors with [RemoveOnDeath] flag
-                    for (int j = game.activeEntities.list[i].behaviors.Count - 1; j >= 0; j--)
+                    for (int j = game.activeEntities[i].behaviors.Count - 1; j >= 0; j--)
                     {
-                        if (game.activeEntities.list[i].behaviors[j].removeOnDeath)
+                        if (game.activeEntities[i].behaviors[j].removeOnDeath)
                         {
-                            game.activeEntities.list[i].RemoveBehavior(game.activeEntities.list[i].behaviors[j]);
+                            game.activeEntities[i].RemoveBehavior(game.activeEntities[i].behaviors[j]);
                         }
                     }
-                    game.activeEntities.list[i].gameObject.SetActive(false);
+                    game.activeEntities[i].gameObject.SetActive(false);
                 }
             }
         }
@@ -56,14 +56,7 @@ namespace DeepAction
         {
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
-                game.activeEntities.list[i].events.FixedUpdate?.Invoke();
-            }
-
-            //limit entity move speed.
-            for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
-            {
-                var e = game.activeEntities.list[i];
-                //e.rb.velocity = Vector2.ClampMagnitude(e.rb.velocity, e.attributes[D_Attribute.MaxMoveSpeed].value);
+                game.activeEntities[i].events.FixedUpdate?.Invoke();
             }
         }
     }
