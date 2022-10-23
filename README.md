@@ -1,5 +1,7 @@
 > Requires Unity 2021.3+
 
+> !!!!! Currently require [ODIN](https://odininspector.com/). The goal is to strip that eventually. All odin attributes can be removed and everything will function just fine.
+
 > WIP not production ready with multiple dead ends currently.
 
 # DeepAction
