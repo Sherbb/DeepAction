@@ -3,9 +3,9 @@
 > WIP not production ready with multiple dead ends currently.
 
 # DeepAction
-A platform to create complex rpg/moba like action games in Unity.
+A platform to create complex action games in Unity.
 
-All entities behavior and composition is defined in c#
+Entities behavior is defined entirely in c#
 ```csharp
 public static EntityTemplate ExampleEnemy()
 {
@@ -30,22 +30,63 @@ public static EntityTemplate ExampleEnemy()
 }
 ```
 
-Its basically just an entity component system, with some supporting systems I like. Global AppState, VFX, etc.
+The visual or "view" side of entities are defined using regular unity prefabs and monoBehaviors. The expectation is that all view code on entity prefabs can function regardless of the actual makeup of the entity it is used for.
+```csharp
+public DeepEntity Enemy()
+{
+    DeepEntity e = GameObject.Instantiate(enemyViewPrefab, DeepManager.instance.transform).GetComponent<DeepEntity>();
+    e.Initialize(DeepEntityPresets.ExampleEnemy());
 
-## Structure
+    return e;
+}
+```
 
-### DeepEntity
-A <b>DeepEntity</b> has Attributes, Resources, Flags, and Behaviors.
+> AKA its basically just another entity component system
 
-This is the core gameplay object. 
+## DeepEntity
 
-### DeepBehavior
-A <b>DeepBehavior</b> is an object that attaches to an entity and executes code based on that entities state. 
-Functions like a monoBehavior.
+The core gameplay entity has Behaviors, Attributes, Flags, and Resources
 
-The DeepEntity will trigger generic events like OnTakeDamage, OnUpdate, and OnKillEnemy on all behaviors currently attached to the Entity.
+### DeepBehaviors
 
-> Todo: actually explain this properly ^ LOL
+A behavior is the replacement for MonoBehaviors that gets attached to entities. It has a Initialize/Destroy method that you can use to hook into the parent entities events.
+
+These events are things like: `Update`,`OnEnable`,`OnCollisionStay`. But also things like: `OnDealDamage`,`OnBounce`,`OnCast`.
+
+```csharp
+public class AreaDamageOnDeath : DeepBehavior
+{
+    private float radius;
+    private Damage damage;
+    private D_Team targetTeam;
+
+    public AreaDamageOnDeath(float radius, Damage damage, D_Team targetTeam)
+    {
+        this.radius = radius;
+        this.damage = damage;
+        this.targetTeam = targetTeam;
+    }
+
+    public override void InitializeBehavior()
+    {
+        parent.events.OnEntityDie += OnDie;
+    }
+
+    public override void DestroyBehavior()
+    {
+        parent.events.OnEntityDie -= OnDie;
+    }
+
+    private void OnDie()
+    {
+        DeepActions.AreaDamage(parent.transform.position, radius, damage, targetTeam);
+    }
+}
+```
+
+> TODO: explain attributes
+
+> TODO: explain resources
 
 ## Goal
 The purpose of this is to create a really solid base that allows for a ton flexibility and freedom in design.
@@ -54,11 +95,3 @@ Beyond freedom, a major goal is creating a system that is very FAST to work with
 I find that doing a system like this through mono-behaviors is very messy and error prone (and a little less performant).
 
 Defining entity behaviors inside c# is both very fast and EXTREMLY flexible. Creating this kind of flexibility in an editor GUI is possible, but a huge waste of time imo.
-
-## Examples
-
-> TODO
-
-## How To Use
-
-> TODO
