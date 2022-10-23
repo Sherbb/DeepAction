@@ -16,7 +16,6 @@ namespace DeepAction
             instance = this;
         }
 
-        //attribute is included in out just to save a line everytime we use this...
         public static bool Pull(string vfx, out VisualEffect effect, out VFXEventAttribute eventAttribute)
         {
             if (instance == null)
@@ -53,7 +52,7 @@ namespace DeepAction
             effect = g.AddComponent<VisualEffect>();
             g.layer = 12; //VFX layer
             g.transform.parent = instance.transform;
-            g.transform.position = Vector3.zero;//should already be set, just in case THIS object is accidentally moved
+            g.transform.position = Vector3.zero;
 
             effect.visualEffectAsset = effectAsset;
 
