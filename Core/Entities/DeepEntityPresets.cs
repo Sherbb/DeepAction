@@ -111,7 +111,8 @@ namespace DeepAction
                 new PlayerMovement(),
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
-                new PlayerShoot(),
+                new PlayerShoot(1),
+                new PlayerShoot(2),
                 new ResourceRegen(D_Resource.Mana,5)
             };
 
@@ -121,17 +122,17 @@ namespace DeepAction
             return t;
         }
 
-        public static EntityTemplate ExamplePlayerProjectile()
+        public static EntityTemplate ExamplePlayerProjectile(int damage)
         {
             EntityTemplate t = BaseProjectile();
 
             float aoeRadius = 7.5f;
 
             t.behaviors = new DeepBehavior[]{
-                new BasicProjectile(1,D_Team.Enemy),
+                new BasicProjectile(0,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
-                new AreaDamageOnDeath(aoeRadius,new Damage(1),D_Team.Enemy),
+                new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
                 new AreaImpulseOnDeath(aoeRadius, 100f,D_Team.Enemy),
                 new VFXOnDeath(
                     new VFX.Sparks(Color.black,5),

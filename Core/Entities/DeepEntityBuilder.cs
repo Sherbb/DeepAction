@@ -41,7 +41,6 @@ namespace DeepAction
             }
         }
 
-
         [Button]
         public DeepEntity CreateFromPrefab()
         {

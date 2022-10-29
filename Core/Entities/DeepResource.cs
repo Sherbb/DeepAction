@@ -92,7 +92,7 @@ namespace DeepAction
             {
                 onDeplete?.Invoke();
             }
-            return c;
+            return c - consumed;
         }
 
         /// <summary>

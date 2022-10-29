@@ -6,11 +6,18 @@ namespace DeepAction
 {
     public class PlayerShoot : DeepBehavior
     {
+        private int _damage;
         public override bool canBeCast => true;
+
         public override Dictionary<D_Resource, int> resourcesToCast => new Dictionary<D_Resource, int>()
         {
             {D_Resource.Mana,1}
         };
+
+        public PlayerShoot(int damage)
+        {
+            _damage = damage;
+        }
 
         public override void OnCast()
         {
@@ -20,7 +27,7 @@ namespace DeepAction
                     0f, 0f, Mathf.Atan2(parent.aimDirection.y, parent.aimDirection.x) * Mathf.Rad2Deg)
                 ).GetComponent<DeepEntity>();
 
-            e.Initialize(DeepEntityPresets.ExamplePlayerProjectile());
+            e.Initialize(DeepEntityPresets.ExamplePlayerProjectile(_damage));
         }
     }
 }

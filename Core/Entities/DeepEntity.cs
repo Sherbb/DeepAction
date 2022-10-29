@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.VFX;
 
 namespace DeepAction
 {
@@ -157,11 +158,24 @@ namespace DeepAction
                 if (d.target == D_Resource.Health)
                 {
                     //Game dependant, you might want a totally different damage calc.
-                    int r = resources[D_Resource.Shield].Consume(d.damage);
-                    resources[D_Resource.Health].Consume(r);
+                    int sr = resources[D_Resource.Shield].Consume(d.damage);
+                    int hr = resources[D_Resource.Health].Consume(sr);
+                    DamageNumbers(d.damage - hr);
                     return;
                 }
                 resources[d.target].Consume(d.damage);
+            }
+        }
+
+        private void DamageNumbers(int num)
+        {
+            Debug.LogError("damage: " + num);
+            if (DeepVFX.Pull("damageNumbers", out VisualEffect vfx, out VFXEventAttribute att))
+            {
+                att.SetInt("num", num - 1);
+                att.SetVector3("position", transform.position);
+                att.SetFloat("spawnCount", 1);
+                vfx.SendEvent("OnPlay", att);
             }
         }
 
