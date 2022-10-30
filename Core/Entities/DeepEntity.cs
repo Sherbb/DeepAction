@@ -38,7 +38,7 @@ namespace DeepAction
 
         // * Lookups
         [HideInEditorMode, ShowInInspector]
-        public List<DeepBehavior> castableBehaviors { get; private set; }
+        public List<DeepAbility> abilities { get; private set; }//abilities are a subset of behaviors
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,7 +59,7 @@ namespace DeepAction
             resources = new Dictionary<D_Resource, DeepResource>();
             flags = new Dictionary<D_Flag, DeepFlag>();
             behaviors = new List<DeepBehavior>();
-            castableBehaviors = new List<DeepBehavior>();
+            abilities = new List<DeepAbility>();
             rb = gameObject.GetComponent<Rigidbody2D>();
 
             if (rb == null)
@@ -169,7 +169,6 @@ namespace DeepAction
 
         private void DamageNumbers(int num)
         {
-            Debug.LogError("damage: " + num);
             if (DeepVFX.Pull("damageNumbers", out VisualEffect vfx, out VFXEventAttribute att))
             {
                 att.SetInt("num", num - 1);

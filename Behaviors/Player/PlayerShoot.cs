@@ -4,22 +4,24 @@ using UnityEngine;
 
 namespace DeepAction
 {
-    public class PlayerShoot : DeepBehavior
+    public class PlayerShoot : DeepAbility
     {
         private int _damage;
-        public override bool canBeCast => true;
 
-        public override Dictionary<D_Resource, int> resourcesToCast => new Dictionary<D_Resource, int>()
+        /*
+        public override Dictionary<D_Resource, int> resourcesToTrigger => new Dictionary<D_Resource, int>()
         {
             {D_Resource.Mana,1}
         };
+        */
 
-        public PlayerShoot(int damage)
+        public PlayerShoot(int damage, float cooldown)
         {
             _damage = damage;
+            triggerCooldown = cooldown;
         }
 
-        public override void OnCast()
+        public override void OnTrigger()
         {
             DeepEntity e = GameObject.Instantiate(Resources.Load("Projectile") as GameObject,
                 parent.transform.position,

@@ -20,11 +20,11 @@ namespace DeepAction
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
                 entity.TryToCast(0);
             }
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButton(1))
             {
                 entity.TryToCast(1);
             }

@@ -107,9 +107,9 @@ namespace DeepAction
             behavior.parent = e;
             e.behaviors.Add(behavior);
             behavior.InitializeBehavior();
-            if (behavior.canBeCast)
+            if (behavior is DeepAbility a)
             {
-                e.castableBehaviors.Add(behavior);
+                e.abilities.Add(a);
             }
             return behavior;
         }
@@ -120,9 +120,9 @@ namespace DeepAction
             {
                 //the .contains is not neccesary if you are feeling brave
                 b.DestroyBehavior();
-                if (b.canBeCast && e.castableBehaviors.Contains(b))
+                if (b is DeepAbility a && e.abilities.Contains(a))
                 {
-                    e.castableBehaviors.Remove(b);
+                    e.abilities.Remove(a);
                 }
                 e.behaviors.Remove(b);
                 return true;
@@ -138,9 +138,9 @@ namespace DeepAction
             }
             b.DestroyBehavior();
             //the .contains is not neccesary if you are feeling brave
-            if (b.canBeCast && e.castableBehaviors.Contains(b))
+            if (b is DeepAbility a && e.abilities.Contains(a))
             {
-                e.castableBehaviors.Remove(b);
+                e.abilities.Remove(a);
             }
             e.behaviors.Remove(b);
             return true;
@@ -152,9 +152,9 @@ namespace DeepAction
 
         public static bool TryToCast(this DeepEntity e, int index)
         {
-            if (e.castableBehaviors.Count > index)
+            if (e.abilities.Count > index)
             {
-                return e.castableBehaviors[index].Cast();
+                return e.abilities[index].Trigger();
             }
             Debug.LogError("Tried to cast missing index on: " + e.name + " Index: " + index);
             return false;

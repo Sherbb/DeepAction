@@ -111,8 +111,8 @@ namespace DeepAction
                 new PlayerMovement(),
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
-                new PlayerShoot(1),
-                new PlayerShoot(2),
+                new PlayerShoot(1,.5f),
+                new PlayerShoot(2,.1f),
                 new ResourceRegen(D_Resource.Mana,5)
             };
 
@@ -126,17 +126,17 @@ namespace DeepAction
         {
             EntityTemplate t = BaseProjectile();
 
-            float aoeRadius = 7.5f;
+            float aoeRadius = 9f;
 
             t.behaviors = new DeepBehavior[]{
-                new BasicProjectile(0,D_Team.Enemy),
+                new BasicProjectile(1,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
-                new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
-                new AreaImpulseOnDeath(aoeRadius, 100f,D_Team.Enemy),
+                //new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
+                new AreaImpulseOnDeath(aoeRadius, 150f,D_Team.Enemy),
                 new VFXOnDeath(
                     new VFX.Sparks(Color.black,5),
-                    new VFX.CirclePop(Color.black,aoeRadius,.3f)
+                    new VFX.CirclePop(Color.black,aoeRadius,.2f)
                 ),
             };
 
