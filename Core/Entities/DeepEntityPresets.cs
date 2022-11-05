@@ -134,6 +134,7 @@ namespace DeepAction
                 new DieOnBounce(),
                 //new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
                 new AreaImpulseOnDeath(aoeRadius, 150f,D_Team.Enemy),
+                new AreaBehaviorOnDeath(aoeRadius,new DecayingSlow(),D_Team.Enemy),
                 new VFXOnDeath(
                     new VFX.Sparks(Color.black,5),
                     new VFX.CirclePop(Color.black,aoeRadius,.2f)

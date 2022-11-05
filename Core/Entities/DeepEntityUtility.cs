@@ -160,5 +160,30 @@ namespace DeepAction
             return false;
         }
 
+        //-----------------------------------
+        //            VIEWS
+        //-----------------------------------
+
+        public static DeepViewReference AddView(this DeepEntity entity, string view)
+        {
+            if (!DeepViewManager.instance.viewPool.ContainsKey(view) && !DeepViewManager.instance.RegisterView(view))
+            {
+                return null;
+            }
+
+            if (DeepViewManager.instance.viewPool[view].Count < 1)
+            {
+                DeepViewManager.instance.RegisterView(view, 1);
+            }
+
+            GameObject v = DeepViewManager.instance.viewPool[view][0];
+            DeepViewManager.instance.viewPool[view].RemoveAt(0);
+            v.transform.parent = entity.transform;
+            v.transform.localPosition = Vector3.zero;
+            v.transform.localRotation = Quaternion.identity;
+            v.transform.localScale = Vector3.one;
+            v.SetActive(true);
+            return new DeepViewReference(v, view);
+        }
     }
 }

@@ -9,11 +9,14 @@ namespace DeepAction
         DeepAttributeModifier speedMod;
         public float duration = 5f;
 
+        private DeepViewReference viewRef;
+
         public override void InitializeBehavior()
         {
             speedMod = new DeepAttributeModifier(0f, modValue, 0f);
             parent.attributes[D_Attribute.MoveSpeed].AddModifier(speedMod);
             parent.StartCoroutine(Decay());
+            viewRef = parent.AddView("DecayingSlowView");
         }
 
         private float timer;
@@ -31,6 +34,7 @@ namespace DeepAction
         public override void DestroyBehavior()
         {
             parent.attributes[D_Attribute.MoveSpeed].RemoveModifer(speedMod);
+            viewRef.ReturnView();
         }
     }
 }
