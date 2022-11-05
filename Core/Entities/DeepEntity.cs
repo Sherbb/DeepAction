@@ -161,6 +161,8 @@ namespace DeepAction
                     int sr = resources[D_Resource.Shield].Consume(d.damage);
                     int hr = resources[D_Resource.Health].Consume(sr);
                     DamageNumbers(d.damage - hr);
+                    //todo use the right damage
+                    events.OnTakeDamage?.Invoke(d.damage - hr);
                     return;
                 }
                 resources[d.target].Consume(d.damage);

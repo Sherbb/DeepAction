@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace DeepAction
 {
     public class PlayerShoot : DeepAbility
     {
-        private int _damage;
+        public Func<EntityTemplate> template;
 
         /*
         public override Dictionary<D_Resource, int> resourcesToTrigger => new Dictionary<D_Resource, int>()
@@ -15,10 +16,10 @@ namespace DeepAction
         };
         */
 
-        public PlayerShoot(int damage, float cooldown)
+        public PlayerShoot(float cooldown, Func<EntityTemplate> template)
         {
-            _damage = damage;
             triggerCooldown = cooldown;
+            this.template = template;
         }
 
         public override void OnTrigger()
@@ -29,7 +30,7 @@ namespace DeepAction
                     0f, 0f, Mathf.Atan2(parent.aimDirection.y, parent.aimDirection.x) * Mathf.Rad2Deg)
                 ).GetComponent<DeepEntity>();
 
-            e.Initialize(DeepEntityPresets.ExamplePlayerProjectile(_damage));
+            e.Initialize(template.Invoke());
         }
     }
 }

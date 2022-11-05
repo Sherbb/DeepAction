@@ -146,6 +146,20 @@ namespace DeepAction
             return true;
         }
 
+
+        //todo optimize this somehow
+        public static bool HasBehavior(this DeepEntity e, Type behavior)
+        {
+            foreach (DeepBehavior b in e.behaviors)
+            {
+                if (b.GetType() == behavior)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         //-----------------------------------
         //            CASTING
         //-----------------------------------

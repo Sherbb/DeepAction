@@ -30,7 +30,7 @@ namespace DeepAction
         {
             var resources = new Dictionary<D_Resource, R>
             {
-                {D_Resource.Health, new R(3)},
+                {D_Resource.Health, new R(10)},
                 {D_Resource.Mana, new R(10)},
                 {D_Resource.Shield, new R(3,0)},
             };
@@ -111,8 +111,8 @@ namespace DeepAction
                 new PlayerMovement(),
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
-                new PlayerShoot(1,.5f),
-                new PlayerShoot(2,.1f),
+                new PlayerShoot(1,() => ExamplePlayerProjectile(1)),
+                new PlayerShoot(.1f,() => ExamplePlayerProjectile2(3)),
                 new ResourceRegen(D_Resource.Mana,5)
             };
 
@@ -126,15 +126,37 @@ namespace DeepAction
         {
             EntityTemplate t = BaseProjectile();
 
-            float aoeRadius = 9f;
+            float aoeRadius = 1f;
 
             t.behaviors = new DeepBehavior[]{
-                new BasicProjectile(1,D_Team.Enemy),
+                new BasicProjectile(damage,D_Team.Enemy),
+                new MoveForwards(),
+                new DieOnBounce(),
+                new VFXOnDeath(
+                    new VFX.Sparks(Color.black,5),
+                    new VFX.CirclePop(Color.black,aoeRadius,.2f)
+                ),
+            };
+
+            t.team = D_Team.Player;
+            t.type = D_EntityType.Projectile;
+
+            return t;
+        }
+
+        public static EntityTemplate ExamplePlayerProjectile2(int damage)
+        {
+            EntityTemplate t = BaseProjectile();
+
+            float aoeRadius = 4f;
+
+            t.behaviors = new DeepBehavior[]{
+                new BasicProjectile(0,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
                 //new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
                 new AreaImpulseOnDeath(aoeRadius, 150f,D_Team.Enemy),
-                new AreaBehaviorOnDeath(aoeRadius,new DecayingSlow(),D_Team.Enemy),
+                new AreaBehaviorOnDeath(aoeRadius,new PopOnDamageExample(aoeRadius,damage,D_Team.Enemy),D_Team.Enemy,false),
                 new VFXOnDeath(
                     new VFX.Sparks(Color.black,5),
                     new VFX.CirclePop(Color.black,aoeRadius,.2f)

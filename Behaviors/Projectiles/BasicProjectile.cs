@@ -2,8 +2,8 @@ namespace DeepAction
 {
     public class BasicProjectile : DeepBehavior
     {
-        private int _impactDamage;
-        private D_Team[] _targetTeam;
+        public int _impactDamage;
+        public D_Team[] _targetTeam;
 
         public BasicProjectile(int impactDamage, params D_Team[] targetTeam)
         {
@@ -27,7 +27,10 @@ namespace DeepAction
             {
                 if (t == e.team)
                 {
-                    e.Hit(new Damage(_impactDamage));
+                    if (_impactDamage > 0)
+                    {
+                        e.Hit(new Damage(_impactDamage));
+                    }
                     parent.Die();
                     return;
                 }
