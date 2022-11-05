@@ -29,7 +29,7 @@ namespace DeepAction
             Collider2D[] hits = Physics2D.OverlapCircleAll(position, radius, enityLayerMask);
             foreach (Collider2D hit in hits)
             {
-                if (hit.TryGetComponent(out DeepEntity entity) && entity.team == targetTeam && (!applyDublicates || !entity.HasBehavior(behavior.GetType())))
+                if (hit.TryGetComponent(out DeepEntity entity) && entity.team == targetTeam && (applyDublicates || !entity.HasBehavior(behavior.GetType())))
                 {
                     entity.AddBehavior(behavior.Clone());
                 }
