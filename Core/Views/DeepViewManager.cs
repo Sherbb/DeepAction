@@ -8,7 +8,7 @@ namespace DeepAction
     {
         public static DeepViewManager instance { get; private set; }
 
-        public Dictionary<string, List<GameObject>> viewPool { get; private set; } = new Dictionary<string, List<GameObject>>();
+        public Dictionary<string, List<DeepViewLink>> viewPool { get; private set; } = new Dictionary<string, List<DeepViewLink>>();
 
         public void Awake()
         {
@@ -27,55 +27,49 @@ namespace DeepAction
 
             if (!viewPool.ContainsKey(view))
             {
-                viewPool.Add(view, new List<GameObject>());
+                viewPool.Add(view, new List<DeepViewLink>());
             }
 
             for (int i = 0; i < count; i++)
             {
                 GameObject v = Instantiate(g, transform);
                 v.SetActive(false);
-                viewPool[view].Add(v);
+                DeepViewLink viewLink;
+                if (!v.TryGetComponent(out viewLink))
+                {
+                    viewLink = v.AddComponent<DeepViewLink>();
+                }
+                viewPool[view].Add(viewLink);
             }
             return true;
         }
 
-        public void ReturnView(string viewName, GameObject gameObject)
+        /// <summary>
+        /// Returns and INACTIVE view. It will still be parented to viewManager.
+        /// </summary>
+        public static DeepViewLink PullView(string viewName)
+        {
+            if (DeepViewManager.instance.viewPool[viewName].Count < 1)
+            {
+                DeepViewManager.instance.RegisterView(viewName, 1);
+            }
+            DeepViewLink v = instance.viewPool[viewName][0];
+            instance.viewPool[viewName].RemoveAt(0);
+            return v;
+        }
+
+        public void ReturnView(string viewName, DeepViewLink viewLink)
         {
             if (!viewPool.ContainsKey(viewName))
             {
                 Debug.LogError("View returned without a matching key");
-                gameObject.SetActive(false);
+                viewLink.gameObject.SetActive(false);
                 return;
             }
 
-            gameObject.SetActive(false);
-            gameObject.transform.parent = transform;
-            viewPool[viewName].Add(gameObject);
-        }
-    }
-
-    public class DeepViewReference
-    {
-        public GameObject gameObject;
-        public string viewName;
-        private bool returned;
-
-        public DeepViewReference(GameObject gameObject, string viewName)
-        {
-            this.gameObject = gameObject;
-            this.viewName = viewName;
-            returned = false;
-        }
-
-        public void ReturnView()
-        {
-            if (returned)
-            {
-                return;
-            }
-
-            DeepViewManager.instance.ReturnView(viewName, gameObject);
-            returned = true;
+            viewLink.gameObject.SetActive(false);
+            viewLink.transform.parent = transform;
+            viewPool[viewName].Add(viewLink);
         }
     }
 }

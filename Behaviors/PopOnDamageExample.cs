@@ -10,7 +10,7 @@ namespace DeepAction
         public int damage;
         public D_Team targetTeam;
 
-        private DeepViewReference viewRef;
+        private DeepViewLink viewRef;
         private float timer;
         private float delay = .25f;
         private bool started;
@@ -36,7 +36,7 @@ namespace DeepAction
         {
             parent.events.OnTakeDamage -= OnTakeDamage;
             parent.events.OnEntityDie -= OnDie;
-            viewRef.ReturnView();
+            viewRef.StartReturn();
         }
 
         private void OnDie()

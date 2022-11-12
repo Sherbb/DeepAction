@@ -6,9 +6,23 @@ using UnityEngine.VFX;
 
 namespace DeepAction
 {
+    //TODO: -------------------------------------------------------------------
+
+    // 1. Either need to create a base entity prefab, or build from components and change some bits bellow
+    
+    // 2. Return views on death
+
+    // 3. Create entity flow not done yet.
+
+    // 4. 
+
+    //TODO: -------------------------------------------------------------------
+    
     [RequireComponent(typeof(DeepMovementBody)), RequireComponent(typeof(Rigidbody2D))]
     public class DeepEntity : MonoBehaviour, IHit
     {
+        // * Views
+        public List<DeepViewLink> views;
         // * Resources
         [Title("Resources", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
         public Dictionary<D_Resource, DeepResource> resources { get; private set; }
@@ -43,6 +57,7 @@ namespace DeepAction
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Rigidbody2D rb { get; private set; }
+        public CircleCollider2D col;
         public DeepMovementBody mb { get; private set; }
         public Vector2 aimDirection { get; set; }
 
@@ -54,13 +69,15 @@ namespace DeepAction
         {
             template = t;
 
-            events = new DeepEntityEvents();
+            views = new List<DeepViewLink>();
             attributes = new Dictionary<D_Attribute, DeepAttribute>();
             resources = new Dictionary<D_Resource, DeepResource>();
             flags = new Dictionary<D_Flag, DeepFlag>();
             behaviors = new List<DeepBehavior>();
             abilities = new List<DeepAbility>();
+            events = new DeepEntityEvents();
             rb = gameObject.GetComponent<Rigidbody2D>();
+            col = gameObject.GetComponent<CircleCollider2D>();
 
             if (rb == null)
             {
@@ -122,6 +139,7 @@ namespace DeepAction
             //OnEnable gets called before this, so we need to initialize here when entities are created.
             App.state.game.RegisterEntity(this);
             events.OnEntityEnable?.Invoke();
+            RefreshColliderSize();
             return this;
         }
 
@@ -189,6 +207,20 @@ namespace DeepAction
             dying = true;
         }
 
+        public void RefreshColliderSize()
+        {
+            float r = 0f;
+            foreach (DeepViewLink view in views)
+            {
+                if (!view.viewAffectsHitbox)
+                {
+                    continue;
+                }
+                r = Mathf.Max(r, view.viewRadius);
+            }
+            col.radius = r;
+        }
+
         //////////////////////////////////////////////////////////////
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -200,7 +232,6 @@ namespace DeepAction
                 activeCollisions[col] = e;
                 events.OnEntityCollisionEnter?.Invoke(e);
             }
-
         }
 
         private void OnTriggerExit2D(Collider2D col)
@@ -228,6 +259,15 @@ namespace DeepAction
         public void SetAimDirection(Vector2 aimDirection)
         {
             this.aimDirection = aimDirection;
+        }
+
+        //-----------------------------------
+        //            STATICS
+        //-----------------------------------
+
+        public static DeepEntity Create(string view, EntityTemplate tempalte)
+        {
+            return null;
         }
     }
 }

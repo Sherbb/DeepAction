@@ -15,7 +15,6 @@ namespace DeepAction
         void Awake()
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
         }
 
         // All entity logic runs during UPDATE
