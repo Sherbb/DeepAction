@@ -88,8 +88,15 @@ namespace DeepAction
                     return;
                 }
 
-                System.Array.Sort(_hitpool, (x, y) => x.distance.CompareTo(y.distance));
-                _hit = _hitpool[0];
+                float closestDist = Mathf.Infinity;
+                for (int i = 0; i < hits; i++)
+                {
+                    if (_hitpool[i].distance < closestDist)
+                    {
+                        _hit = _hitpool[i];
+                        closestDist = _hitpool[i].distance;
+                    }
+                }
 
                 if (_hit.point == Vector2.zero)
                 {
@@ -116,10 +123,6 @@ namespace DeepAction
             {
                 int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, slideDir, _hitpool, frameDistance, _entityWallMask);
 
-                //! FIXME (CRITICAL)
-                //the problem is that _hitpool does not get reset, so we sort against everything in it every time.
-                //the sort needs to be limited to hits index
-
                 if (hits == 0)
                 {
                     transform.position = (Vector2)transform.position + (slideDir * frameDistance);
@@ -128,8 +131,15 @@ namespace DeepAction
 
                 slideThisFrame = true;
 
-                System.Array.Sort(_hitpool, (x, y) => x.distance.CompareTo(y.distance));
-                _hit = _hitpool[0];
+                float closestDist = Mathf.Infinity;
+                for (int i = 0; i < hits; i++)
+                {
+                    if (_hitpool[i].distance < closestDist)
+                    {
+                        _hit = _hitpool[i];
+                        closestDist = _hitpool[i].distance;
+                    }
+                }
 
                 if (_hit.point == Vector2.zero)
                 {
