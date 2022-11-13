@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.VFX;
+using DeepAction.Views;
 
 namespace DeepAction
 {

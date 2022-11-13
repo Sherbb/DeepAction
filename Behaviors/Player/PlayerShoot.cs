@@ -28,7 +28,9 @@ namespace DeepAction
                 template.Invoke(),
                 parent.transform.position,
                 Quaternion.Euler(0f, 0f, Mathf.Atan2(parent.aimDirection.y, parent.aimDirection.x) * Mathf.Rad2Deg),
-                "ProjectileView");
+                "ProjectileView",
+                "ProjectileTrail"
+            );
         }
     }
 }

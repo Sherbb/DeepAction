@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,12 +24,16 @@ namespace DeepAction
 
         private string _viewName;//used to id this view for when we return.
 
+        public Action onSetup;
+        public Action onStartReturn;
+
         public void Setup(DeepEntity e, string viewName)
         {
             entity = e;
             e.views.Add(this);
             _viewName = viewName;
             _returning = false;
+            onSetup?.Invoke();
         }
 
         //Some views will need to linger for a moment after being removed.
@@ -42,6 +47,7 @@ namespace DeepAction
             _returning = true;
             //NOTE that views are removed from the entity while returning. This could maybe cause a bug if your view code does not take _returning into account.
             entity.views.Remove(this);
+            onStartReturn?.Invoke();
             if (_readyToReturn)
             {
                 Return();
