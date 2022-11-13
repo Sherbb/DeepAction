@@ -10,9 +10,6 @@ namespace DeepAction
         /// <summary>The entity this behavior is on.</summary>
         public DeepEntity parent;
 
-        [HideInInspector]
-        public virtual bool removeOnDeath { get; private set; }
-
         public virtual void InitializeBehavior() { }
         public virtual void DestroyBehavior() { }
 
