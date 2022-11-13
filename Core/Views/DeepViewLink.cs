@@ -54,7 +54,7 @@ namespace DeepAction
                 return;
             }
             //views are unparented if they are not ready to return.
-            transform.parent = null;
+            transform.parent = DeepViewManager.instance.returningViewParent;
         }
 
         /// <summary>

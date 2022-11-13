@@ -10,9 +10,21 @@ namespace DeepAction
 
         public Dictionary<string, List<DeepViewLink>> viewPool { get; private set; } = new Dictionary<string, List<DeepViewLink>>();
 
+        public Transform inactiveViewParent;
+        //holds views that are trying to return, but are waiting on something ex: trails
+        public Transform returningViewParent;
+
         public void Awake()
         {
             instance = this;
+            GameObject g = new GameObject();
+            g.name = "InactiveViews";
+            g.transform.parent = transform;
+            inactiveViewParent = g.transform;
+            g = new GameObject();
+            g.name = "ReturningViews";
+            g.transform.parent = transform;
+            returningViewParent = g.transform;
         }
 
         public bool RegisterView(string view, int count = 5)
@@ -32,7 +44,7 @@ namespace DeepAction
 
             for (int i = 0; i < count; i++)
             {
-                GameObject v = Instantiate(g, transform);
+                GameObject v = Instantiate(g, inactiveViewParent);
                 v.SetActive(false);
                 DeepViewLink viewLink;
                 if (!v.TryGetComponent(out viewLink))
@@ -68,7 +80,7 @@ namespace DeepAction
             }
 
             viewLink.gameObject.SetActive(false);
-            viewLink.transform.parent = transform;
+            viewLink.transform.parent = inactiveViewParent;
             viewPool[viewName].Add(viewLink);
         }
     }

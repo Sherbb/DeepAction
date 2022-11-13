@@ -30,7 +30,7 @@ namespace DeepAction
         {
             var resources = new Dictionary<D_Resource, R>
             {
-                {D_Resource.Health, new R(10)},
+                {D_Resource.Health, new R(5)},
                 {D_Resource.Mana, new R(10)},
                 {D_Resource.Shield, new R(3,0)},
             };
@@ -113,7 +113,7 @@ namespace DeepAction
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
                 new PlayerShoot(1,() => ExamplePlayerProjectile(1)),
-                new PlayerShoot(.1f,() => ExamplePlayerProjectile2(3)),
+                new PlayerShoot(.05f,() => ExamplePlayerProjectile2(1)),
                 new ResourceRegen(D_Resource.Mana,5)
             };
 
@@ -149,18 +149,18 @@ namespace DeepAction
         {
             EntityTemplate t = BaseProjectile();
 
-            float aoeRadius = 4f;
+            float aoeRadius = 5.5f;
 
             t.behaviors = new DeepBehavior[]{
                 new BasicProjectile(0,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
-                //new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
+                new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
                 new AreaImpulseOnDeath(aoeRadius, 150f,D_Team.Enemy),
-                new AreaBehaviorOnDeath(aoeRadius,new PopOnDamageExample(aoeRadius,damage,D_Team.Enemy),D_Team.Enemy,false),
+                //new AreaBehaviorOnDeath(aoeRadius,new PopOnDamageExample(aoeRadius,damage,D_Team.Enemy),D_Team.Enemy,false),
                 new VFXOnDeath(
-                    new VFX.Sparks(Color.black,5),
-                    new VFX.CirclePop(Color.black,aoeRadius,.2f)
+                    new VFX.Sparks(Color.black,6),
+                    new VFX.CirclePop(Color.black,aoeRadius,.4f)
                 ),
             };
 
