@@ -24,13 +24,11 @@ namespace DeepAction
 
         public override void OnTrigger()
         {
-            DeepEntity e = GameObject.Instantiate(Resources.Load("Projectile") as GameObject,
+            DeepEntity e = DeepEntity.Create(
+                template.Invoke(),
                 parent.transform.position,
-                Quaternion.Euler(
-                    0f, 0f, Mathf.Atan2(parent.aimDirection.y, parent.aimDirection.x) * Mathf.Rad2Deg)
-                ).GetComponent<DeepEntity>();
-
-            e.Initialize(template.Invoke());
+                Quaternion.Euler(0f, 0f, Mathf.Atan2(parent.aimDirection.y, parent.aimDirection.x) * Mathf.Rad2Deg),
+                "ProjectileView");
         }
     }
 }

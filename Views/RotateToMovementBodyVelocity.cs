@@ -6,15 +6,15 @@ namespace DeepAction.Views
 {
     public class RotateToMovementBodyVelocity : MonoBehaviour
     {
-        public DeepMovementBody mb;
+        public DeepViewLink link;
         public float rotateSpeed = 9f;
 
         void Update()
         {
-            if (mb == null) return;
-            if (mb.velocity.magnitude > 0f)
+            if (link.entity == null) return;
+            if (link.entity.mb.velocity.magnitude > 0f)
             {
-                transform.up = Vector2.Lerp(transform.up, mb.velocity, Time.deltaTime * rotateSpeed);
+                transform.up = Vector2.Lerp(transform.up, link.entity.mb.velocity, Time.deltaTime * rotateSpeed);
             }
         }
     }

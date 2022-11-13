@@ -4,46 +4,48 @@ using UnityEngine;
 
 namespace DeepAction
 {
-    [RequireComponent(typeof(DeepEntity))]
-    public class PlayerBrain : MonoBehaviour
+    public class PlayerBrain : DeepBehavior
     {
         //the purpose of a brain is to cast behaviors.
 
         //this scripts is still pretty fuzzy and is likely to change a lot in the future
 
-        private DeepEntity entity;
-
-        private void Awake()
+        public override void InitializeBehavior()
         {
-            entity = GetComponent<DeepEntity>();
+            parent.events.Update += Update;
+        }
+
+        public override void DestroyBehavior()
+        {
+            parent.events.Update -= Update;
         }
 
         private void Update()
         {
             if (Input.GetMouseButton(0))
             {
-                entity.TryToCast(0);
+                parent.TryToCast(0);
             }
             if (Input.GetMouseButton(1))
             {
-                entity.TryToCast(1);
+                parent.TryToCast(1);
             }
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                entity.TryToCast(2);
+                parent.TryToCast(2);
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                entity.TryToCast(2);
+                parent.TryToCast(2);
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
-                entity.TryToCast(2);
+                parent.TryToCast(2);
             }
             if (Input.GetKeyDown(KeyCode.F))
             {
-                entity.TryToCast(2);
+                parent.TryToCast(2);
             }
         }
 

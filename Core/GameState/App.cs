@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 
 namespace DeepAction
 {
+    [DefaultExecutionOrder(-500)]
     public class App : MonoBehaviour
     {
         [ShowInInspector]

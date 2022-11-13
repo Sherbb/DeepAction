@@ -8,35 +8,30 @@ namespace DeepAction
 {
     //TODO: -------------------------------------------------------------------
 
-    // 1. Either need to create a base entity prefab, or build from components and change some bits bellow
-    
-    // 2. Return views on death
-
-    // 3. Create entity flow not done yet.
-
-    // 4. 
+    // 1. need to define collision type somewhere inside deepEntity
 
     //TODO: -------------------------------------------------------------------
-    
+
     [RequireComponent(typeof(DeepMovementBody)), RequireComponent(typeof(Rigidbody2D))]
     public class DeepEntity : MonoBehaviour, IHit
     {
         // * Views
-        public List<DeepViewLink> views;
+        [Title("Views", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+        public List<DeepViewLink> views = new List<DeepViewLink>();
         // * Resources
         [Title("Resources", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_Resource, DeepResource> resources { get; private set; }
+        public Dictionary<D_Resource, DeepResource> resources { get; private set; } = new Dictionary<D_Resource, DeepResource>();
         // * Attributes
         [Title("Attributes", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_Attribute, DeepAttribute> attributes { get; private set; }
+        public Dictionary<D_Attribute, DeepAttribute> attributes { get; private set; } = new Dictionary<D_Attribute, DeepAttribute>();
         // * Flags
         [Title("States", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
-        public Dictionary<D_Flag, DeepFlag> flags { get; private set; }
+        public Dictionary<D_Flag, DeepFlag> flags { get; private set; } = new Dictionary<D_Flag, DeepFlag>();
         // * Behaviors
         [Title("Behaviors", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
-        public List<DeepBehavior> behaviors { get; private set; }
+        public List<DeepBehavior> behaviors { get; private set; } = new List<DeepBehavior>();
         // * Events
-        public DeepEntityEvents events;
+        public DeepEntityEvents events = new DeepEntityEvents();
         // * Team
         [HideInEditorMode, ShowInInspector]
         public D_Team team { get; private set; }
@@ -52,48 +47,45 @@ namespace DeepAction
 
         // * Lookups
         [HideInEditorMode, ShowInInspector]
-        public List<DeepAbility> abilities { get; private set; }//abilities are a subset of behaviors
+        //abilities are a subset of behaviors
+        public List<DeepAbility> abilities { get; private set; } = new List<DeepAbility>();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Rigidbody2D rb { get; private set; }
-        public CircleCollider2D col;
+        public CircleCollider2D col { get; private set; }
         public DeepMovementBody mb { get; private set; }
         public Vector2 aimDirection { get; set; }
 
-        private EntityTemplate template;
-
         private Dictionary<Collider2D, DeepEntity> activeCollisions = new Dictionary<Collider2D, DeepEntity>();
 
-        public DeepEntity Initialize(EntityTemplate t)
+        public DeepEntity Initialize(EntityTemplate template)
         {
-            template = t;
+            //pointless GC! optimize this! Requires replacing addAtt with setAtt etc below.
+            views.Clear();
+            attributes.Clear();
+            resources.Clear();
+            flags.Clear();
 
-            views = new List<DeepViewLink>();
-            attributes = new Dictionary<D_Attribute, DeepAttribute>();
-            resources = new Dictionary<D_Resource, DeepResource>();
-            flags = new Dictionary<D_Flag, DeepFlag>();
-            behaviors = new List<DeepBehavior>();
-            abilities = new List<DeepAbility>();
-            events = new DeepEntityEvents();
-            rb = gameObject.GetComponent<Rigidbody2D>();
-            col = gameObject.GetComponent<CircleCollider2D>();
+            behaviors.Clear();
+            abilities.Clear();
 
             if (rb == null)
             {
-                Debug.LogError("DeepEntity does not have a rigidbody: " + this.gameObject.name, this.gameObject);
+                rb = gameObject.GetComponent<Rigidbody2D>();
             }
-            //If you arent using movementBody you probably don't need this.
-            if (rb.bodyType != RigidbodyType2D.Kinematic)
+            if (col == null)
             {
-                Debug.LogError("DeepEntity has non-kinematic rigidbody: " + this.gameObject.name, this.gameObject);
+                col = gameObject.GetComponent<CircleCollider2D>();
+            }
+            if (mb == null)
+            {
+                mb = gameObject.GetComponent<DeepMovementBody>();
+                mb.entity = this;
             }
 
-            mb = gameObject.GetComponent<DeepMovementBody>();
-            mb.entity = this;
-
-            team = t.team;
-            type = t.type;
+            team = template.team;
+            type = template.type;
 
             //get attributes from template
             foreach (KeyValuePair<D_Attribute, A> attPair in template.attributes)
@@ -132,7 +124,11 @@ namespace DeepAction
                 this.AddBehavior(b);
             }
 
+            rb.velocity = Vector2.zero;
+            mb.SetVelocity(Vector2.zero);
+
             // * Kill entity when health runs out
+            //! remember to undo this when we re-use resources
             resources[D_Resource.Health].onDeplete += Die;
 
             initialized = true;
@@ -140,9 +136,11 @@ namespace DeepAction
             App.state.game.RegisterEntity(this);
             events.OnEntityEnable?.Invoke();
             RefreshColliderSize();
+            gameObject.SetActive(true);
             return this;
         }
 
+        /*
         private void OnEnable()
         {
             dying = false;
@@ -157,12 +155,12 @@ namespace DeepAction
                 events?.OnEntityEnable?.Invoke();
             }
         }
+        */
 
         private void OnDisable()
         {
             dying = false;
             events.OnEntityDisable?.Invoke();
-            App.state.game.DeregisterEntity(this);
         }
 
         /// <summary>
@@ -201,7 +199,10 @@ namespace DeepAction
         //todo consider adding a source entity to this.
         public void Die()
         {
-            if (dying) return;
+            if (dying)
+            {
+                return;
+            }
 
             events.OnEntityDie?.Invoke();
             dying = true;
@@ -262,12 +263,20 @@ namespace DeepAction
         }
 
         //-----------------------------------
-        //            STATICS
+        //            CREATE
         //-----------------------------------
 
-        public static DeepEntity Create(string view, EntityTemplate tempalte)
+        public static DeepEntity Create(EntityTemplate template, Vector3 position, Quaternion rotation, params string[] views)
         {
-            return null;
+            DeepEntity e = DeepManager.instance.PullEntity();
+            e.transform.position = position;
+            e.transform.rotation = rotation;
+            e.Initialize(template);
+            foreach (string view in views)
+            {
+                e.AddView(view);
+            }
+            return e;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace DeepAction.Views
 {
     public class RollAlongMovementBody : MonoBehaviour
     {
-        public DeepMovementBody mb;
+        public DeepViewLink link;
         public Transform target;
         public float rotateSpeed;
 
@@ -12,11 +12,11 @@ namespace DeepAction.Views
 
         void Update()
         {
-            if (mb == null)
+            if (link.entity == null)
             {
                 return;
             }
-            target.Rotate(new Vector3(mb.effectiveVelocity.y, mb.effectiveVelocity.x, 0f) * rotateSpeed * Time.deltaTime, Space.World);
+            target.Rotate(new Vector3(link.entity.mb.effectiveVelocity.y, link.entity.mb.effectiveVelocity.x, 0f) * rotateSpeed * Time.deltaTime, Space.World);
         }
     }
 }

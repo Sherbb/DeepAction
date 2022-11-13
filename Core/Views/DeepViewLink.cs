@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace DeepAction
 {
@@ -14,10 +15,8 @@ namespace DeepAction
         public bool viewAffectsHitbox = false;
         //hitbox size of this view.
         //this value is only sampled when the view is attached.
+        [ShowIf("viewAffectsHitbox")]
         public float viewRadius;
-        //when we START to return should we unparent this view and freeze its position?
-        //if the view gets return immediatly then this will have no affect.
-        public bool unparentOnReturnStart;
 
         private bool _readyToReturn = true;
         private bool _returning = false;
@@ -36,6 +35,10 @@ namespace DeepAction
         //imagine a view that has a trail. If you return that view as soon as an entity dies it will look really bad. So we let you delay.
         public void StartReturn()
         {
+            if (_returning)
+            {
+                return;
+            }
             _returning = true;
             //NOTE that views are removed from the entity while returning. This could maybe cause a bug if your view code does not take _returning into account.
             entity.views.Remove(this);
@@ -44,10 +47,8 @@ namespace DeepAction
                 Return();
                 return;
             }
-            if (unparentOnReturnStart)
-            {
-                transform.parent = null;
-            }
+            //views are unparented if they are not ready to return.
+            transform.parent = null;
         }
 
         /// <summary>

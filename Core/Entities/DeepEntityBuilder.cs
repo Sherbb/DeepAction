@@ -3,32 +3,16 @@ using Sirenix.OdinInspector;
 
 namespace DeepAction
 {
+    //example script
     public class DeepEntityBuilder : MonoBehaviour
     {
-        private const string baseEntityPath = "CubeEnemy";
-        private GameObject _baseEntity;
-        private GameObject baseEntity
-        {
-            get
-            {
-                if (_baseEntity == null)
-                {
-                    _baseEntity = Resources.Load(baseEntityPath) as GameObject;
-                }
-
-                return _baseEntity;
-            }
-        }
-
-        public GameObject player;
-        public GameObject enemy;
 
         public float spawnPerSec = 0f;
         private float spawnTimer;
 
         void Start()
         {
-            Player();
+            DeepEntity.Create(DeepEntityPresets.ExamplePlayer(), new Vector2(0f, -20f), Quaternion.identity, "PlayerView");
         }
 
         void Update()
@@ -36,45 +20,9 @@ namespace DeepAction
             spawnTimer += Time.deltaTime * spawnPerSec;
             if (spawnTimer >= 1f)
             {
-                Enemy();
+                DeepEntity.Create(DeepEntityPresets.ExampleEnemy(), Vector2.zero, Quaternion.identity, "CubeEnemyView");
                 spawnTimer -= 1f;
             }
-        }
-
-        [Button]
-        public DeepEntity CreateFromPrefab()
-        {
-            DeepEntity e = GameObject.Instantiate(baseEntity, DeepManager.instance.transform).GetComponent<DeepEntity>();
-            e.Initialize(DeepEntityPresets.StaticBaseEntity);
-
-            return e;
-        }
-        [Button]
-        public DeepEntity Enemy()
-        {
-            DeepEntity e = GameObject.Instantiate(enemy, DeepManager.instance.transform).GetComponent<DeepEntity>();
-            e.Initialize(DeepEntityPresets.ExampleEnemy());
-
-            return e;
-        }
-        [Button]
-        public DeepEntity Player()
-        {
-            DeepEntity e = GameObject.Instantiate(player, DeepManager.instance.transform).GetComponent<DeepEntity>();
-            e.Initialize(DeepEntityPresets.ExamplePlayer());
-
-            return e;
-        }
-
-        [Button]
-        public DeepEntity CreateFromScratch()
-        {
-            GameObject g = new GameObject();
-            g.transform.parent = DeepManager.instance.transform;
-            DeepEntity e = g.AddComponent<DeepEntity>();
-            e.Initialize(DeepEntityPresets.StaticBaseEntity);
-
-            return e;
         }
     }
 }

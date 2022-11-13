@@ -4,11 +4,11 @@ namespace DeepAction.Views
 {
     public class RotateToEntityAim : MonoBehaviour
     {
-        public DeepEntity entity;
+        public DeepViewLink link;
 
         private void LateUpdate()
         {
-            transform.right = entity.aimDirection;
+            transform.right = link.entity.aimDirection;
         }
     }
 }

@@ -109,6 +109,7 @@ namespace DeepAction
 
             t.behaviors = new DeepBehavior[]{
                 new PlayerMovement(),
+                new PlayerBrain(),
                 new PlayerTouch(20f,500f),
                 new PlayerAim(),
                 new PlayerShoot(1,() => ExamplePlayerProjectile(1)),
