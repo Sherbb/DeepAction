@@ -44,7 +44,7 @@ namespace DeepAction
             if (started && !finished)
             {
                 parent.StopCoroutine(co);
-                DeepActions.AreaDamage(parent.transform.position, radius, new Damage(damage), targetTeam);
+                DeepUtility.AreaDamage(parent.transform.position, radius, new Damage(damage), targetTeam);
                 new VFX.CirclePop(Color.red, radius).Execute(parent.transform.position);
                 parent.RemoveBehavior(this);
             }
@@ -67,7 +67,7 @@ namespace DeepAction
                 yield return null;
             }
             finished = true;
-            DeepActions.AreaDamage(parent.transform.position, radius, new Damage(damage), targetTeam);
+            DeepUtility.AreaDamage(parent.transform.position, radius, new Damage(damage), targetTeam);
             new VFX.CirclePop(Color.red, radius).Execute(parent.transform.position);
             parent.RemoveBehavior(this);
         }

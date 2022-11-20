@@ -31,7 +31,7 @@ namespace DeepAction
 
         private void OnDie()
         {
-            DeepActions.AreaBehavior(parent.transform.position, radius, behavior, targetTeam, applyDublicates);
+            DeepUtility.AreaBehavior(parent.transform.position, radius, behavior, targetTeam, applyDublicates);
         }
     }
 }

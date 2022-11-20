@@ -138,6 +138,11 @@ namespace DeepAction
             events.OnEntityEnable?.Invoke();
             RefreshColliderSize();
             gameObject.SetActive(true);
+
+            foreach (string v in template.views)
+            {
+                this.AddView(v);
+            }
             return this;
         }
 

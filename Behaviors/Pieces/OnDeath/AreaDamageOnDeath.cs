@@ -29,7 +29,7 @@ namespace DeepAction
 
         private void OnDie()
         {
-            DeepActions.AreaDamage(parent.transform.position, radius, damage, targetTeam);
+            DeepUtility.AreaDamage(parent.transform.position, radius, damage, targetTeam);
         }
     }
 }

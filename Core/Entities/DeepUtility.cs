@@ -7,7 +7,7 @@ namespace DeepAction
     /// <summary>
     /// Contains lots of usefull static gameplay actions.
     /// </summary>
-    public class DeepActions
+    public class DeepUtility
     {
         public static LayerMask enityLayerMask = 1 << 10;
 

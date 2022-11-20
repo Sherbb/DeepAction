@@ -8,7 +8,7 @@ namespace DeepAction
 
         //* Movement
         MoveSpeed,
-        MaxMoveSpeed,
+        MaxMoveSpeed,//todo remove this.
         Drag,
         Bounciness,//0-1 normally
         SlideFriction,
