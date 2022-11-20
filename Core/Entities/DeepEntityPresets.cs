@@ -91,10 +91,12 @@ namespace DeepAction
 
             t.behaviors = new DeepBehavior[]{
                 new MoveTowardsPlayer(),
-                new AvoidOtherEntities(D_Team.Enemy,D_EntityType.Actor,60f),
+                new GridDeformConstant(100,4f),
+                new GridDeformOnDeath(1000,3f),
+                new AvoidOtherEntities(D_Team.Enemy, D_EntityType.Actor, 60f),
                 new VFXOnDeath(
-                    new VFX.Sparks(new Color(1f,.256f,.256f),5),
-                    new VFX.SquarePop(new Color(1f,.256f,.256f),5f,.2f)
+                    new VFX.Sparks(new Color(1f, .256f, .256f), 5),
+                    new VFX.SquarePop(new Color(1f, .256f, .256f), 5f, .2f)
                 ),
             };
             t.team = D_Team.Enemy;
@@ -114,6 +116,7 @@ namespace DeepAction
                 new PlayerAim(),
                 new PlayerShoot(1,() => ExamplePlayerProjectile(1)),
                 new PlayerShoot(.05f,() => ExamplePlayerProjectile2(1)),
+                new GridDeformConstant(1000,4f),
                 new ResourceRegen(D_Resource.Mana,5)
             };
 
@@ -133,6 +136,7 @@ namespace DeepAction
                 new BasicProjectile(damage,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
+                new GridDeformConstant(500,4f),
                 new VFXOnDeath(
                     new VFX.Sparks(Color.black,5),
                     new VFX.CirclePop(Color.black,aoeRadius,.2f)
@@ -153,6 +157,8 @@ namespace DeepAction
 
             t.behaviors = new DeepBehavior[]{
                 new BasicProjectile(0,D_Team.Enemy),
+                new GridDeformConstant(500,4f),
+                new GridDeformOnDeath(500,2f),
                 new MoveForwards(),
                 new DieOnBounce(),
                 new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
