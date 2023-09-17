@@ -68,7 +68,7 @@ namespace DeepAction
                 {D_Attribute.Strength,new A(1)},
                 {D_Attribute.Inteligence,new A(1)},
                 {D_Attribute.Dexterity,new A(1)},
-                {D_Attribute.MoveSpeed,new A(150)},
+                {D_Attribute.MoveSpeed,new A(300)},
                 {D_Attribute.MaxMoveSpeed,new A(200)},
                 {D_Attribute.Drag,new A(0)},
                 {D_Attribute.Bounciness,new A(1)},
@@ -84,15 +84,16 @@ namespace DeepAction
 
         public static EntityTemplate ExampleEnemy()
         {
-            EntityTemplate t = BaseEntity();
+            EntityTemplate t = T_Base.Entity();
 
             t.attributes[D_Attribute.MoveSpeed] = new A(Random.Range(20f, 40f));
             t.attributes[D_Attribute.MaxMoveSpeed] = new A(Random.Range(20f, 40f));
 
             t.behaviors = new DeepBehavior[]{
                 new MoveTowardsPlayer(),
-                new GridDeformConstant(100,4f),
+                new GridDeformConstant(50,4f),
                 new GridDeformOnDeath(1000,3f),
+                new ArtifactBuildupOnDeath(.1f),
                 new AvoidOtherEntities(D_Team.Enemy, D_EntityType.Actor, 60f),
                 new VFXOnDeath(
                     new VFX.Sparks(new Color(1f, .256f, .256f), 5),
@@ -105,43 +106,25 @@ namespace DeepAction
             return t;
         }
 
-        public static EntityTemplate ExamplePlayer()
-        {
-            EntityTemplate t = BaseEntity();
-
-            t.behaviors = new DeepBehavior[]{
-                new PlayerMovement(),
-                new PlayerBrain(),
-                new PlayerTouch(20f,500f),
-                new PlayerAim(),
-                new PlayerShoot(1,() => ExamplePlayerProjectile(1)),
-                new PlayerShoot(.05f,() => ExamplePlayerProjectile2(1)),
-                new GridDeformConstant(1000,4f),
-                new ResourceRegen(D_Resource.Mana,5)
-            };
-
-            t.team = D_Team.Player;
-            t.type = D_EntityType.Actor;
-
-            return t;
-        }
-
         public static EntityTemplate ExamplePlayerProjectile(int damage)
         {
             EntityTemplate t = BaseProjectile();
 
-            float aoeRadius = 1f;
+            float aoeRadius = 16f;
 
             t.behaviors = new DeepBehavior[]{
                 new BasicProjectile(damage,D_Team.Enemy),
                 new MoveForwards(),
                 new DieOnBounce(),
-                new GridDeformConstant(500,4f),
+                new GridDeformConstant(90,4f),
+                new AreaBehaviorOnDeath(aoeRadius, new DamageOverTime(new Damage(damage,Color.green,D_Resource.Health),20,.15f,false,"PoisonView"),D_Team.Enemy,false),
                 new VFXOnDeath(
-                    new VFX.Sparks(Color.black,5),
-                    new VFX.CirclePop(Color.black,aoeRadius,.2f)
+                    new VFX.Sparks(Color.green, 100),
+                    new VFX.DistortionRing(aoeRadius)
                 ),
             };
+
+            t.views = new string[] { "ProjectileView", "ProjectileTrail" };
 
             t.team = D_Team.Player;
             t.type = D_EntityType.Projectile;
@@ -153,22 +136,20 @@ namespace DeepAction
         {
             EntityTemplate t = BaseProjectile();
 
-            float aoeRadius = 5.5f;
-
             t.behaviors = new DeepBehavior[]{
-                new BasicProjectile(0,D_Team.Enemy),
-                new GridDeformConstant(500,4f),
-                new GridDeformOnDeath(500,2f),
+                new BasicProjectile(damage,D_Team.Enemy),
+                new GridDeformConstant(60,4f),
+                new GridDeformOnDeath(100,4f),
                 new MoveForwards(),
                 new DieOnBounce(),
-                new AreaDamageOnDeath(aoeRadius,new Damage(damage),D_Team.Enemy),
-                new AreaImpulseOnDeath(aoeRadius, 150f,D_Team.Enemy),
+                //new AreaImpulseOnDeath(aoeRadius, 150f,D_Team.Enemy),
                 //new AreaBehaviorOnDeath(aoeRadius,new PopOnDamageExample(aoeRadius,damage,D_Team.Enemy),D_Team.Enemy,false),
-                new VFXOnDeath(
-                    new VFX.Sparks(Color.black,6),
-                    new VFX.CirclePop(Color.black,aoeRadius,.4f)
+                new VFXOnBounce(
+                    new VFX.Sparks(Color.white,10)
                 ),
             };
+
+            t.views = new string[] { "ProjectileView", "ProjectileTrail" };
 
             t.team = D_Team.Player;
             t.type = D_EntityType.Projectile;

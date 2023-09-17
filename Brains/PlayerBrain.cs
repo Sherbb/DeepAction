@@ -12,12 +12,12 @@ namespace DeepAction
 
         public override void InitializeBehavior()
         {
-            parent.events.Update += Update;
+            parent.events.UpdateNorm += Update;
         }
 
         public override void DestroyBehavior()
         {
-            parent.events.Update -= Update;
+            parent.events.UpdateNorm -= Update;
         }
 
         private void Update()
@@ -31,7 +31,7 @@ namespace DeepAction
                 parent.TryToCast(1);
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 parent.TryToCast(2);
             }

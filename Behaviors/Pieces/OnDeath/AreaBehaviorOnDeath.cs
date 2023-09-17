@@ -11,12 +11,12 @@ namespace DeepAction
         public D_Team targetTeam;
         public bool applyDublicates;
 
-        public AreaBehaviorOnDeath(float radius, DeepBehavior behavior, D_Team targetTeam, bool applyDublicates)
+        public AreaBehaviorOnDeath(float radius, DeepBehavior behavior, D_Team targetTeam, bool applyDuplicates)
         {
             this.radius = radius;
             this.behavior = behavior;
             this.targetTeam = targetTeam;
-            this.applyDublicates = applyDublicates;
+            this.applyDublicates = applyDuplicates;
         }
 
         public override void InitializeBehavior()
@@ -31,7 +31,7 @@ namespace DeepAction
 
         private void OnDie()
         {
-            DeepUtility.AreaBehavior(parent.transform.position, radius, behavior, targetTeam, applyDublicates);
+            DeepUtility.AreaBehavior(parent.transform.position, radius, behavior, owner, targetTeam, applyDublicates);
         }
     }
 }

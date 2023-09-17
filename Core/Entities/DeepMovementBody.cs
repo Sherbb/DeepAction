@@ -1,21 +1,13 @@
 using UnityEngine;
-using Sirenix.OdinInspector;
+using Unity.Jobs;
 
 namespace DeepAction
 {
-    /// <summary>
-    /// OPTIONAL. Can be substituted for simple rigidBody movement, or whatever you feel like.
-    ///
-    /// I created this so that I can move ALL entities the same way. Projectiles, players, enemies, etc.
-    /// </summary>
+    // Can be substituted for simple rigidBody movement, or whatever you feel like.
+    // I created this so that I can move ALL entities the same way. Projectiles, players, enemies, etc.
     public class DeepMovementBody : MonoBehaviour
     {
-        //does "movementBody" even make sense? lol
-
-        //todo find a static place to put these layer masks....
-        private static LayerMask _entityWallMask = 1 << 11;
-
-        //? if you have really fast projectiles, or lots of overlapping walls consider raising this.
+        // if you have really fast projectiles, or lots of overlapping walls consider raising this.
         private static int raycastPoolSize = 5;
 
         [HideInInspector]
@@ -27,34 +19,43 @@ namespace DeepAction
             Slide,
         }
 
-        [EnumToggleButtons]
         public CollisionType collisionType = CollisionType.Bounce;
 
-        [ShowInInspector, ReadOnly]
         public Vector2 velocity { get; private set; }
-        [ShowInInspector, ReadOnly]
         public Vector2 effectiveVelocity { get; private set; }
 
         private Vector2 _futurePosition;
         private RaycastHit2D _hit;
         private RaycastHit2D[] _hitpool = new RaycastHit2D[raycastPoolSize];
 
+        private void OnEnable()
+        {
+            DeepUpdate.UpdateEarly += UpdateEarly;
+        }
+
+        private void OnDisable()
+        {
+            DeepUpdate.UpdateEarly -= UpdateEarly;
+        }
+
         public void AddForce(Vector2 force)
         {
             velocity += force;
-            velocity = Vector2.ClampMagnitude(velocity, entity.attributes[D_Attribute.MaxMoveSpeed].value);
         }
 
         public void SetVelocity(Vector2 velocity)
         {
-            this.velocity = Vector2.ClampMagnitude(velocity, entity.attributes[D_Attribute.MaxMoveSpeed].value);
+            this.velocity = velocity;
         }
 
-        //todo take this off update and call it through entity manager
-        public void Update()
+        public void UpdateEarly()
         {
             //drag
             velocity = velocity * (1f - Time.deltaTime * entity.attributes[D_Attribute.Drag].value);
+            if (velocity.magnitude < .010f)
+            {
+                return;
+            }
 
             switch (collisionType)
             {
@@ -69,7 +70,7 @@ namespace DeepAction
                         //apply slide friction
                         velocity = velocity * (1f - Time.deltaTime * entity.attributes[D_Attribute.SlideFriction].value);
                     }
-                    effectiveVelocity = (transform.position - startPos) * (1f / Time.deltaTime);
+                    effectiveVelocity = (entity.cachedTransform.position - startPos) * (1f / Time.deltaTime);
                     break;
             }
 
@@ -78,13 +79,14 @@ namespace DeepAction
         private void BounceCollision()
         {
             float frameDistance = velocity.magnitude * Time.deltaTime;
+            Vector2 velocityNormalized = velocity / Mathf.Sqrt(velocity.sqrMagnitude);
             do
             {
-                int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, velocity.normalized, _hitpool, frameDistance, _entityWallMask);
+                int hits = Physics2D.CircleCastNonAlloc(entity.cachedTransform.position, entity.attributes[D_Attribute.MovementRadius].value, velocityNormalized, _hitpool, frameDistance, Layers.entityWall);
 
                 if (hits == 0)
                 {
-                    transform.position = (Vector2)transform.position + (velocity.normalized * frameDistance);
+                    entity.cachedTransform.position = (Vector2)entity.cachedTransform.position + (velocityNormalized * frameDistance);
                     return;
                 }
 
@@ -104,7 +106,7 @@ namespace DeepAction
                 }
 
                 frameDistance -= _hit.distance;
-                transform.position = _hit.point + (_hit.normal * (entity.attributes[D_Attribute.MovementRadius].value * 1.015f));
+                entity.cachedTransform.position = _hit.point + (_hit.normal * (entity.attributes[D_Attribute.MovementRadius].value * 1.015f));
                 entity.events.OnBounce?.Invoke(transform.position);
                 velocity = Vector2.Reflect(velocity, _hit.normal);
                 velocity *= entity.attributes[D_Attribute.Bounciness].value;
@@ -121,11 +123,11 @@ namespace DeepAction
             bool slideThisFrame = false;
             do
             {
-                int hits = Physics2D.CircleCastNonAlloc(transform.position, entity.attributes[D_Attribute.MovementRadius].value, slideDir, _hitpool, frameDistance, _entityWallMask);
+                int hits = Physics2D.CircleCastNonAlloc(entity.cachedTransform.position, entity.attributes[D_Attribute.MovementRadius].value, slideDir, _hitpool, frameDistance, Layers.entityWall);
 
                 if (hits == 0)
                 {
-                    transform.position = (Vector2)transform.position + (slideDir * frameDistance);
+                    entity.cachedTransform.position = (Vector2)entity.cachedTransform.position + (slideDir * frameDistance);
                     return slideThisFrame;
                 }
 
@@ -143,12 +145,12 @@ namespace DeepAction
 
                 if (_hit.point == Vector2.zero)
                 {
-                    _hit.point = transform.position;
+                    _hit.point = entity.cachedTransform.position;
                 }
 
                 frameDistance -= _hit.distance;
 
-                transform.position = _hit.point + (_hit.normal * (entity.attributes[D_Attribute.MovementRadius].value * 1.025f));
+                entity.cachedTransform.position = _hit.point + (_hit.normal * (entity.attributes[D_Attribute.MovementRadius].value * 1.025f));
 
                 slideDir = (Vector2.Reflect(velocity.normalized, _hit.normal).normalized + velocity.normalized).normalized;
 

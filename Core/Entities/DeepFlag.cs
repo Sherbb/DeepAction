@@ -1,15 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using System;
 
 namespace DeepAction
 {
+    // TODO: this is a bit of a stub.
+    // flags are intended for things like "stunned" where they have a strict on/off state
+#if ODIN_INSPECTOR
     [HideReferenceObjectPicker]
+#endif
     public class DeepFlag
     {
+#if ODIN_INSPECTOR
         [DisplayAsString, ShowInInspector, ReadOnly, LabelText("Current Status:")]
+#endif
         public bool flag { get; private set; }
 
         [HideInInspector]
@@ -69,7 +77,9 @@ namespace DeepAction
         }
     }
 
+#if ODIN_INSPECTOR
     [HideReferenceObjectPicker]
+#endif
     public class DeepFlagModifier
     {
         public DeepBehavior source { get; private set; }

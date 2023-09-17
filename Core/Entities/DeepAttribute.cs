@@ -2,14 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 namespace DeepAction
 {
+#if ODIN_INSPECTOR
     [HideReferenceObjectPicker]
+#endif
     public class DeepAttribute
     {
         public float baseValue { get; private set; }
+#if ODIN_INSPECTOR
         [ShowInInspector]
+#endif
         public float value { get; private set; }
 
         private bool clamp;
@@ -115,9 +121,9 @@ namespace DeepAction
 
     public class DeepAttributeModifier
     {
-        //BaseValue + baseAdd * multiplier + postAdd
-        public DeepBehavior source;
+        public DeepEntity owner;
 
+        //BaseValue + baseAdd * multiplier + postAdd
         public float baseAdd { get; private set; }
         public float multiplier { get; private set; }
         public float postAdd { get; private set; }
@@ -136,18 +142,22 @@ namespace DeepAction
             this.multiplier = mod.multiplier;
             this.postAdd = mod.postAdd;
         }
-        public DeepAttributeModifier(float baseAdd, float multiplier, float postAdd)
+        /// <summary>
+        /// BaseValue + baseAdd * multiplier + postAdd
+        /// </summary>
+        public DeepAttributeModifier(float baseAdd = 0f, float multiplier = 0f, float postAdd = 0f)
         {
             this.baseAdd = baseAdd;
             this.postAdd = postAdd;
             this.multiplier = multiplier;
         }
+
         public DeepAttributeModifier(DeepAttributeModifier other)
         {
             this.baseAdd = other.baseAdd;
             this.postAdd = other.postAdd;
             this.multiplier = other.multiplier;
-            this.source = other.source;
+            this.owner = other.owner;
         }
 
         public void UpdateModifier(float baseAdd, float multiplier, float postAdd)

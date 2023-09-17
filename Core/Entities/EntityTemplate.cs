@@ -14,14 +14,14 @@ namespace DeepAction
         //Defining views in the template is optional. Sometimes its easier to define here, sometimes easier when creating entities.
         public string[] views;
 
-        public EntityTemplate(Dictionary<D_Resource, R> resources, Dictionary<D_Attribute, A> attributes, DeepBehavior[] behaviors, D_Team team, D_EntityType type, params string[] views)
+        public EntityTemplate(Dictionary<D_Resource, R> resources, Dictionary<D_Attribute, A> attributes, DeepBehavior[] behaviors, D_Team team, D_EntityType type, params string[] extraViews)
         {
             this.resources = resources;
             this.attributes = attributes;
             this.behaviors = behaviors;
             this.team = team;
             this.type = type;
-            this.views = views;
+            this.views = extraViews;
         }
     }
 

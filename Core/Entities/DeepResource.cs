@@ -2,11 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 namespace DeepAction
 {
+#if ODIN_INSPECTOR
     [HideReferenceObjectPicker]
     [InlineProperty]
+#endif
     /// <summary>
     /// A resource is an int with a max value
     /// - the max value can be modified by behaviors. Mods should only exist while a behvior is on an entity.
@@ -14,12 +18,18 @@ namespace DeepAction
     /// </summary>
     public class DeepResource
     {
+#if ODIN_INSPECTOR
         [ShowInInspector, ReadOnly]
+#endif
         public int value { get; private set; }
 
+#if ODIN_INSPECTOR
         [ShowInInspector, ReadOnly]
+#endif
         public int baseMax { get; private set; }
+#if ODIN_INSPECTOR
         [ShowInInspector, ReadOnly]
+#endif
         public int currentMax { get; private set; }
 
         [HideInInspector]
@@ -61,7 +71,7 @@ namespace DeepAction
             onRegen?.Invoke();
             if (value == currentMax)
             {
-                onFill.Invoke();
+                onFill?.Invoke();
             }
             return value;
         }
@@ -140,7 +150,7 @@ namespace DeepAction
             {
                 b += m.maxModify;
             }
-            b = Mathf.Max(b, 1);
+            b = Mathf.Max(b, 0);
 
             currentMax = b;
             value = Mathf.Clamp(value, 0, b);
@@ -151,7 +161,9 @@ namespace DeepAction
             DeepResource newR = (DeepResource)this.MemberwiseClone();
             return newR;
         }
+#if ODIN_INSPECTOR
         [HideReferenceObjectPicker]
+#endif
         public class DeepResourceModifier
         {
             public int maxModify { get; private set; }

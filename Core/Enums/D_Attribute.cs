@@ -12,6 +12,6 @@ namespace DeepAction
         Drag,
         Bounciness,//0-1 normally
         SlideFriction,
-        MovementRadius,
+        MovementRadius,//todo remove this
     }
 }

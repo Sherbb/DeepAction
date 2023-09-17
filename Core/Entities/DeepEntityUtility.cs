@@ -86,13 +86,13 @@ namespace DeepAction
         //            BEHAVIORS
         //-----------------------------------
 
-        public static DeepBehavior AddBehavior<T>(this DeepEntity e) where T : DeepBehavior
+        public static DeepBehavior AddBehavior<T>(this DeepEntity e, DeepEntity owner) where T : DeepBehavior
         {
             DeepBehavior b = (DeepBehavior)Activator.CreateInstance(typeof(T));
-            return e.AddBehavior(b);
+            return e.AddBehavior(b, owner);
         }
 
-        public static DeepBehavior AddBehavior(this DeepEntity e, Type behavior)
+        public static DeepBehavior AddBehavior(this DeepEntity e, Type behavior, DeepEntity owner)
         {
             if (!typeof(DeepBehavior).IsAssignableFrom(behavior))
             {
@@ -100,12 +100,13 @@ namespace DeepAction
                 return null;
             }
             DeepBehavior b = (DeepBehavior)Activator.CreateInstance(behavior);
-            return e.AddBehavior(b);
+            return e.AddBehavior(b, owner);
         }
 
-        public static DeepBehavior AddBehavior(this DeepEntity e, DeepBehavior behavior)
+        public static DeepBehavior AddBehavior(this DeepEntity e, DeepBehavior behavior, DeepEntity owner)
         {
             behavior.parent = e;
+            behavior.owner = owner;
             e.behaviors.Add(behavior);
             behavior.InitializeBehavior();
             if (behavior is DeepAbility a)
@@ -133,7 +134,7 @@ namespace DeepAction
 
         public static bool RemoveBehavior(this DeepEntity e, DeepBehavior b)
         {
-            if (!e.behaviors.Contains(b))
+            if (b == null || !e.behaviors.Contains(b))
             {
                 return false;
             }
@@ -171,7 +172,7 @@ namespace DeepAction
             {
                 return e.abilities[index].Trigger();
             }
-            Debug.LogError("Tried to cast missing index on: " + e.name + " Index: " + index);
+            Debug.LogWarning("Tried to cast missing index on: " + e.name + " Index: " + index);
             return false;
         }
 

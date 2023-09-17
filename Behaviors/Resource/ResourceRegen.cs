@@ -1,19 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 namespace DeepAction
 {
     public class ResourceRegen : DeepBehavior
     {
-        [ShowInInspector, ReadOnly]
         private D_Resource _resource;
-        [ShowInInspector, ReadOnly]
         private float _regenPerSec;
 
         private bool isFull;
-        [ShowInInspector, ReadOnly]
         public float timer { get; private set; }//0-1
 
         public ResourceRegen(D_Resource resource, float regenPerSec)
@@ -27,14 +23,14 @@ namespace DeepAction
             isFull = parent.resources[_resource].isFull;
             parent.resources[_resource].onConsume += CheckResource;
             parent.resources[_resource].onFill += CheckResource;
-            parent.events.Update += Update;
+            parent.events.UpdateNorm += Update;
         }
 
         public override void DestroyBehavior()
         {
             parent.resources[_resource].onConsume -= CheckResource;
             parent.resources[_resource].onFill -= CheckResource;
-            parent.events.Update -= Update;
+            parent.events.UpdateNorm -= Update;
         }
 
         //we restart the timer when we go from full => empty

@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 using System;
-using Newtonsoft.Json;
 
 namespace DeepAction
 {
@@ -36,6 +34,17 @@ namespace DeepAction
             }
         }
 
+        void Start()
+        {
+            DeepUpdate.UpdateEarly += UpdateEarly;
+            DeepUpdate.UpdateSchedule += UpdateSchedule;
+            DeepUpdate.UpdateNorm += UpdateNorm;
+            DeepUpdate.UpdateComplete += UpdateComplete;
+            DeepUpdate.UpdateFinal += UpdateFinal;
+
+            DeepUpdate.LateNorm += LateNorm;
+        }
+
         private void CreateBaseEntity()
         {
             GameObject g = new GameObject();
@@ -45,6 +54,7 @@ namespace DeepAction
             g.AddComponent<CircleCollider2D>().isTrigger = true;
             var rb = g.AddComponent<Rigidbody2D>();
             rb.isKinematic = true;
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             rb.freezeRotation = true;
             g.AddComponent<DeepMovementBody>();
             g.transform.parent = inactiveEntityParent;
@@ -71,21 +81,57 @@ namespace DeepAction
         }
 
         // All entity logic runs during UPDATE
-        void Update()
+
+        private void UpdateEarly()
         {
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
-                game.activeEntities[i].events.Update?.Invoke();
+                game.activeEntities[i].events.UpdateEarly?.Invoke();
+            }
+        }
+
+        private void UpdateSchedule()
+        {
+            for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
+            {
+                game.activeEntities[i].events.UpdateSchedule?.Invoke();
+            }
+        }
+
+        private void UpdateNorm()
+        {
+            for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
+            {
+                if (game.activeEntities[i].activeCollisions.Count > 0)
+                {
+                    game.activeEntities[i].events.OnEntityCollisionStay?.Invoke();
+                }
             }
 
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
-                game.activeEntities[i].CheckCollisionStay();
+                game.activeEntities[i].events.UpdateNorm?.Invoke();
             }
         }
 
-        // Entites are killed (disabled) during LATEUPDATE
-        void LateUpdate()
+        private void UpdateComplete()
+        {
+            foreach (DeepEntity e in game.activeEntities)
+            {
+                e.events.UpdateComplete?.Invoke();
+            }
+        }
+         
+        private void UpdateFinal()
+        {
+            for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
+            {
+                game.activeEntities[i].events.UpdateFinal?.Invoke();
+            }
+        }
+
+        // Entites are killed (disabled) during LATEUPDATE-norm
+        private void LateNorm()
         {
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)
             {
@@ -111,6 +157,7 @@ namespace DeepAction
             }
         }
 
+        //todo use DeepUpdate
         void FixedUpdate()
         {
             for (int i = game.activeEntities.list.Count - 1; i >= 0; i--)

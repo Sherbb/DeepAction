@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DeepAction
 {
     public class BasicProjectile : DeepBehavior
@@ -29,7 +31,7 @@ namespace DeepAction
                 {
                     if (_impactDamage > 0)
                     {
-                        e.Hit(new Damage(_impactDamage));
+                        e.Hit(new Damage(_impactDamage, Color.cyan));
                     }
                     parent.Die();
                     return;

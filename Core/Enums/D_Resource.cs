@@ -5,5 +5,6 @@ namespace DeepAction
         Health,
         Shield,
         Mana,
+        Artifacts,
     }
 }

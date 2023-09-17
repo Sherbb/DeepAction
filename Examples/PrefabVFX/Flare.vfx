@@ -17,10 +17,10 @@ MonoBehaviour:
   categories: []
   uiBounds:
     serializedVersion: 2
-    x: 66
+    x: 941
     y: -232
-    width: 1878
-    height: 1505
+    width: 1003
+    height: 1391
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -713,7 +713,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 7.1
+      m_SerializableObject: 20.55
     m_Space: 2147483647
   m_Property:
     name: Size
@@ -1129,7 +1129,7 @@ MonoBehaviour:
   castShadows: 0
   useExposureWeight: 0
   flipbookLayout: 0
-  shaderGraph: {fileID: -5475051401550479605, guid: a6a15bc2c5091cd49be455ef582ca5b9, type: 3}
+  shaderGraph: {fileID: 4333940904281232215, guid: a6a15bc2c5091cd49be455ef582ca5b9, type: 3}
   materialSettings:
     m_PropertyNames: []
     m_PropertyValues: []

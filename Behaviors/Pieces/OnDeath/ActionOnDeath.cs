@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace DeepAction
 {
     public class ActionOnDeath : DeepBehavior
     {
-        private Action[] actions;
-        public ActionOnDeath(params Action[] actions)
+        private Action<DeepEntity>[] actions;
+        public ActionOnDeath(params Action<DeepEntity>[] actions)
         {
             this.actions = actions;
         }
@@ -25,9 +22,9 @@ namespace DeepAction
 
         private void OnDie()
         {
-            foreach (Action a in actions)
+            foreach (Action<DeepEntity> a in actions)
             {
-                a.Invoke();
+                a.Invoke(parent);
             }
         }
     }

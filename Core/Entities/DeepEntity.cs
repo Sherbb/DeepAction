@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using UnityEngine.VFX;
 using DeepAction.Views;
 
@@ -9,7 +11,8 @@ namespace DeepAction
 {
     //TODO: -------------------------------------------------------------------
 
-    // 1. need to define collision type somewhere inside deepEntity
+    // 1. need to define collision type somewhere inside deepEntity (currently everything is set to bounce)
+    // 2. Movement body reads from attributes.movementRadius which needs to be removed.
 
     //TODO: -------------------------------------------------------------------
 
@@ -17,37 +20,68 @@ namespace DeepAction
     public class DeepEntity : MonoBehaviour, IHit
     {
         // * Views
+#if ODIN_INSPECTOR
         [Title("Views", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+#endif
         public List<DeepViewLink> views = new List<DeepViewLink>();
         // * Resources
+#if ODIN_INSPECTOR
         [Title("Resources", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+#endif
         public Dictionary<D_Resource, DeepResource> resources { get; private set; } = new Dictionary<D_Resource, DeepResource>();
         // * Attributes
+#if ODIN_INSPECTOR
         [Title("Attributes", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+#endif
         public Dictionary<D_Attribute, DeepAttribute> attributes { get; private set; } = new Dictionary<D_Attribute, DeepAttribute>();
         // * Flags
+#if ODIN_INSPECTOR
         [Title("States", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+#endif
         public Dictionary<D_Flag, DeepFlag> flags { get; private set; } = new Dictionary<D_Flag, DeepFlag>();
         // * Behaviors
+#if ODIN_INSPECTOR
         [Title("Behaviors", "", TitleAlignments.Centered), PropertySpace, HideInEditorMode, ShowInInspector]
+#endif
         public List<DeepBehavior> behaviors { get; private set; } = new List<DeepBehavior>();
         // * Events
         public DeepEntityEvents events = new DeepEntityEvents();
         // * Team
+#if ODIN_INSPECTOR
         [HideInEditorMode, ShowInInspector]
+#endif
         public D_Team team { get; private set; }
         // * Type
+#if ODIN_INSPECTOR
         [HideInEditorMode, ShowInInspector]
+#endif
         public D_EntityType type { get; private set; }
 
         // * Status
+#if ODIN_INSPECTOR
         [HideInEditorMode, ShowInInspector]
+#endif
         public bool dying { get; private set; }//entity will be killed(disabled) next LateUpdate()
+#if ODIN_INSPECTOR
         [HideInEditorMode]
+#endif
         public bool initialized { get; private set; }
 
-        // * Lookups
+        // * Ownership
+#if ODIN_INSPECTOR
         [HideInEditorMode, ShowInInspector]
+#endif
+        public DeepEntity creator;
+#if ODIN_INSPECTOR
+        [HideInEditorMode, ShowInInspector]
+#endif
+        public DeepEntity owner;
+        public bool hasOwner => owner != null;
+
+        // * Lookups
+#if ODIN_INSPECTOR
+        [HideInEditorMode, ShowInInspector]
+#endif
         //abilities are a subset of behaviors
         public List<DeepAbility> abilities { get; private set; } = new List<DeepAbility>();
 
@@ -57,10 +91,11 @@ namespace DeepAction
         public CircleCollider2D col { get; private set; }
         public DeepMovementBody mb { get; private set; }
         public Vector2 aimDirection { get; set; }
+        public Transform cachedTransform { get; private set; }//slightly faster than mono.transform
 
-        private Dictionary<Collider2D, DeepEntity> activeCollisions = new Dictionary<Collider2D, DeepEntity>();
+        public Dictionary<Collider2D, DeepEntity> activeCollisions { get; private set; } = new Dictionary<Collider2D, DeepEntity>();
 
-        public DeepEntity Initialize(EntityTemplate template)
+        public DeepEntity Initialize(EntityTemplate template, DeepEntity creator = null)
         {
             //pointless GC! optimize this! Requires replacing addAtt with setAtt etc below.
             views.Clear();
@@ -85,8 +120,13 @@ namespace DeepAction
                 mb.entity = this;
             }
 
+            cachedTransform = transform;
+
             team = template.team;
             type = template.type;
+
+            this.creator = creator;
+            owner = creator;
 
             //get attributes from template
             foreach (KeyValuePair<D_Attribute, A> attPair in template.attributes)
@@ -119,25 +159,29 @@ namespace DeepAction
             {
                 this.SetupFlag(flag);
             }
-            //add behaviors from template
-            foreach (DeepBehavior b in template.behaviors)
-            {
-                this.AddBehavior(b);
-            }
 
             rb.velocity = Vector2.zero;
             mb.SetVelocity(Vector2.zero);
 
-            // * Kill entity when health runs out
-            //! remember to undo this when we re-use resources
+            // Kill entity when health runs out
             resources[D_Resource.Health].onDeplete += Die;
 
             initialized = true;
             //OnEnable gets called before this, so we need to initialize here when entities are created.
             App.state.game.RegisterEntity(this);
-            events.OnEntityEnable?.Invoke();
             RefreshColliderSize();
+
+            //* ACTIVE
             gameObject.SetActive(true);
+
+            //add behaviors from template. We do this later so that coroutines will work.
+            foreach (DeepBehavior b in template.behaviors)
+            {
+                this.AddBehavior(b, owner != null ? owner : this);
+            }
+
+            //Important we do this after adding behaviors ^ 
+            events.OnEntityEnable?.Invoke();
 
             foreach (string v in template.views)
             {
@@ -145,23 +189,6 @@ namespace DeepAction
             }
             return this;
         }
-
-        /*
-        private void OnEnable()
-        {
-            dying = false;
-
-            if (initialized)
-            {
-                foreach (KeyValuePair<D_Resource, R> r in template.resources)
-                {
-                    resources[r.Key].SetValue(r.Value.baseValue);
-                }
-                App.state.game.RegisterEntity(this);
-                events?.OnEntityEnable?.Invoke();
-            }
-        }
-        */
 
         private void OnDisable()
         {
@@ -175,28 +202,35 @@ namespace DeepAction
         /// </summary>
         public void Hit(params Damage[] hits)
         {
+            Hit(null, hits);
+        }
+        public void Hit(DeepEntity damageDealer, params Damage[] hits)
+        {
             foreach (Damage d in hits)
             {
                 if (d.target == D_Resource.Health)
                 {
-                    //Game dependant, you might want a totally different damage calc.
+                    //Shield absorption. Game dependant
                     int sr = resources[D_Resource.Shield].Consume(d.damage);
                     int hr = resources[D_Resource.Health].Consume(sr);
-                    DamageNumbers(d.damage - hr);
+                    int damageToHP = d.damage - hr;
+                    DamageNumbers(damageToHP, d.color);
                     //todo use the right damage
-                    events.OnTakeDamage?.Invoke(d.damage - hr);
+                    events.OnTakeDamage?.Invoke(damageToHP);
+                    damageDealer?.events.OnDealDamage?.Invoke(damageToHP);
                     return;
                 }
                 resources[d.target].Consume(d.damage);
             }
         }
 
-        private void DamageNumbers(int num)
+        private void DamageNumbers(int num, Color color)
         {
             if (DeepVFX.Pull("damageNumbers", out VisualEffect vfx, out VFXEventAttribute att))
             {
-                att.SetInt("num", num - 1);
+                att.SetInt("num", num - 1);//custom att specific to damageNumbers.vfx
                 att.SetVector3("position", transform.position);
+                att.SetVector3("color", new Vector3(color.r, color.g, color.b));
                 att.SetFloat("spawnCount", 1);
                 vfx.SendEvent("OnPlay", att);
             }
@@ -233,7 +267,6 @@ namespace DeepAction
         private void OnTriggerEnter2D(Collider2D col)
         {
             events.OnTriggerEnter2D?.Invoke(col);
-            activeCollisions.Add(col, null);
             if (col.gameObject.TryGetComponent(out DeepEntity e))
             {
                 activeCollisions[col] = e;
@@ -251,18 +284,6 @@ namespace DeepAction
             }
         }
 
-        public void CheckCollisionStay()
-        {
-            foreach (KeyValuePair<Collider2D, DeepEntity> col in activeCollisions)
-            {
-                events.OnTriggerStay2D?.Invoke(col.Key);
-                if (col.Value != null)
-                {
-                    events.OnEntityCollisionStay?.Invoke(col.Value);
-                }
-            }
-        }
-
         public void SetAimDirection(Vector2 aimDirection)
         {
             this.aimDirection = aimDirection;
@@ -272,13 +293,23 @@ namespace DeepAction
         //            CREATE
         //-----------------------------------
 
-        public static DeepEntity Create(EntityTemplate template, Vector3 position, Quaternion rotation, params string[] views)
+        public static DeepEntity Create(EntityTemplate template, Vector3 position, Quaternion rotation, params string[] extraViews)
+        {
+            return Create(template, null, position, rotation, Vector3.one, extraViews);
+        }
+        public static DeepEntity Create(EntityTemplate template, DeepEntity creator, Vector3 position, Quaternion rotation, params string[] extraViews)
+        {
+            return Create(template, creator, position, rotation, Vector3.one, extraViews);
+        }
+
+        public static DeepEntity Create(EntityTemplate template, DeepEntity creator, Vector3 position, Quaternion rotation, Vector3 scale, params string[] extraViews)
         {
             DeepEntity e = DeepManager.instance.PullEntity();
             e.transform.position = position;
             e.transform.rotation = rotation;
-            e.Initialize(template);
-            foreach (string view in views)
+            e.transform.localScale = scale;
+            e.Initialize(template, creator);
+            foreach (string view in extraViews)
             {
                 e.AddView(view);
             }

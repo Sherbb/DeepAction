@@ -1,0 +1,58 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel UpdateTexture
+#pragma kernel AddForce
+
+RWTexture2D<float4> Displacement;
+RWTexture2D<float4> Velocity;
+float deltaTime;
+float3 forcePosition;
+float forceStrength;
+float dampening;
+float falloffExponent;
+float testValue;
+
+float springForce = 400.0;//right now this gets set in GridShaderControl.cs   once wwe find something we like we should make it const. Same with anything above that fits.
+
+[numthreads(8,8,1)]
+void UpdateTexture (uint3 id : SV_DispatchThreadID)
+{
+
+    Velocity[id.xy] = float4(
+        Velocity[id.xy].x - Displacement[id.xy].x * deltaTime * springForce,
+        Velocity[id.xy].y - Displacement[id.xy].y * deltaTime * springForce,
+        Velocity[id.xy].z - Displacement[id.xy].z * deltaTime * springForce,
+        1.0);
+    Velocity[id.xy] *= 1 - dampening * deltaTime;
+    Displacement[id.xy] = float4(
+        Displacement[id.xy].x + Velocity[id.xy].x * deltaTime, 
+        Displacement[id.xy].y + Velocity[id.xy].y * deltaTime,
+        Displacement[id.xy].z + Velocity[id.xy].z * deltaTime,
+        1.0);
+}
+[numthreads(8,8,1)]
+void AddForce (uint3 id : SV_DispatchThreadID)
+{
+    float3 pointToVertex = float3(
+        id.x-Displacement[id.xy].x,
+        id.y-Displacement[id.xy].y,
+        0+Displacement[id.xy].z) - forcePosition;
+
+    normalize(pointToVertex);
+
+
+    //float attenuatedForce = forceStrength / (1.0 +  dot(pointToVertex,pointToVertex));
+    float dist = distance(float3(
+        id.x-Displacement[id.xy].x,
+        id.y-Displacement[id.xy].y,
+        0+Displacement[id.xy].z),forcePosition);
+
+    float attenuatedForce = forceStrength * (1.0 /  pow(dist,falloffExponent));
+
+    attenuatedForce *= -1;
+   // normalize(pointToVertex);
+
+    Velocity[id.xy] += float4(
+         (attenuatedForce*deltaTime) * pointToVertex.x,
+         (attenuatedForce*deltaTime) * pointToVertex.y,
+         (attenuatedForce*deltaTime) * pointToVertex.z,0.0);
+}

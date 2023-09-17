@@ -34,6 +34,7 @@ namespace DeepAction
                     parent.transform.position,
                     _aoeRadius,
                     new DecayingAttributeMod(D_Attribute.MoveSpeed, new ModValues(0f, -.9f, 0f), 3f),
+                    owner,
                     D_Team.Enemy);
             }
         }

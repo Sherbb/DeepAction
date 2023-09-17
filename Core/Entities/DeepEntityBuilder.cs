@@ -1,5 +1,4 @@
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 namespace DeepAction
 {
@@ -16,10 +15,19 @@ namespace DeepAction
 
         void Update()
         {
+            if (!Input.GetKey(KeyCode.G))
+            {
+                return;
+            }
+
             spawnTimer += Time.deltaTime * spawnPerSec;
             if (spawnTimer >= 1f)
             {
-                DeepEntity.Create(DeepEntityPresets.ExampleEnemy(), Vector2.zero, Quaternion.identity, "CubeEnemyView");
+                if (Random.Range(0f, 1f) > .7f)
+                {
+                    DeepEntity.Create(T_Cube.CubeBig(), Vector2.zero, Quaternion.identity);
+                }
+                //DeepEntity.Create(T_Cube.Cube(), Vector2.zero, Quaternion.identity);
                 spawnTimer -= 1f;
             }
         }

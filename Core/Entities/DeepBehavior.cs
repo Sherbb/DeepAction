@@ -1,14 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
+using Unity.Jobs;
 namespace DeepAction
 {
+#if ODIN_INSPECTOR
     [DoNotDrawAsReference]
+#endif
     public abstract class DeepBehavior
     {
-        [HideInInspector]
+#if ODIN_INSPECTOR
+        [HideInEditorMode]
+#endif
         /// <summary>The entity this behavior is on.</summary>
         public DeepEntity parent;
+#if ODIN_INSPECTOR
+        [HideInEditorMode]
+#endif
+        /// <summary>The entity that created this behavior. Behaviors added during Init are owned by the owner of the Entity.</summary>
+        public DeepEntity owner;
 
         public virtual void InitializeBehavior() { }
         public virtual void DestroyBehavior() { }
@@ -29,7 +41,9 @@ namespace DeepAction
         public virtual float triggerCooldown { get; protected set; } = 1f;
 
         public float lastTriggerTime { get; private set; } = -999999f;
+#if ODIN_INSPECTOR
         [ShowInInspector]
+#endif
         public float remainingCooldown => Mathf.Max(triggerCooldown - (Time.time - lastTriggerTime), 0f);
         public bool cooldownFinished => remainingCooldown <= 0f;//todo cache
 
@@ -52,6 +66,7 @@ namespace DeepAction
             {
                 parent.resources[key].Consume(resourcesToTrigger[key]);
             }
+
             lastTriggerTime = Time.time;
             OnTrigger();
             return true;
