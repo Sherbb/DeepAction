@@ -1,0 +1,11 @@
+{
+    "name": "com.sherbb.deepaction",
+    "displayName": "DeepAction",
+    "version": "0.0.1",
+    "unity": "2021.3",
+    "description": "An object-oriented entity-component-system designed for creating complicated action games. Primarily standalone c# that could potentially work outside of Unity.",
+    "keywords": [
+        "ecs"
+    ],
+    "category": "Unity"
+}
