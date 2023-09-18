@@ -1,8 +1,11 @@
-> Requires Unity 2021.3+
 
-> !!!!! Currently require [ODIN](https://odininspector.com/). The goal is to strip that eventually. All odin attributes can be removed and everything will function just fine.
+```
+WORK IN PROGRESS
+```
+```
+Requires Unity 2021.3+
+```
 
-> WIP not production ready with multiple dead ends currently.
 
 # DeepAction
 A platform to create complex action games in Unity.
@@ -31,19 +34,6 @@ public static EntityTemplate ExampleEnemy()
     return t;
 }
 ```
-
-The visual or "view" side of entities are defined using regular unity prefabs and monoBehaviors. The expectation is that all view code on entity prefabs can function regardless of the actual makeup of the entity it is used for.
-```csharp
-public DeepEntity Enemy()
-{
-    DeepEntity e = GameObject.Instantiate(enemyViewPrefab, DeepManager.instance.transform).GetComponent<DeepEntity>();
-    e.Initialize(DeepEntityPresets.ExampleEnemy());
-
-    return e;
-}
-```
-
-> AKA its basically just another entity component system
 
 ## DeepEntity
 
