@@ -8,17 +8,20 @@ Requires Unity 2021.3+
 
 
 # DeepAction
-A platform to create complex action games in Unity.
+An `object-oriented` `entity-component-system` for creating complex action games in Unity.
 
 Entities behavior is defined entirely in c#
 ```csharp
+//an entity is defined as a "template" which can be used to instantiate
 public static EntityTemplate ExampleEnemy()
 {
     EntityTemplate t = BaseEntity();
 
+    //attributes are floats that drive entity behavior and can be modified by behaviors
     t.attributes[D_Attribute.MoveSpeed] = new A(Random.Range(20f, 40f));
     t.attributes[D_Attribute.MaxMoveSpeed] = new A(Random.Range(20f, 40f));
 
+    //behaviors are like monoBehaviors 
     t.behaviors = new DeepBehavior[]{
         new MoveTowardsPlayer(),
         new AvoidOtherEntities(D_Team.Enemy,D_EntityType.Actor,60f),
